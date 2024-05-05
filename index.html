@@ -157,10 +157,11 @@
             }
         }
 
-        function startGame() {
+       function startGame() {
             currentShape = createShape();
             draw();
             interval = setInterval(moveDown, 1000);
+            document.querySelector('.start-button').style.display = 'none'; // Скрываем кнопку после нажатия
         }
 
         function moveDown() {
