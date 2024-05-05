@@ -99,8 +99,8 @@
             <h2>Следующая фигура:</h2>
             <canvas id="next-block" width="100" height="100"></canvas>
         </div>
-        <button class="start-button" onclick="startGame()">Начать игру</button>
     </div>
+    <button class="start-button" onclick="startGame()">Начать игру</button>
 
     <script>
         // JavaScript код будет здесь
@@ -148,6 +148,7 @@
         }
 
         function draw() {
+            const gameBoard = document.getElementById('game-board'); // Используем правильный ID
             for (let i = 0; i < currentShape.length; i++) {
                 for (let j = 0; j < currentShape[i].length; j++) {
                     if (currentShape[i][j]) {
@@ -162,6 +163,8 @@
         }
 
         function startGame() {
+            const gameBoard = document.getElementById('game-board'); // Получаем игровое поле
+            gameBoard.innerHTML = ''; // Очищаем игровое поле перед началом игры
             currentShape = createShape();
             draw();
             interval = setInterval(moveDown, 1000);
