@@ -175,6 +175,10 @@
             ]
         ];
 
+        let currentX = Math.floor(cols / 2);
+        let currentY = 0;
+        let currentRotationIndex = 0;
+
         function createShape() {
             const index = Math.floor(Math.random() * shapes.length);
             return shapes[index];
@@ -302,9 +306,6 @@
             }
         }
 
-        let currentX = Math.floor(cols / 2);
-        let currentY = 0;
-
         function startGame() {
             score = 0;
             document.getElementById('score').innerText = score;
@@ -357,10 +358,12 @@
         }
 
         function rotateShape() {
-            const newShape = rotatedShapes[shapes.indexOf(currentShape)];
+            const nextRotationIndex = (currentRotationIndex + 1) % rotatedShapes[shapes.indexOf(currentShape)].length;
+            const newShape = rotatedShapes[shapes.indexOf(currentShape)][nextRotationIndex];
             if (!checkCollision(newShape, currentX, currentY)) {
                 clearShape(currentShape, currentX, currentY);
                 currentShape = newShape;
+                currentRotationIndex = nextRotationIndex;
                 drawShape(currentShape, currentX, currentY);
             }
         }
