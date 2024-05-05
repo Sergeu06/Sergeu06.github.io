@@ -321,6 +321,8 @@
             }
             interval = setInterval(moveDown, 1000);
             document.querySelector('.start-button').style.display = 'none';
+            currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
+            currentY = 0;
             drawShape(currentShape, currentX, currentY);
         }
 
