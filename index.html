@@ -103,14 +103,13 @@
     <button class="start-button" onclick="startGame()">Начать игру</button>
 
     <script>
-        // JavaScript код будет здесь
-    </script>
-    <script>
         const rows = 20;
         const cols = 10;
         let score = 0;
         let currentShape;
+        let nextShape;
         let interval;
+        let gameBoard = [];
 
         const shapes = [
             [
@@ -147,32 +146,175 @@
             return shapes[index];
         }
 
-        function draw() {
-            const gameBoard = document.getElementById('game-board'); // Используем правильный ID
-            for (let i = 0; i < currentShape.length; i++) {
-                for (let j = 0; j < currentShape[i].length; j++) {
-                    if (currentShape[i][j]) {
+        function drawShape(shape, x, y) {
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
                         const cell = document.createElement('div');
                         cell.classList.add('cell');
-                        cell.style.gridColumn = j + 1;
-                        cell.style.gridRow = i + 1;
+                        cell.style.gridColumn = x + j + 1;
+                        cell.style.gridRow = y + i + 1;
                         gameBoard.appendChild(cell);
+                        gameBoard[y + i][x + j] = cell;
                     }
                 }
             }
         }
 
-        function startGame() {
-            const gameBoard = document.getElementById('game-board'); // Получаем игровое поле
-            gameBoard.innerHTML = ''; // Очищаем игровое поле перед началом игры
-            currentShape = createShape();
-            draw();
-            interval = setInterval(moveDown, 1000);
-            document.querySelector('.start-button').style.display = 'none'; // Скрываем кнопку после нажатия
+        function clearShape(shape, x, y) {
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        gameBoard[y + i][x + j].remove();
+                    }
+                }
+            }
         }
 
         function moveDown() {
-            // Реализация логики перемещения фигуры вниз
+            clearShape(currentShape, currentX, currentY);
+            currentY++;
+            if (checkCollision(currentShape, currentX, currentY)) {
+                currentY--;
+                drawShape(currentShape, currentX, currentY);
+                lockShape(currentShape, currentX, currentY);
+                currentShape = nextShape;
+                nextShape = createShape();
+                drawNextShape();
+                currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
+                currentY = 0;
+                drawShape(currentShape, currentX, currentY);
+            } else {
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+
+        function checkCollision(shape, x, y) {
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        if (y + i >= rows || x + j < 0 || x + j >= cols || (gameBoard[y + i] && gameBoard[y + i][x + j])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function lockShape(shape, x, y) {
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        gameBoard[y + i][x + j] = true;
+                    }
+                }
+            }
+            checkRows();
+        }
+
+        function checkRows() {
+            let rowCount = 0;
+            for (let i = rows - 1; i >= 0; i--) {
+                let isRowFull = true;
+                for (let j = 0; j < cols; j++) {
+                    if (!gameBoard[i][j]) {
+                        isRowFull = false;
+                        break;
+                    }
+                }
+                if (isRowFull) {
+                    rowCount++;
+                    removeRow(i);
+                    i++;
+                }
+            }
+            updateScore(rowCount);
+        }
+
+        function removeRow(row) {
+            for (let i = row; i > 0; i--) {
+                for (let j = 0; j < cols; j++) {
+                    gameBoard[i][j] = gameBoard[i - 1][j];
+                    if (gameBoard[i][j]) {
+                        gameBoard[i][j].style.gridRow = i + 1;
+                    }
+                }
+            }
+            for (let j = 0; j < cols; j++) {
+                gameBoard[0][j] = null;
+            }
+        }
+
+        function updateScore(rows) {
+            score += rows * 100;
+            document.getElementById('score').innerText = score;
+        }
+
+        function drawNextShape() {
+            const nextCanvas = document.getElementById('next-block');
+            const ctx = nextCanvas.getContext('2d');
+            ctx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+            const blockSize = nextCanvas.width / 4;
+            const shape = nextShape[0];
+            ctx.fillStyle = '#fff';
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        ctx.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                    }
+                }
+            }
+        }
+
+        let currentX = Math.floor(cols / 2);
+        let currentY = 0;
+
+        function startGame() {
+            score = 0;
+            document.getElementById('score').innerText = score;
+            currentShape = createShape();
+            nextShape = createShape();
+            drawNextShape();
+            clearInterval(interval);
+            gameBoard = [];
+            for (let i = 0; i < rows; i++) {
+                gameBoard[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    gameBoard[i][j] = null;
+                }
+            }
+            interval = setInterval(moveDown, 1000);
+            document.querySelector('.start-button').style.display = 'none'; // Скрываем кнопку после нажатия
+            drawShape(currentShape, currentX, currentY);
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                moveLeft();
+            } else if (event.key === 'ArrowRight') {
+                moveRight();
+            } else if (event.key === 'ArrowDown') {
+                moveDown();
+            }
+        });
+
+        function moveLeft() {
+            clearShape(currentShape, currentX, currentY);
+            currentX--;
+            if (checkCollision(currentShape, currentX, currentY)) {
+                currentX++;
+            }
+            drawShape(currentShape, currentX, currentY);
+        }
+
+        function moveRight() {
+            clearShape(currentShape, currentX, currentY);
+            currentX++;
+            if (checkCollision(currentShape, currentX, currentY)) {
+                currentX--;
+            }
+            drawShape(currentShape, currentX, currentY);
         }
     </script>
 </body>
