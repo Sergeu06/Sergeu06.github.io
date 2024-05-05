@@ -323,7 +323,7 @@
             const newShape = currentShape[newRotation];
             if (!checkCollision(newShape, currentX, currentY)) {
                 clearShape(currentShape, currentX, currentY);
-                currentShape = currentShape[newRotation];
+                currentShape = newShape;
                 currentRotation = newRotation;
                 drawShape(currentShape, currentX, currentY);
             }
@@ -331,3 +331,4 @@
     </script>
 </body>
 </html>
+
