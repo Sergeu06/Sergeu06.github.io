@@ -138,6 +138,43 @@
             ]
         ];
 
+        const rotatedShapes = [
+            [
+                [1],
+                [1],
+                [1],
+                [1]
+            ],
+            [
+                [0, 1],
+                [1, 1],
+                [0, 1]
+            ],
+            [
+                [1, 0, 0],
+                [1, 1, 1]
+            ],
+            [
+                [0, 1],
+                [0, 1],
+                [1, 1]
+            ],
+            [
+                [1, 1],
+                [1, 1]
+            ],
+            [
+                [1, 0],
+                [1, 1],
+                [0, 1]
+            ],
+            [
+                [0, 1],
+                [1, 1],
+                [1, 0]
+            ]
+        ];
+
         function createShape() {
             const index = Math.floor(Math.random() * shapes.length);
             return shapes[index];
@@ -267,7 +304,6 @@
 
         let currentX = Math.floor(cols / 2);
         let currentY = 0;
-        let currentRotation = 0;
 
         function startGame() {
             score = 0;
@@ -319,12 +355,10 @@
         }
 
         function rotateShape() {
-            const newRotation = (currentRotation + 1) % currentShape.length;
-            const newShape = currentShape[newRotation];
+            const newShape = rotatedShapes[shapes.indexOf(currentShape)];
             if (!checkCollision(newShape, currentX, currentY)) {
                 clearShape(currentShape, currentX, currentY);
                 currentShape = newShape;
-                currentRotation = newRotation;
                 drawShape(currentShape, currentX, currentY);
             }
         }
