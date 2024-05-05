@@ -124,37 +124,38 @@ document.addEventListener('DOMContentLoaded', () => {
     let grid = Array.from({ length: 20 }, () => Array(10).fill(0)); // Массив, представляющий игровое поле
     let gameInterval; // Интервал игры
 
-    // Функция для создания новой фигуры
-    function createNewBlock() {
-        const tetrominoes = [
-            [[1, 1, 1, 1]], // I-фигура
-            [[1, 1, 1], [0, 1, 0]], // T-фигура
-            [[1, 1, 1], [1, 0, 0]], // L-фигура
-            [[1, 1, 1], [0, 0, 1]], // J-фигура
-            [[0, 1, 1], [1, 1, 0]], // S-фигура
-            [[1, 1], [1, 1]] // O-фигура
-        ];
+// Функция для создания новой фигуры
+function createNewBlock() {
+    const tetrominoes = [
+        [[1, 1, 1, 1]], // I-фигура
+        [[1, 1, 1], [0, 1, 0]], // T-фигура
+        [[1, 1, 1], [1, 0, 0]], // L-фигура
+        [[1, 1, 1], [0, 0, 1]], // J-фигура
+        [[0, 1, 1], [1, 1, 0]], // S-фигура
+        [[1, 1], [1, 1]] // O-фигура
+    ];
 
-        const randomIndex = Math.floor(Math.random() * tetrominoes.length);
-        const tetromino = tetrominoes[randomIndex];
+    const randomIndex = Math.floor(Math.random() * tetrominoes.length);
+    const tetromino = tetrominoes[randomIndex];
 
-        currentBlock = document.createElement('div');
-        currentBlock.classList.add('block');
+    currentBlock = document.createElement('div');
+    currentBlock.classList.add('block');
 
-        tetromino.forEach((row, rowIndex) => {
-            row.forEach((cell, cellIndex) => {
-                if (cell === 1) {
-                    const blockCell = document.createElement('div');
-                    blockCell.classList.add('cell');
-                    blockCell.style.top = (rowIndex * 25) + 'px';
-                    blockCell.style.left = (cellIndex * 25) + 'px';
-                    currentBlock.appendChild(blockCell);
-                }
-            });
+    tetromino.forEach((row, rowIndex) => {
+        row.forEach((cell, cellIndex) => {
+            if (cell === 1) {
+                const blockCell = document.createElement('div');
+                blockCell.classList.add('cell');
+                blockCell.style.top = (rowIndex * 25) + 'px';
+                blockCell.style.left = (cellIndex * 25) + 'px';
+                currentBlock.appendChild(blockCell);
+            }
         });
+    });
 
-        gameBoard.appendChild(currentBlock);
-    }
+    gameBoard.appendChild(currentBlock); // Исправлено: добавляем фигуру на игровое поле
+}
+
 
     // Функция для проверки и удаления заполненных рядов
     function checkAndClearRows() {
