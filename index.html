@@ -155,7 +155,7 @@
                         cell.style.gridColumn = x + j + 1;
                         cell.style.gridRow = y + i + 1;
                         gameBoard.appendChild(cell);
-                        gameBoard[y + i][x + j] = cell;
+                        gameBoard[y + i][x + j] = true;
                     }
                 }
             }
@@ -165,7 +165,7 @@
             for (let i = 0; i < shape.length; i++) {
                 for (let j = 0; j < shape[i].length; j++) {
                     if (shape[i][j]) {
-                        gameBoard[y + i][x + j].remove();
+                        gameBoard[y + i][x + j] = null;
                     }
                 }
             }
@@ -236,9 +236,6 @@
             for (let i = row; i > 0; i--) {
                 for (let j = 0; j < cols; j++) {
                     gameBoard[i][j] = gameBoard[i - 1][j];
-                    if (gameBoard[i][j]) {
-                        gameBoard[i][j].style.gridRow = i + 1;
-                    }
                 }
             }
             for (let j = 0; j < cols; j++) {
