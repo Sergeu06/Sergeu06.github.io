@@ -173,21 +173,20 @@
         } else {
             mergeShape(currentShape, currentX, currentY);
             clearInterval(interval); // Останавливаем интервал
-            clearLines(); // Очищаем заполненные линии
             startGame(); // Запускаем новую фигуру
         }
     }
 
     // Функция для ускоренного падения
     function moveDownFaster() {
-        clearInterval(interval);
-        interval = setInterval(moveDown, 50);
+        clearInterval(dropIntervalId);
+        dropIntervalId = setInterval(moveDown, 50);
     }
 
     // Функция для возврата обычного интервала падения
     function resetDropInterval() {
-        clearInterval(interval);
-        interval = setInterval(moveDown, dropInterval);
+        clearInterval(dropIntervalId);
+        dropIntervalId = setInterval(moveDown, dropInterval);
     }
 
     // Функция для проверки столкновения фигуры с другими фигурами или краем поля
@@ -250,6 +249,7 @@
                 }
             }
         }
+        clearLines();
     }
 
     // Функция для очистки заполненных рядов
@@ -279,48 +279,76 @@
 
     // Функция для обновления отображения поля
     function updateBoard() {
-        const board = document.getElementById('game-board');
-        board.innerHTML = ''; // Очищаем игровое поле
-        gameBoard.forEach((row, i) => {
-            row.forEach((cell, j) => {
+        const gameBoardElement = document.getElementById('game-board');
+        gameBoardElement.innerHTML = '';
+        gameBoard.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
                 if (cell !== null) {
-                    cell.style.gridColumn = j + 1;
-                    cell.style.gridRow = i + 1;
-                    board.appendChild(cell);
+                    const cellElement = document.createElement('div');
+                    cellElement.classList.add('cell');
+                    cellElement.style.gridColumn = colIndex + 1;
+                    cellElement.style.gridRow = rowIndex + 1;
+                    gameBoardElement.appendChild(cellElement);
                 }
             });
         });
     }
 
+    // Обработчик нажатия клавиш клавиатуры
+    document.addEventListener('keydown', (event) => {
+        switch (event.code) {
+            case 'ArrowLeft':
+                moveShapeLeft();
+                break;
+            case 'ArrowRight':
+                moveShapeRight();
+                break;
+            case 'ArrowDown':
+                moveDownFaster();
+                break;
+            case 'ArrowUp':
+                rotateShape();
+                break;
+        }
+    });
+
+    // Функция для движения фигуры влево
+    function moveShapeLeft() {
+        if (!checkCollision(currentShape, currentX - 1, currentY)) {
+            clearShape(currentShape, currentX, currentY);
+            currentX--;
+            drawShape(currentShape, currentX, currentY);
+        }
+    }
+
+    // Функция для движения фигуры вправо
+    function moveShapeRight() {
+        if (!checkCollision(currentShape, currentX + 1, currentY)) {
+            clearShape(currentShape, currentX, currentY);
+            currentX++;
+            drawShape(currentShape, currentX, currentY);
+        }
+    }
+
+    // Функция для поворота фигуры
+    function rotateShape() {
+        const newShape = [];
+        for (let i = 0; i < currentShape[0].length; i++) {
+            const newRow = [];
+            for (let j = currentShape.length - 1; j >= 0; j--) {
+                newRow.push(currentShape[j][i]);
+            }
+            newShape.push(newRow);
+        }
+        if (!checkCollision(newShape, currentX, currentY)) {
+            clearShape(currentShape, currentX, currentY);
+            currentShape = newShape;
+            drawShape(currentShape, currentX, currentY);
+        }
+    }
+
     // Начать игру при загрузке страницы
     startGame();
-
-    // Обработчики событий для управления фигурой
-    document.addEventListener('keydown', event => {
-        if (event.key === 'ArrowLeft') {
-            if (!checkCollision(currentShape, currentX - 1, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentX--;
-                drawShape(currentShape, currentX, currentY);
-            }
-        } else if (event.key === 'ArrowRight') {
-            if (!checkCollision(currentShape, currentX + 1, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentX++;
-                drawShape(currentShape, currentX, currentY);
-            }
-        } else if (event.key === 'ArrowDown') {
-            moveDownFaster(); // Ускоренное падение
-        } else if (event.key === 'ArrowUp') {
-            // Поворот по часовой стрелке
-        }
-    });
-
-    document.addEventListener('keyup', event => {
-        if (event.key === 'ArrowDown') {
-            resetDropInterval(); // Возврат обычного интервала падения
-        }
-    });
 </script>
 
 </body>
