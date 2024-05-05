@@ -190,23 +190,23 @@
     }
 
     // Функция для проверки столкновения фигуры с другими фигурами или краем поля
-function checkCollision(shape, x, y) {
-    for (let i = 0; i < shape.length; i++) {
-        for (let j = 0; j < shape[i].length; j++) {
-            if (shape[i][j]) {
-                // Проверка столкновения с краем поля
-                if (y + i >= rows || x + j < 0 || x + j >= cols) {
-                    return true;
-                }
-                // Проверка столкновения с другой фигурой
-                if (gameBoard[y + i][x + j] !== null) {
-                    return true;
+    function checkCollision(shape, x, y) {
+        for (let i = 0; i < shape.length; i++) {
+            for (let j = 0; j < shape[i].length; j++) {
+                if (shape[i][j]) {
+                    // Проверка столкновения с краем поля
+                    if (y + i >= rows || x + j < 0 || x + j >= cols) {
+                        return true;
+                    }
+                    // Проверка столкновения с другой фигурой
+                    if (gameBoard[y + i][x + j] !== null) {
+                        return true;
+                    }
                 }
             }
         }
+        return false;
     }
-    return false;
-}
 
     // Функция для отрисовки фигуры на игровом поле
     function drawShape(shape, x, y) {
