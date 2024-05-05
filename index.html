@@ -175,6 +175,28 @@
         }
     }
 
+    // Функция для поворота фигуры по часовой стрелке на 90 градусов
+    function rotateShapeClockwise(shape) {
+        const rotatedShape = [];
+        for (let i = 0; i < shape[0].length; i++) {
+            const newRow = shape.map(row => row[i]).reverse();
+            rotatedShape.push(newRow);
+        }
+        return rotatedShape;
+    }
+
+    // Обработчик события нажатия клавиши
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowUp') {
+            const rotatedShape = rotateShapeClockwise(currentShape);
+            if (!checkCollision(rotatedShape, currentX, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentShape = rotatedShape;
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+    });
+
     // Функция для проверки столкновения фигуры с другими фигурами или краем поля
     function checkCollision(shape, x, y) {
         for (let i = 0; i < shape.length; i++) {
@@ -240,6 +262,7 @@
     // Начать игру при загрузке страницы
     startGame();
 </script>
+
 
 </body>
 </html>
