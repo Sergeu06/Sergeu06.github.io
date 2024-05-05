@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <style>
+        .block {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .cell {
+            width: 25px;
+            height: 25px;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -16,6 +29,7 @@
             overflow: hidden;
             color: #fff;
         }
+
         .game-container {
             position: relative;
             display: flex;
@@ -26,6 +40,7 @@
             max-height: 800px;
             border: 1px solid #fff;
         }
+
         .game-board {
             position: relative;
             flex: 0 0 75%;
@@ -34,10 +49,7 @@
             grid-template-columns: repeat(10, 1fr);
             grid-template-rows: repeat(20, 1fr);
         }
-        .cell {
-            border: 1px solid #333;
-            background-color: #222;
-        }
+
         .info {
             position: relative;
             flex: 1;
@@ -48,6 +60,7 @@
             justify-content: space-around;
             text-align: center;
         }
+
         #next-block {
             border: 1px solid #fff;
             background-color: #000;
@@ -56,6 +69,7 @@
             width: 100%;
             height: auto;
         }
+
         canvas {
             border: none;
             background-color: #000;
@@ -84,9 +98,7 @@
             cursor: pointer;
             font-size: 1.5rem;
         }
-        .block {
-            position: absolute;
-        }
+    </style>
 </head>
 <body>
     <div class="game-container">
