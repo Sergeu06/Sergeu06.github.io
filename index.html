@@ -99,230 +99,205 @@
     </div>
 
 <script>
-    const rows = 20;
-    const cols = 10;
-    let currentShape;
-    let interval;
-    let gameBoard = [];
-    let currentX;
-    let currentY;
-    let dropInterval = 1000; // Интервал падения фигуры по умолчанию
-    let dropIntervalId;
-    let score = 0;
+document.addEventListener('DOMContentLoaded', () => {
+    const gameBoard = document.querySelector('.game-board'); // Получаем игровое поле
+    const startButton = document.querySelector('.start-button'); // Получаем кнопку "Start Game"
+    let score = 0; // Инициализируем переменную для счета
+    let level = 1; // Инициализируем переменную для уровня
+    let currentBlock; // Переменная для хранения текущей фигуры
+    let grid = Array.from({ length: 20 }, () => Array(10).fill(0)); // Массив, представляющий игровое поле
+    let gameInterval; // Интервал игры
 
-    // Функция для создания случайной фигуры
-    function createRandomShape() {
-        const shapes = [
-            [
-                [1, 1, 1, 1] // I-фигура
-            ],
-            [
-                [1, 1, 1],
-                [0, 1, 0] // T-фигура
-            ],
-            [
-                [1, 1, 1],
-                [1, 0, 0] // L-фигура
-            ],
-            [
-                [1, 1, 1],
-                [0, 0, 1] // J-фигура
-            ],
-            [
-                [1, 1],
-                [1, 1] // O-фигура
-            ],
-            [
-                [0, 1, 1],
-                [1, 1, 0] // Z-фигура
-            ],
-            [
-                [1, 1, 0],
-                [0, 1, 1] // S-фигура
-            ]
+    // Функция для создания новой фигуры
+    function createNewBlock() {
+        const tetrominoes = [
+            [[1, 1, 1, 1]], // I-фигура
+            [[1, 1, 1], [0, 1, 0]], // T-фигура
+            [[1, 1, 1], [1, 0, 0]], // L-фигура
+            [[1, 1, 1], [0, 0, 1]], // J-фигура
+            [[0, 1, 1], [1, 1, 0]], // S-фигура
+            [[1, 1], [1, 1]] // O-фигура
         ];
 
-        // Случайным образом выбираем одну из фигур
-        const randomIndex = Math.floor(Math.random() * shapes.length);
-        return shapes[randomIndex];
-    }
+        const randomIndex = Math.floor(Math.random() * tetrominoes.length);
+        const tetromino = tetrominoes[randomIndex];
 
-    // Функция для начала игры
-    function startGame() {
-        currentShape = createRandomShape();
-        clearInterval(interval);
-        gameBoard = Array.from({ length: rows }, () => Array(cols).fill(null));
-        interval = setInterval(moveDown, dropInterval);
-        currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
-        currentY = 0;
-        drawShape(currentShape, currentX, currentY);
-    }
+        currentBlock = document.createElement('div');
+        currentBlock.classList.add('block');
 
-    // Функция для движения фигуры вниз
-    function moveDown() {
-        if (!checkCollision(currentShape, currentX, currentY + 1)) {
-            clearShape(currentShape, currentX, currentY);
-            currentY++;
-            drawShape(currentShape, currentX, currentY);
-        } else {
-            mergeShape(currentShape, currentX, currentY);
-            clearInterval(interval); // Останавливаем интервал
-            startGame(); // Запускаем новую фигуру
-        }
-    }
-
-    // Функция для ускоренного падения
-    function moveDownFaster() {
-        clearInterval(dropIntervalId);
-        dropIntervalId = setInterval(moveDown, 50);
-    }
-
-    // Функция для возврата обычного интервала падения
-    function resetDropInterval() {
-        clearInterval(dropIntervalId);
-        dropIntervalId = setInterval(moveDown, dropInterval);
-    }
-
-    // Функция для проверки столкновения фигуры с другими фигурами или краем поля
-    function checkCollision(shape, x, y) {
-        for (let i = 0; i < shape.length; i++) {
-            for (let j = 0; j < shape[i].length; j++) {
-                if (shape[i][j]) {
-                    // Проверка столкновения с краем поля
-                    if (y + i >= rows || x + j < 0 || x + j >= cols) {
-                        return true;
-                    }
-                    // Проверка столкновения с другой фигурой
-                    if (gameBoard[y + i] && gameBoard[y + i][x + j] !== null) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    // Функция для отрисовки фигуры на игровом поле
-    function drawShape(shape, x, y) {
-        for (let i = 0; i < shape.length; i++) {
-            for (let j = 0; j < shape[i].length; j++) {
-                if (shape[i][j]) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.style.gridColumn = x + j + 1;
-                    cell.style.gridRow = y + i + 1;
-                    document.getElementById('game-board').appendChild(cell);
-                }
-            }
-        }
-    }
-
-    // Функция для очистки фигуры с игрового поля
-    function clearShape(shape, x, y) {
-        const cells = document.querySelectorAll('.cell');
-        cells.forEach(cell => {
-            if (parseInt(cell.style.gridRow) > y && parseInt(cell.style.gridColumn) > x &&
-                parseInt(cell.style.gridColumn) <= x + shape[0].length &&
-                parseInt(cell.style.gridRow) <= y + shape.length) {
-                cell.remove();
-            }
-        });
-    }
-
-    // Функция для объединения фигуры с игровым полем
-    function mergeShape(shape, x, y) {
-        for (let i = 0; i < shape.length; i++) {
-            for (let j = 0; j < shape[i].length; j++) {
-                if (shape[i][j]) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.style.gridColumn = x + j + 1;
-                    cell.style.gridRow = y + i + 1;
-                    document.getElementById('game-board').appendChild(cell);
-                    gameBoard[y + i][x + j] = cell;
-                }
-            }
-        }
-        clearLines();
-    }
-
-    // Функция для очистки заполненных рядов
-    function clearLines() {
-        for (let i = rows - 1; i >= 0; i--) {
-            let isFull = true;
-            for (let j = 0; j < cols; j++) {
-                if (gameBoard[i][j] === null) {
-                    isFull = false;
-                    break;
-                }
-            }
-            if (isFull) {
-                // Увеличиваем счет
-                score += 10;
-                document.getElementById('score').innerText = score;
-                // Удаляем текущий ряд
-                gameBoard.splice(i, 1);
-                // Добавляем новый ряд сверху
-                gameBoard.unshift(new Array(cols).fill(null));
-                // Обновляем отображение поля
-                updateBoard();
-                i++; // Пересчитываем этот же ряд снова
-            }
-        }
-    }
-
-    // Функция для обновления отображения поля
-    function updateBoard() {
-        const gameBoardElement = document.getElementById('game-board');
-        gameBoardElement.innerHTML = '';
-        gameBoard.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                if (cell !== null) {
-                    const cellElement = document.createElement('div');
-                    cellElement.classList.add('cell');
-                    cellElement.style.gridColumn = colIndex + 1;
-                    cellElement.style.gridRow = rowIndex + 1;
-                    gameBoardElement.appendChild(cellElement);
+        tetromino.forEach((row, rowIndex) => {
+            row.forEach((cell, cellIndex) => {
+                if (cell === 1) {
+                    const blockCell = document.createElement('div');
+                    blockCell.classList.add('cell');
+                    blockCell.style.top = (rowIndex * 25) + 'px';
+                    blockCell.style.left = (cellIndex * 25) + 'px';
+                    currentBlock.appendChild(blockCell);
                 }
             });
         });
+
+        gameBoard.appendChild(currentBlock);
     }
 
-    // Обработчик нажатия клавиш клавиатуры
-    document.addEventListener('keydown', (event) => {
-        switch (event.code) {
-            case 'ArrowLeft':
-                moveShapeLeft();
-                break;
-            case 'ArrowRight':
-                moveShapeRight();
-                break;
-            case 'ArrowDown':
-                moveDownFaster();
-                break;
+    // Функция для проверки и удаления заполненных рядов
+    function checkAndClearRows() {
+        const rowsToRemove = [];
+        grid.forEach((row, index) => {
+            if (row.every(cell => cell.classList.contains('fixed'))) {
+                rowsToRemove.push(index);
+            }
+        });
+
+        rowsToRemove.forEach(rowIndex => {
+            grid.splice(rowIndex, 1);
+            grid.unshift(Array(10).fill(0));
+        });
+
+        score += rowsToRemove.length * 100;
+        document.getElementById('score').textContent = score;
+    }
+
+    // Функция для обновления счета и уровня
+    function updateScoreAndLevel() {
+        score += 10;
+        document.getElementById('score').textContent = score;
+
+        if (score >= level * 100) {
+            level++;
+            document.getElementById('level').textContent = level;
+            changeFallSpeed();
         }
-    });
+    }
+
+    // Функция для изменения скорости падения фигуры
+    function changeFallSpeed() {
+        const fallInterval = 1000 - (level * 100);
+        clearInterval(gameInterval);
+        gameInterval = setInterval(moveBlockDown, fallInterval);
+    }
+
+    // Функция для движения фигуры вниз
+    function moveBlockDown() {
+        if (!checkCollisions()) {
+            currentBlock.style.top = parseInt(currentBlock.style.top) + 25 + 'px';
+        }
+    }
 
     // Функция для движения фигуры влево
-    function moveShapeLeft() {
-        if (!checkCollision(currentShape, currentX - 1, currentY)) {
-            clearShape(currentShape, currentX, currentY);
-            currentX--;
-            drawShape(currentShape, currentX, currentY);
+    function moveBlockLeft() {
+        const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+        const canMoveLeft = cells.every(cell => {
+            const left = parseInt(cell.style.left);
+            return left > 0 && !grid.some(row => row[left / 25 - 1] && row[left / 25 - 1].classList.contains('fixed'));
+        });
+
+        if (canMoveLeft) {
+            currentBlock.style.left = parseInt(currentBlock.style.left) - 25 + 'px';
         }
     }
 
     // Функция для движения фигуры вправо
-    function moveShapeRight() {
-        if (!checkCollision(currentShape, currentX + 1, currentY)) {
-            clearShape(currentShape, currentX, currentY);
-            currentX++;
-            drawShape(currentShape, currentX, currentY);
+    function moveBlockRight() {
+        const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+        const canMoveRight = cells.every(cell => {
+            const left = parseInt(cell.style.left);
+            return left < 225 && !grid.some(row => row[left / 25 + 1] && row[left / 25 + 1].classList.contains('fixed'));
+        });
+
+        if (canMoveRight) {
+            currentBlock.style.left = parseInt(currentBlock.style.left) + 25 + 'px';
         }
     }
 
-    // Начать игру при загрузке страницы
-    startGame();
+    // Функция для поворота фигуры
+    function rotateBlock() {
+        const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+        const matrix = Array.from({ length: 4 }, () => Array(4).fill(0));
+
+        cells.forEach(cell => {
+            const top = parseInt(cell.style.top) / 25;
+            const left = parseInt(cell.style.left) / 25;
+            matrix[top][left] = 1;
+        });
+
+        const rotatedMatrix = matrix[0].map((_, index) => matrix.map(row => row[index]));
+        rotatedMatrix.forEach(row => row.reverse());
+
+        cells.forEach((cell, index) => {
+            const row = Math.floor(index / 4);
+            const col = index % 4;
+            if (rotatedMatrix[row][col] === 1) {
+                cell.style.top = (row * 25) + 'px';
+                cell.style.left = (col * 25) + 'px';
+            }
+        });
+    }
+
+    // Функция для фиксации фигуры на игровом поле
+    function fixBlock() {
+        const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+        cells.forEach(cell => cell.classList.add('fixed'));
+        checkAndClearRows();
+        updateScoreAndLevel();
+        createNewBlock();
+    }
+
+    // Функция для проверки столкновений фигуры с другими элементами
+    function checkCollisions() {
+        const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+        const blockBottom = Math.max(...cells.map(cell => cell.getBoundingClientRect().bottom));
+        const gameBoardRect = gameBoard.getBoundingClientRect();
+
+        if (blockBottom >= gameBoardRect.bottom) {
+            fixBlock();
+            return true;
+        }
+
+        const canMoveDown = cells.every(cell => {
+            const top = parseInt(cell.style.top);
+            const left = parseInt(cell.style.left);
+            return top < 475 && !grid[top / 25 + 1][left / 25].classList.contains('fixed');
+        });
+
+        if (!canMoveDown) {
+            fixBlock();
+            return true;
+        }
+
+        return false;
+    }
+
+    // Функция для начала игры
+    function startGame() {
+        createNewBlock();
+        gameInterval = setInterval(moveBlockDown, 1000);
+    }
+
+    // Обработчик события для нажатия клавиш
+    document.addEventListener('keydown', event => {
+        switch (event.key) {
+            case 'ArrowLeft':
+                moveBlockLeft();
+                break;
+            case 'ArrowRight':
+                moveBlockRight();
+                break;
+            case 'ArrowDown':
+                moveBlockDown();
+                break;
+            case 'ArrowUp':
+                rotateBlock();
+                break;
+            default:
+                break;
+        }
+    });
+
+    // Обработчик события для кнопки "Start Game"
+    startButton.addEventListener('click', startGame);
+});
+
 </script>
 
 </body>
