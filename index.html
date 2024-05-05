@@ -177,42 +177,6 @@
         }
     }
 
-    // Функция для поворота фигуры по часовой стрелке на 90 градусов
-    function rotateShapeClockwise(shape) {
-        const rotatedShape = [];
-        for (let i = 0; i < shape[0].length; i++) {
-            const newRow = shape.map(row => row[i]).reverse();
-            rotatedShape.push(newRow);
-        }
-        return rotatedShape;
-    }
-
-    // Обработчик события нажатия клавиши
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'ArrowUp') {
-            const rotatedShape = rotateShapeClockwise(currentShape);
-            if (!checkCollision(rotatedShape, currentX, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentShape = rotatedShape;
-                drawShape(currentShape, currentX, currentY);
-            }
-        } else if (event.key === 'ArrowLeft') {
-            if (!checkCollision(currentShape, currentX - 1, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentX--;
-                drawShape(currentShape, currentX, currentY);
-            }
-        } else if (event.key === 'ArrowRight') {
-            if (!checkCollision(currentShape, currentX + 1, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentX++;
-                drawShape(currentShape, currentX, currentY);
-            }
-        } else if (event.key === 'ArrowDown') {
-            moveDownFaster();
-        }
-    });
-
     // Функция для ускоренного падения фигуры
     function moveDownFaster() {
         clearInterval(interval); // Останавливаем текущий интервал
@@ -289,7 +253,26 @@
 
     // Начать игру при загрузке страницы
     startGame();
+
+    // Обработчики событий для управления фигурой
+    document.addEventListener('keydown', event => {
+        if (event.key === 'ArrowLeft') {
+            // Движение влево
+        } else if (event.key === 'ArrowRight') {
+            // Движение вправо
+        } else if (event.key === 'ArrowDown') {
+            moveDownFaster(); // Ускоренное падение
+        } else if (event.key === 'ArrowUp') {
+            // Поворот по часовой стрелке
+        }
+    });
+
+    document.addEventListener('keyup', event => {
+        if (event.key === 'ArrowDown') {
+            resetDropInterval(); // Возврат обычного интервала падения
+        }
+    });
 </script>
-    
+
 </body>
 </html>
