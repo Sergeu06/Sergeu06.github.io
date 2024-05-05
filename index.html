@@ -6,89 +6,51 @@
     <title>Tetris</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #000;
+            background-color: #000; /* черный фон */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* чтобы контент не выходил за пределы экрана */
         }
-        .container {
-            position: relative;
-            width: 90vw;
-            height: 90vh;
-            max-width: 400px;
-            max-height: 400px;
-            background-color: #fff;
-            border: 2px solid #000; /* добавляем рамку */
+        .game-container {
+            display: flex;
+            width: 90vw; /* ширина контейнера 90% от ширины экрана */
+            height: 90vh; /* высота контейнера 90% от высоты экрана */
+            max-width: 800px; /* максимальная ширина контейнера */
+            max-height: 600px; /* максимальная высота контейнера */
+            border: 1px solid #fff; /* рамка контейнера */
+        }
+        .game-board {
+            flex: 0 0 75%; /* ширина игрового поля 75% от ширины контейнера */
+            border-right: 1px solid #fff; /* правая рамка игрового поля */
+        }
+        .info {
+            flex: 1; /* оставшееся пространство занимает информация (25% от ширины контейнера) */
+            padding: 10px;
         }
         canvas {
-            border: 1px solid #000;
-            background-color: #fff;
-            width: 100%;
-            height: 100%;
+            border: 1px solid #fff;
+            background-color: #000; /* черный фон холста */
+            width: 100%; /* ширина холста равна ширине родительского блока */
+            height: 100%; /* высота холста равна высоте родительского блока */
             display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <canvas id="tetris"></canvas>
+    <div class="game-container">
+        <div class="game-board">
+            <canvas id="tetris"></canvas>
+        </div>
+        <div class="info">
+            <h2>Счет:</h2>
+            <p id="score">0</p>
+            <h2>Следующая фигура:</h2>
+            <canvas id="next-block" width="100" height="100"></canvas>
+        </div>
     </div>
-
-    <script>
-        const canvas = document.getElementById("tetris");
-        const context = canvas.getContext("2d");
-
-        context.scale(20, 20);
-
-        const matrix = [
-            [0, 0, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ];
-
-        function draw() {
-            context.fillStyle = "#000";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            drawMatrix(player.matrix, player.pos);
-        }
-
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        context.fillStyle = "red";
-                        context.fillRect(x + offset.x,
-                                         y + offset.y,
-                                         1, 1);
-                    }
-                });
-            });
-        }
-
-        const player = {
-            pos: { x: 5, y: 5 },
-            matrix: matrix
-        };
-
-        let lastTime = 0;
-        const dropInterval = 1000;
-
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
-
-            draw();
-            player.pos.y += 1;
-            requestAnimationFrame(update);
-        }
-
-        update();
-    </script>
 </body>
 </html>
