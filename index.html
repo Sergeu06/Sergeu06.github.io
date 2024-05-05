@@ -97,7 +97,6 @@
             <canvas id="next-block" width="100" height="100"></canvas>
         </div>
     </div>
-    <button class="start-button" onclick="startGame()">Начать игру</button>
 
 <script>
     const rows = 20;
@@ -109,6 +108,7 @@
     let currentY;
     let dropInterval = 1000; // Интервал падения фигуры по умолчанию
     let dropIntervalId;
+    let score = 0;
 
     // Функция для создания случайной фигуры
     function createRandomShape() {
@@ -173,20 +173,21 @@
         } else {
             mergeShape(currentShape, currentX, currentY);
             clearInterval(interval); // Останавливаем интервал
+            clearLines(); // Очищаем заполненные линии
             startGame(); // Запускаем новую фигуру
         }
     }
 
-    // Функция для ускоренного падения фигуры
+    // Функция для ускоренного падения
     function moveDownFaster() {
-        clearInterval(interval); // Останавливаем текущий интервал
-        dropIntervalId = setInterval(moveDown, 50); // Устанавливаем новый интервал для быстрого падения
+        clearInterval(interval);
+        interval = setInterval(moveDown, 50);
     }
 
-    // Функция для возврата обычного интервала падения фигуры
+    // Функция для возврата обычного интервала падения
     function resetDropInterval() {
-        clearInterval(dropIntervalId); // Останавливаем быстрое падение
-        interval = setInterval(moveDown, dropInterval); // Возвращаем обычный интервал падения
+        clearInterval(interval);
+        interval = setInterval(moveDown, dropInterval);
     }
 
     // Функция для проверки столкновения фигуры с другими фигурами или краем поля
@@ -251,15 +252,63 @@
         }
     }
 
+    // Функция для очистки заполненных рядов
+    function clearLines() {
+        for (let i = rows - 1; i >= 0; i--) {
+            let isFull = true;
+            for (let j = 0; j < cols; j++) {
+                if (gameBoard[i][j] === null) {
+                    isFull = false;
+                    break;
+                }
+            }
+            if (isFull) {
+                // Увеличиваем счет
+                score += 10;
+                document.getElementById('score').innerText = score;
+                // Удаляем текущий ряд
+                gameBoard.splice(i, 1);
+                // Добавляем новый ряд сверху
+                gameBoard.unshift(new Array(cols).fill(null));
+                // Обновляем отображение поля
+                updateBoard();
+                i++; // Пересчитываем этот же ряд снова
+            }
+        }
+    }
+
+    // Функция для обновления отображения поля
+    function updateBoard() {
+        const board = document.getElementById('game-board');
+        board.innerHTML = ''; // Очищаем игровое поле
+        gameBoard.forEach((row, i) => {
+            row.forEach((cell, j) => {
+                if (cell !== null) {
+                    cell.style.gridColumn = j + 1;
+                    cell.style.gridRow = i + 1;
+                    board.appendChild(cell);
+                }
+            });
+        });
+    }
+
     // Начать игру при загрузке страницы
     startGame();
 
     // Обработчики событий для управления фигурой
     document.addEventListener('keydown', event => {
         if (event.key === 'ArrowLeft') {
-            // Движение влево
+            if (!checkCollision(currentShape, currentX - 1, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentX--;
+                drawShape(currentShape, currentX, currentY);
+            }
         } else if (event.key === 'ArrowRight') {
-            // Движение вправо
+            if (!checkCollision(currentShape, currentX + 1, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentX++;
+                drawShape(currentShape, currentX, currentY);
+            }
         } else if (event.key === 'ArrowDown') {
             moveDownFaster(); // Ускоренное падение
         } else if (event.key === 'ArrowUp') {
