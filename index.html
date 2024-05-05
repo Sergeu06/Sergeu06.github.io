@@ -9,26 +9,27 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #000; /* Черный фон */
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* чтобы контент не выходил за пределы экрана */
+            overflow: hidden;
         }
         .container {
             position: relative;
-            width: 90vw; /* Ширина контейнера равна 90% ширины экрана */
-            height: 90vw; /* Высота контейнера равна 90% ширины экрана (для квадратного контейнера) */
-            max-width: 400px; /* Максимальная ширина контейнера */
-            max-height: 400px; /* Максимальная высота контейнера */
-            background-color: #fff; /* Белый фон контейнера */
+            width: 90vw;
+            height: 90vh;
+            max-width: 400px;
+            max-height: 400px;
+            background-color: #fff;
+            border: 2px solid #000; /* добавляем рамку */
         }
         canvas {
             border: 1px solid #000;
-            background-color: #fff; /* Белый фон холста */
-            width: 100%; /* Ширина холста равна 100% ширины контейнера */
-            height: 100%; /* Высота холста равна 100% высоты контейнера */
+            background-color: #fff;
+            width: 100%;
+            height: 100%;
             display: block;
         }
     </style>
