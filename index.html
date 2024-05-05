@@ -154,8 +154,8 @@
                         cell.classList.add('cell');
                         cell.style.gridColumn = x + j + 1;
                         cell.style.gridRow = y + i + 1;
-                        gameBoard.appendChild(cell);
-                        gameBoard[y + i][x + j] = true;
+                        gameBoard[y + i][x + j] = cell;
+                        document.getElementById('game-board').appendChild(cell);
                     }
                 }
             }
@@ -165,6 +165,10 @@
             for (let i = 0; i < shape.length; i++) {
                 for (let j = 0; j < shape[i].length; j++) {
                     if (shape[i][j]) {
+                        const cell = gameBoard[y + i][x + j];
+                        if (cell) {
+                            cell.remove();
+                        }
                         gameBoard[y + i][x + j] = null;
                     }
                 }
@@ -193,7 +197,7 @@
             for (let i = 0; i < shape.length; i++) {
                 for (let j = 0; j < shape[i].length; j++) {
                     if (shape[i][j]) {
-                        if (y + i >= rows || x + j < 0 || x + j >= cols || (gameBoard[y + i] && gameBoard[y + i][x + j])) {
+                        if (y + i >= rows || x + j < 0 || x + j >= cols || gameBoard[y + i][x + j]) {
                             return true;
                         }
                     }
