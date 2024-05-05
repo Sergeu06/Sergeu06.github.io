@@ -99,17 +99,17 @@
     </div>
     <button class="start-button" onclick="startGame()">Начать игру</button>
 
-    <script>
-        const rows = 20;
-        const cols = 10;
-        let score = 0;
-        let currentShape;
-        let nextShape;
-        let interval;
-        let gameBoard = [];
-        let currentX;
-        let currentY;
+<script>
+    const rows = 20;
+    const cols = 10;
+    let currentShape;
+    let interval;
+    let gameBoard = [];
+    let currentX;
+    let currentY;
 
+    // Функция для создания случайной фигуры
+    function createRandomShape() {
         const shapes = [
             [
                 [1, 1, 1, 1] // I-фигура
@@ -140,173 +140,106 @@
             ]
         ];
 
-        function rotateShape() {
-            const newShape = rotateClockwise(currentShape);
-            if (!checkCollision(newShape, currentX, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentShape = newShape;
-                drawShape(currentShape, currentX, currentY);
+        // Случайным образом выбираем одну из фигур
+        const randomIndex = Math.floor(Math.random() * shapes.length);
+        return shapes[randomIndex];
+    }
+
+    // Функция для начала игры
+    function startGame() {
+        currentShape = createRandomShape();
+        clearInterval(interval);
+        gameBoard = [];
+        for (let i = 0; i < rows; i++) {
+            gameBoard[i] = [];
+            for (let j = 0; j < cols; j++) {
+                gameBoard[i][j] = null;
             }
         }
+        interval = setInterval(moveDown, 1000);
+        currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
+        currentY = 0;
+        drawShape(currentShape, currentX, currentY);
+    }
 
-        function rotateClockwise(shape) {
-            const size = shape.length;
-            const newShape = new Array(size).fill(0).map(() => new Array(size).fill(0));
-            for (let i = 0; i < size; i++) {
-                for (let j = 0; j < size; j++) {
-                    newShape[i][j] = shape[size - j - 1][i];
-                }
-            }
-            return newShape;
+    // Функция для движения фигуры вниз
+    function moveDown() {
+        if (!checkCollision(currentShape, currentX, currentY + 1)) {
+            clearShape(currentShape, currentX, currentY);
+            currentY++;
+            drawShape(currentShape, currentX, currentY);
+        } else {
+            mergeShape(currentShape, currentX, currentY);
+            clearInterval(interval); // Останавливаем интервал
+            startGame(); // Запускаем новую фигуру
         }
+    }
 
-        function drawShape(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        const cell = document.createElement('div');
-                        cell.classList.add('cell');
-                        cell.style.gridColumn = x + j + 1;
-                        cell.style.gridRow = y + i + 1;
-                        gameBoard[y + i][x + j] = cell;
-                        document.getElementById('game-board').appendChild(cell);
+    // Функция для проверки столкновения фигуры с другими фигурами или краем поля
+    function checkCollision(shape, x, y) {
+        for (let i = 0; i < shape.length; i++) {
+            for (let j = 0; j < shape[i].length; j++) {
+                if (shape[i][j]) {
+                    // Проверка столкновения с краем поля
+                    if (y + i >= rows || x + j < 0 || x + j >= cols) {
+                        return true;
+                    }
+                    // Проверка столкновения с другой фигурой
+                    if (gameBoard[y + i][x + j] !== null) {
+                        return true;
                     }
                 }
             }
         }
+        return false;
+    }
 
-        function clearShape(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        const cell = gameBoard[y + i][x + j];
-                        if (cell) {
-                            cell.remove();
-                        }
-                        gameBoard[y + i][x + j] = null;
-                    }
+    // Функция для отрисовки фигуры на игровом поле
+    function drawShape(shape, x, y) {
+        for (let i = 0; i < shape.length; i++) {
+            for (let j = 0; j < shape[i].length; j++) {
+                if (shape[i][j]) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.gridColumn = x + j + 1;
+                    cell.style.gridRow = y + i + 1;
+                    document.getElementById('game-board').appendChild(cell);
                 }
             }
         }
+    }
 
-        function createShape() {
-            const index = Math.floor(Math.random() * shapes.length);
-            return shapes[index];
-        }
-
-        function startGame() {
-            score = 0;
-            document.getElementById('score').innerText = score;
-            currentShape = createShape();
-            nextShape = createShape();
-            clearInterval(interval);
-            gameBoard = [];
-            for (let i = 0; i < rows; i++) {
-                gameBoard[i] = [];
-                for (let j = 0; j < cols; j++) {
-                    gameBoard[i][j] = null;
-                }
-            }
-            interval = setInterval(moveDown, 1000);
-            document.querySelector('.start-button').style.display = 'none';
-            currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
-            currentY = 1; // Здесь установим начальное значение currentY равным 1
-            if (checkCollision(currentShape, currentX, currentY)) {
-                clearInterval(interval);
-                alert('Игра окончена! Попробуйте снова.');
-                document.querySelector('.start-button').style.display = 'block';
-            } else {
-                drawShape(currentShape, currentX, currentY);
-            }
-        }
-
-        function moveDown() {
-            if (!checkCollision(currentShape, currentX, currentY + 1)) {
-                clearShape(currentShape, currentX, currentY);
-                currentY++;
-                drawShape(currentShape, currentX, currentY);
-            } else {
-                mergeShape(currentShape, currentX, currentY);
-                clearRows();
-                currentShape = nextShape;
-                nextShape = createShape();
-                currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
-                currentY = 1;
-                if (checkCollision(currentShape, currentX, currentY)) {
-                    clearInterval(interval);
-                    alert('Игра окончена! Попробуйте снова.');
-                    document.querySelector('.start-button').style.display = 'block';
-                } else {
-                    drawShape(currentShape, currentX, currentY);
-                }
-            }
-        }
-
-        function checkCollision(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        if (y + i >= rows || x + j < 0 || x + j >= cols || (gameBoard[y + i] && gameBoard[y + i][x + j])) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        function mergeShape(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        const cell = document.createElement('div');
-                        cell.classList.add('cell');
-                        cell.style.gridColumn = x + j + 1;
-                        cell.style.gridRow = y + i + 1;
-                        gameBoard[y + i][x + j] = cell;
-                        document.getElementById('game-board').appendChild(cell);
-                    }
-                }
-            }
-        }
-
-        function clearRows() {
-            for (let i = rows - 1; i >= 0; i--) {
-                if (gameBoard[i].every(cell => cell !== null)) {
-                    gameBoard.splice(i, 1);
-                    const newRow = new Array(cols).fill(null);
-                    gameBoard.unshift(newRow);
-                    score += 100;
-                    document.getElementById('score').innerText = score;
-                    i++;
-                }
-            }
-        }
-
-        document.addEventListener('keydown', function (event) {
-            switch (event.key) {
-                case 'ArrowDown':
-                    moveDown();
-                    break;
-                case 'ArrowLeft':
-                    if (!checkCollision(currentShape, currentX - 1, currentY)) {
-                        clearShape(currentShape, currentX, currentY);
-                        currentX--;
-                        drawShape(currentShape, currentX, currentY);
-                    }
-                    break;
-                case 'ArrowRight':
-                    if (!checkCollision(currentShape, currentX + 1, currentY)) {
-                        clearShape(currentShape, currentX, currentY);
-                        currentX++;
-                        drawShape(currentShape, currentX, currentY);
-                    }
-                    break;
-                case 'ArrowUp':
-                    rotateShape();
-                    break;
+    // Функция для очистки фигуры с игрового поля
+    function clearShape(shape, x, y) {
+        const cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            if (parseInt(cell.style.gridRow) > y && parseInt(cell.style.gridColumn) > x &&
+                parseInt(cell.style.gridColumn) <= x + shape[0].length &&
+                parseInt(cell.style.gridRow) <= y + shape.length) {
+                cell.remove();
             }
         });
-    </script>
+    }
+
+    // Функция для объединения фигуры с игровым полем
+    function mergeShape(shape, x, y) {
+        for (let i = 0; i < shape.length; i++) {
+            for (let j = 0; j < shape[i].length; j++) {
+                if (shape[i][j]) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.gridColumn = x + j + 1;
+                    cell.style.gridRow = y + i + 1;
+                    document.getElementById('game-board').appendChild(cell);
+                    gameBoard[y + i][x + j] = cell;
+                }
+            }
+        }
+    }
+
+    // Начать игру при загрузке страницы
+    startGame();
+</script>
+
 </body>
 </html>
