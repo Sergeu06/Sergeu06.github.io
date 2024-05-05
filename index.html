@@ -87,26 +87,69 @@
         const rows = 20;
         const cols = 10;
         let score = 0;
+        let currentShape;
+        let interval;
 
-        // Создание игрового поля
-        const gameBoard = document.getElementById('game-board');
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                gameBoard.appendChild(cell);
+        const shapes = [
+            [
+                [1, 1, 1, 1] // I-фигура
+            ],
+            [
+                [1, 1, 1],
+                [0, 1, 0] // T-фигура
+            ],
+            [
+                [1, 1, 1],
+                [1, 0, 0] // L-фигура
+            ],
+            [
+                [1, 1, 1],
+                [0, 0, 1] // J-фигура
+            ],
+            [
+                [1, 1],
+                [1, 1] // O-фигура
+            ],
+            [
+                [0, 1, 1],
+                [1, 1, 0] // Z-фигура
+            ],
+            [
+                [1, 1, 0],
+                [0, 1, 1] // S-фигура
+            ]
+        ];
+
+        function createShape() {
+            const index = Math.floor(Math.random() * shapes.length);
+            return shapes[index];
+        }
+
+        function draw() {
+            for (let i = 0; i < currentShape.length; i++) {
+                for (let j = 0; j < currentShape[i].length; j++) {
+                    if (currentShape[i][j]) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        cell.style.gridColumn = j + 1;
+                        cell.style.gridRow = i + 1;
+                        gameBoard.appendChild(cell);
+                    }
+                }
             }
         }
 
-        // Перемещение фигуры вниз
+        function startGame() {
+            currentShape = createShape();
+            draw();
+            interval = setInterval(moveDown, 1000);
+        }
+
         function moveDown() {
             // Реализация логики перемещения фигуры вниз
         }
 
-        // Запуск игры
-        function startGame() {
-            // Реализация логики начала игры
-        }
+        startGame();
     </script>
 </body>
 </html>
