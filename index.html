@@ -300,9 +300,6 @@
             case 'ArrowDown':
                 moveDownFaster();
                 break;
-            case 'ArrowUp':
-                rotateShape();
-                break;
         }
     });
 
@@ -320,23 +317,6 @@
         if (!checkCollision(currentShape, currentX + 1, currentY)) {
             clearShape(currentShape, currentX, currentY);
             currentX++;
-            drawShape(currentShape, currentX, currentY);
-        }
-    }
-
-    // Функция для поворота фигуры
-    function rotateShape() {
-        const newShape = [];
-        for (let i = 0; i < currentShape[0].length; i++) {
-            const newRow = [];
-            for (let j = currentShape.length - 1; j >= 0; j--) {
-                newRow.push(currentShape[j][i]);
-            }
-            newShape.push(newRow);
-        }
-        if (!checkCollision(newShape, currentX, currentY)) {
-            clearShape(currentShape, currentX, currentY);
-            currentShape = newShape;
             drawShape(currentShape, currentX, currentY);
         }
     }
