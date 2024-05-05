@@ -138,50 +138,16 @@
             ]
         ];
 
-        const rotatedShapes = [
-            [
-                [1],
-                [1],
-                [1],
-                [1]
-            ],
-            [
-                [0, 1],
-                [1, 1],
-                [0, 1]
-            ],
-            [
-                [1, 0, 0],
-                [1, 1, 1]
-            ],
-            [
-                [0, 1],
-                [0, 1],
-                [1, 1]
-            ],
-            [
-                [1, 1],
-                [1, 1]
-            ],
-            [
-                [1, 0],
-                [1, 1],
-                [0, 1]
-            ],
-            [
-                [0, 1],
-                [1, 1],
-                [1, 0]
-            ]
-        ];
-
-        let currentX = Math.floor(cols / 2);
-        let currentY = 0;
-        let currentRotationIndex = 0;
-
-        function createShape() {
-            const index = Math.floor(Math.random() * shapes.length);
-            return shapes[index];
+        function rotateShape(shape) {
+            const newShape = [];
+            const shapeSize = shape.length;
+            for (let i = 0; i < shapeSize; i++) {
+                newShape.push([]);
+                for (let j = 0; j < shapeSize; j++) {
+                    newShape[i].push(shape[shapeSize - j - 1][i]);
+                }
+            }
+            return newShape;
         }
 
         function drawShape(shape, x, y) {
@@ -357,15 +323,18 @@
             drawShape(currentShape, currentX, currentY);
         }
 
-       function rotateShape() {
-    const nextRotationIndex = (currentRotationIndex + 1) % rotatedShapes[shapes.indexOf(currentShape)].length;
-    const newShape = rotatedShapes[shapes.indexOf(currentShape)][nextRotationIndex];
-    if (!checkCollision(newShape, currentX, currentY)) {
-        currentShape = newShape;
-        currentRotationIndex = nextRotationIndex;
-        drawShape(currentShape, currentX, currentY);
-    }
-}
+        function rotateShape() {
+            const newShape = rotateShape(currentShape);
+            if (!checkCollision(newShape, currentX, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentShape = newShape;
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+
+        function createShape() {
+            const index = Math.floor(Math.random() * shapes.length);
+            return shapes[index];
         }
     </script>
 </body>
