@@ -28,6 +28,13 @@
         .game-board {
             flex: 0 0 75%; /* ширина игрового поля 75% от ширины контейнера */
             border-right: 1px solid #fff; /* правая рамка игрового поля */
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 10 столбцов */
+            grid-template-rows: repeat(20, 1fr); /* 20 строк */
+        }
+        .cell {
+            border: 1px solid #333; /* рамка ячейки */
+            background-color: #222; /* цвет ячейки */
         }
         .info {
             flex: 1; /* оставшееся пространство занимает информация */
@@ -65,8 +72,8 @@
 </head>
 <body>
     <div class="game-container">
-        <div class="game-board">
-            <canvas id="tetris"></canvas>
+        <div class="game-board" id="game-board">
+            <!-- Поле для игры -->
         </div>
         <div class="info">
             <h2>Счет:</h2>
@@ -75,5 +82,31 @@
             <canvas id="next-block" width="100" height="100"></canvas>
         </div>
     </div>
+
+    <script>
+        const rows = 20;
+        const cols = 10;
+        let score = 0;
+
+        // Создание игрового поля
+        const gameBoard = document.getElementById('game-board');
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                gameBoard.appendChild(cell);
+            }
+        }
+
+        // Перемещение фигуры вниз
+        function moveDown() {
+            // Реализация логики перемещения фигуры вниз
+        }
+
+        // Запуск игры
+        function startGame() {
+            // Реализация логики начала игры
+        }
+    </script>
 </body>
 </html>
