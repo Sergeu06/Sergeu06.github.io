@@ -357,15 +357,15 @@
             drawShape(currentShape, currentX, currentY);
         }
 
-        function rotateShape() {
-            const nextRotationIndex = (currentRotationIndex + 1) % rotatedShapes[shapes.indexOf(currentShape)].length;
-            const newShape = rotatedShapes[shapes.indexOf(currentShape)][nextRotationIndex];
-            if (!checkCollision(newShape, currentX, currentY)) {
-                clearShape(currentShape, currentX, currentY);
-                currentShape = newShape;
-                currentRotationIndex = nextRotationIndex;
-                drawShape(currentShape, currentX, currentY);
-            }
+       function rotateShape() {
+    const nextRotationIndex = (currentRotationIndex + 1) % rotatedShapes[shapes.indexOf(currentShape)].length;
+    const newShape = rotatedShapes[shapes.indexOf(currentShape)][nextRotationIndex];
+    if (!checkCollision(newShape, currentX, currentY)) {
+        currentShape = newShape;
+        currentRotationIndex = nextRotationIndex;
+        drawShape(currentShape, currentX, currentY);
+    }
+}
         }
     </script>
 </body>
