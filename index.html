@@ -138,13 +138,21 @@
             ]
         ];
 
-        function rotateShape(shape) {
-            const newShape = [];
-            const shapeSize = shape.length;
-            for (let i = 0; i < shapeSize; i++) {
-                newShape.push([]);
-                for (let j = 0; j < shapeSize; j++) {
-                    newShape[i].push(shape[shapeSize - j - 1][i]);
+        function rotateShape() {
+            const newShape = rotateClockwise(currentShape);
+            if (!checkCollision(newShape, currentX, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentShape = newShape;
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+
+        function rotateClockwise(shape) {
+            const size = shape.length;
+            const newShape = new Array(size).fill(0).map(() => new Array(size).fill(0));
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    newShape[i][j] = shape[size - j - 1][i];
                 }
             }
             return newShape;
@@ -179,97 +187,9 @@
             }
         }
 
-        function moveDown() {
-            clearShape(currentShape, currentX, currentY);
-            currentY++;
-            if (checkCollision(currentShape, currentX, currentY)) {
-                currentY--;
-                drawShape(currentShape, currentX, currentY);
-                lockShape(currentShape, currentX, currentY);
-                currentShape = nextShape;
-                nextShape = createShape();
-                drawNextShape();
-                currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
-                currentY = 0;
-                drawShape(currentShape, currentX, currentY);
-            } else {
-                drawShape(currentShape, currentX, currentY);
-            }
-        }
-
-        function checkCollision(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        if (y + i >= rows || x + j < 0 || x + j >= cols || gameBoard[y + i][x + j]) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        function lockShape(shape, x, y) {
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        gameBoard[y + i][x + j] = true;
-                    }
-                }
-            }
-            checkRows();
-        }
-
-        function checkRows() {
-            let rowCount = 0;
-            for (let i = rows - 1; i >= 0; i--) {
-                let isRowFull = true;
-                for (let j = 0; j < cols; j++) {
-                    if (!gameBoard[i][j]) {
-                        isRowFull = false;
-                        break;
-                    }
-                }
-                if (isRowFull) {
-                    rowCount++;
-                    removeRow(i);
-                    i++;
-                }
-            }
-            updateScore(rowCount);
-        }
-
-        function removeRow(row) {
-            for (let i = row; i > 0; i--) {
-                for (let j = 0; j < cols; j++) {
-                    gameBoard[i][j] = gameBoard[i - 1][j];
-                }
-            }
-            for (let j = 0; j < cols; j++) {
-                gameBoard[0][j] = null;
-            }
-        }
-
-        function updateScore(rows) {
-            score += rows * 100;
-            document.getElementById('score').innerText = score;
-        }
-
-        function drawNextShape() {
-            const nextCanvas = document.getElementById('next-block');
-            const ctx = nextCanvas.getContext('2d');
-            ctx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
-            const blockSize = nextCanvas.width / 4;
-            const shape = nextShape[0];
-            ctx.fillStyle = '#fff';
-            for (let i = 0; i < shape.length; i++) {
-                for (let j = 0; j < shape[i].length; j++) {
-                    if (shape[i][j]) {
-                        ctx.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
-                    }
-                }
-            }
+        function createShape() {
+            const index = Math.floor(Math.random() * shapes.length);
+            return shapes[index];
         }
 
         function startGame() {
@@ -277,7 +197,6 @@
             document.getElementById('score').innerText = score;
             currentShape = createShape();
             nextShape = createShape();
-            drawNextShape();
             clearInterval(interval);
             gameBoard = [];
             for (let i = 0; i < rows; i++) {
@@ -294,47 +213,106 @@
         }
 
         document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowLeft') {
+            if (event.keyCode === 37) {
                 moveLeft();
-            } else if (event.key === 'ArrowRight') {
+            } else if (event.keyCode === 39) {
                 moveRight();
-            } else if (event.key === 'ArrowDown') {
-                moveDown();
-            } else if (event.key === 'ArrowUp') {
+            } else if (event.keyCode === 38) {
                 rotateShape();
+            } else if (event.keyCode === 40) {
+                moveDown();
             }
         });
 
-        function moveLeft() {
-            clearShape(currentShape, currentX, currentY);
-            currentX--;
-            if (checkCollision(currentShape, currentX, currentY)) {
-                currentX++;
-            }
-            drawShape(currentShape, currentX, currentY);
-        }
-
-        function moveRight() {
-            clearShape(currentShape, currentX, currentY);
-            currentX++;
-            if (checkCollision(currentShape, currentX, currentY)) {
-                currentX--;
-            }
-            drawShape(currentShape, currentX, currentY);
-        }
-
-        function rotateShape() {
-            const newShape = rotateShape(currentShape);
-            if (!checkCollision(newShape, currentX, currentY)) {
+        function moveDown() {
+            if (!checkCollision(currentShape, currentX, currentY + 1)) {
                 clearShape(currentShape, currentX, currentY);
-                currentShape = newShape;
+                currentY++;
+                drawShape(currentShape, currentX, currentY);
+            } else {
+                freezeShape();
+            }
+        }
+
+        function moveLeft() {
+            if (!checkCollision(currentShape, currentX - 1, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentX--;
                 drawShape(currentShape, currentX, currentY);
             }
         }
 
-        function createShape() {
-            const index = Math.floor(Math.random() * shapes.length);
-            return shapes[index];
+        function moveRight() {
+            if (!checkCollision(currentShape, currentX + 1, currentY)) {
+                clearShape(currentShape, currentX, currentY);
+                currentX++;
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+
+        function freezeShape() {
+            // Замораживаем текущую фигуру
+            for (let i = 0; i < currentShape.length; i++) {
+                for (let j = 0; j < currentShape[i].length; j++) {
+                    if (currentShape[i][j]) {
+                        const cell = gameBoard[currentY + i][currentX + j];
+                        cell.style.backgroundColor = '#333';
+                    }
+                }
+            }
+
+            // Проверяем, есть ли полные ряды
+            let rowsToRemove = [];
+            for (let i = 0; i < rows; i++) {
+                let rowIsFull = true;
+                for (let j = 0; j < cols; j++) {
+                    if (!gameBoard[i][j]) {
+                        rowIsFull = false;
+                        break;
+                    }
+                }
+                if (rowIsFull) {
+                    rowsToRemove.push(i);
+                }
+            }
+
+            // Удаляем полные ряды
+            for (let i = rowsToRemove.length - 1; i >= 0; i--) {
+                const rowIndex = rowsToRemove[i];
+                gameBoard.splice(rowIndex, 1);
+                gameBoard.unshift(new Array(cols).fill(null));
+                score += 100;
+            }
+
+            document.getElementById('score').innerText = score;
+
+            // Создаем новую фигуру
+            currentShape = nextShape;
+            nextShape = createShape();
+            currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
+            currentY = 0;
+
+            // Проверяем, возможно ли разместить новую фигуру
+            if (checkCollision(currentShape, currentX, currentY)) {
+                clearInterval(interval);
+                alert('Игра окончена! Ваш счет: ' + score);
+                document.querySelector('.start-button').style.display = 'block';
+            } else {
+                drawShape(currentShape, currentX, currentY);
+            }
+        }
+
+        function checkCollision(shape, x, y) {
+            for (let i = 0; i < shape.length; i++) {
+                for (let j = 0; j < shape[i].length; j++) {
+                    if (shape[i][j]) {
+                        if (y + i >= rows || x + j < 0 || x + j >= cols || (gameBoard[y + i] && gameBoard[y + i][x + j])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
     </script>
 </body>
