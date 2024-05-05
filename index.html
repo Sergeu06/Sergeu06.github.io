@@ -151,13 +151,7 @@
     function startGame() {
         currentShape = createRandomShape();
         clearInterval(interval);
-        gameBoard = [];
-        for (let i = 0; i < rows; i++) {
-            gameBoard[i] = [];
-            for (let j = 0; j < cols; j++) {
-                gameBoard[i][j] = null;
-            }
-        }
+        gameBoard = Array.from({ length: rows }, () => Array(cols).fill(null));
         interval = setInterval(moveDown, dropInterval);
         currentX = Math.floor(cols / 2) - Math.floor(currentShape[0].length / 2);
         currentY = 0;
@@ -190,20 +184,23 @@
     }
 
     // Функция для проверки столкновения фигуры с другими фигурами или краем поля
-    function checkCollision(shape, x, y) {
-        for (let i = 0; i < shape.length; i++) {
-            for (let j = 0; j < shape[i].length; j++) {
-                if (shape[i][j]) {
-                    const row = y + i;
-                    const col = x + j;
-                    if (row >= rows || col < 0 || col >= cols || (row >= 0 && row < rows && gameBoard[row][col] !== null)) {
-                        return true;
-                    }
+function checkCollision(shape, x, y) {
+    for (let i = 0; i < shape.length; i++) {
+        for (let j = 0; j < shape[i].length; j++) {
+            if (shape[i][j]) {
+                // Проверка столкновения с краем поля
+                if (y + i >= rows || x + j < 0 || x + j >= cols) {
+                    return true;
+                }
+                // Проверка столкновения с другой фигурой
+                if (gameBoard[y + i][x + j] !== null) {
+                    return true;
                 }
             }
         }
-        return false;
     }
+    return false;
+}
 
     // Функция для отрисовки фигуры на игровом поле
     function drawShape(shape, x, y) {
@@ -237,11 +234,12 @@
         for (let i = 0; i < shape.length; i++) {
             for (let j = 0; j < shape[i].length; j++) {
                 if (shape[i][j]) {
-                    const row = y + i;
-                    const col = x + j;
-                    if (row >= 0 && row < rows && col >= 0 && col < cols) {
-                        gameBoard[row][col] = 1;
-                    }
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.style.gridColumn = x + j + 1;
+                    cell.style.gridRow = y + i + 1;
+                    document.getElementById('game-board').appendChild(cell);
+                    gameBoard[y + i][x + j] = cell;
                 }
             }
         }
