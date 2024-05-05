@@ -3,78 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris</title>
+    <title>Telegram Mini App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
         }
-        canvas {
-            border: 1px solid #000;
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
             background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <canvas id="tetris" width="720" height="1080"></canvas>
+    <div class="container">
+        <h1>Привет, Telegram!</h1>
+        <p>Это мое мини-приложение для Telegram.</p>
+        <button onclick="sendMessage()">Отправить сообщение</button>
+    </div>
 
     <script>
-        const canvas = document.getElementById("tetris");
-        const context = canvas.getContext("2d");
-
-        context.scale(20, 20);
-
-        const matrix = [
-            [0, 0, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ];
-
-        function draw() {
-            context.fillStyle = "#000";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            drawMatrix(player.matrix, player.pos);
+        function sendMessage() {
+            // Ваш код для отправки сообщения через Telegram API
+            alert("Сообщение отправлено!");
         }
-
-        function drawMatrix(matrix, offset) {
-            matrix.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        context.fillStyle = "red";
-                        context.fillRect(x + offset.x,
-                                         y + offset.y,
-                                         1, 1);
-                    }
-                });
-            });
-        }
-
-        const player = {
-            pos: { x: 5, y: 5 },
-            matrix: matrix
-        };
-
-        let lastTime = 0;
-        const dropInterval = 1000;
-
-        function update(time = 0) {
-            const deltaTime = time - lastTime;
-            lastTime = time;
-
-            draw();
-            player.pos.y += 1;
-            requestAnimationFrame(update);
-        }
-
-        update();
     </script>
 </body>
 </html>
