@@ -31,12 +31,17 @@
         .info {
             flex: 1; /* оставшееся пространство занимает информация (25% от ширины контейнера) */
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         canvas {
             border: 1px solid #fff;
             background-color: #000; /* черный фон холста */
             width: 100%; /* ширина холста равна ширине родительского блока */
-            height: 100%; /* высота холста равна высоте родительского блока */
+            height: auto; /* автоматическое вычисление высоты */
+            max-height: 50%; /* максимальная высота холста (50% от родительского блока) */
             display: block;
         }
     </style>
