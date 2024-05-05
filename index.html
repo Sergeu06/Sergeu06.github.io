@@ -101,6 +101,10 @@
         </div>
         <button class="start-button" onclick="startGame()">Начать игру</button>
     </div>
+
+    <script>
+        // JavaScript код будет здесь
+    </script>
     <script>
         const rows = 20;
         const cols = 10;
@@ -157,7 +161,7 @@
             }
         }
 
-       function startGame() {
+        function startGame() {
             currentShape = createShape();
             draw();
             interval = setInterval(moveDown, 1000);
@@ -167,8 +171,6 @@
         function moveDown() {
             // Реализация логики перемещения фигуры вниз
         }
-
-        startGame();
     </script>
 </body>
 </html>
