@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <style>
-        body {
+             body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -16,16 +16,37 @@
             height: 100vh;
             overflow: hidden; /* чтобы контент не выходил за пределы экрана */
         }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+        }
+        .info {
+            padding: 20px;
+            border-right: 1px solid #ccc;
+        }
         canvas {
             border: 1px solid #000;
             background-color: #fff;
-            width: 100vw; /* Ширина холста равна ширине экрана */
+            width: calc(100vw - 200px); /* Ширина холста равна ширине экрана за вычетом 200px для рамок информации */
             height: 100vh; /* Высота холста равна высоте экрана */
             display: block;
         }
     </style>
 </head>
 <body>
+        <div class="container">
+        <div class="info">
+            <h2>Счет:</h2>
+            <p id="score">0</p>
+            <h2>Следующий блок:</h2>
+            <canvas id="next-block" width="80" height="80"></canvas>
+        </div>
+        <canvas id="tetris"></canvas>
+    </div>
+
     <canvas id="tetris"></canvas>
 
     <script>
