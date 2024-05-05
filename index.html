@@ -17,7 +17,7 @@
             color: #fff; /* белый текст */
         }
         .game-container {
-            position: relative;
+            position: relative; /* добавляем относительное позиционирование */
             display: flex;
             flex-direction: row; /* расположение элементов в строку */
             width: 95vw; /* увеличим ширину контейнера */
@@ -74,10 +74,10 @@
 
         /* Стиль кнопки */
         .start-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: absolute; /* абсолютное позиционирование */
+            top: 50%; /* расположение по вертикали на 50% */
+            left: 50%; /* расположение по горизонтали на 50% */
+            transform: translate(-50%, -50%); /* сдвигаем кнопку на -50% от ее ширины и высоты */
             padding: 10px 20px;
             background-color: #fff;
             color: #000;
