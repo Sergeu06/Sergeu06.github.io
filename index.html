@@ -323,8 +323,7 @@
             const newShape = currentShape[newRotation];
             if (!checkCollision(newShape, currentX, currentY)) {
                 clearShape(currentShape, currentX, currentY);
-                currentShape = currentShape[newRotation];
-                currentRotation = newRotation;
+                currentShape = shapes[(shapes.indexOf(currentShape) + 1) % shapes.length];
                 drawShape(currentShape, currentX, currentY);
             }
         }
