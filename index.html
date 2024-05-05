@@ -26,7 +26,9 @@
         }
         .game-board {
             flex: 0 0 75%; /* ширина игрового поля 75% от ширины контейнера */
-            border-right: 1px solid #fff; /* правая рамка игрового поля */
+        }
+        .game-board canvas {
+            border-right: none; /* убираем правую рамку */
         }
         .info {
             flex: 1; /* оставшееся пространство занимает информация (25% от ширины контейнера) */
@@ -35,6 +37,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            border-left: 1px solid #fff; /* левая рамка блока с информацией */
+        }
+        .info canvas {
+            border: none; /* убираем границу у холста в блоке с информацией */
         }
         canvas {
             border: 1px solid #fff;
