@@ -204,6 +204,114 @@
                     currentBlock.style.left = parseInt(currentBlock.style.left) - 25 + 'px';
                 }
             }
+
+            // Функция для проверки коллизий при перемещении вправо
+            function checkCollisionsRight() {
+                // Получаем все клетки текущей фигуры
+                const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+                
+                // Проверяем возможность движения вправо
+                const canMoveRight = cells.every(cell => {
+                    const left = parseInt(cell.style.left);
+                    return left < 225 && !grid[parseInt(cell.style.top) / 25][left / 25 + 1].classList.contains('fixed');
+                });
+
+                // Возвращаем результат проверки
+                return canMoveRight;
+            }
+
+            // Функция для проверки и удаления заполненных рядов
+            function checkAndClearRows() {
+                // Получаем индексы заполненных рядов
+                const rowsToRemove = [];
+                grid.forEach((row, index) => {
+                    if (row.every(cell => cell.classList.contains('fixed'))) {
+                        rowsToRemove.push(index);
+                    }
+                });
+
+                // Удаляем заполненные ряды и добавляем новые сверху
+                rowsToRemove.forEach(rowIndex => {
+                    grid.splice(rowIndex, 1);
+                    grid.unshift(Array(10).fill(0));
+                });
+
+                // Обновляем счет
+                score += rowsToRemove.length * 100;
+                document.getElementById('score').textContent = score;
+            }
+
+            // Функция для обновления счета и уровня
+            function updateScoreAndLevel() {
+                // Увеличиваем счет
+                score += 10;
+                document.getElementById('score').textContent = score;
+
+                // Увеличиваем уровень
+                if (score >= level * 100) {
+                    level++;
+                    document.getElementById('level').textContent = level;
+                    changeFallSpeed();
+                }
+            }
+
+            // Функция для изменения скорости падения фигуры
+            function changeFallSpeed() {
+                // Очищаем предыдущий интервал и запускаем новый с учетом уровня
+                clearInterval(gameInterval);
+                gameInterval = setInterval(moveBlockDown, 1000 - (level * 100));
+            }
+
+            // Функция для фиксации фигуры на игровом поле
+            function fixBlock() {
+                // Получаем все клетки текущей фигуры
+                const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+                
+                // Для каждой клетки фигуры устанавливаем класс "fixed" и обновляем игровое поле
+                cells.forEach(cell => {
+                    cell.classList.add('fixed');
+                    const top = parseInt(cell.style.top) / 25;
+                    const left = parseInt(cell.style.left) / 25;
+                    grid[top][left] = cell;
+                });
+
+                // Проверяем и удаляем заполненные ряды, обновляем счет и уровень, создаем новую фигуру
+                checkAndClearRows();
+                updateScoreAndLevel();
+                createNewBlock();
+            }
+
+            // Функция для начала игры
+            function startGame() {
+                // Создаем новую фигуру и запускаем интервал для падения фигур
+                createNewBlock();
+                gameInterval = setInterval(moveBlockDown, 1000);
+            }
+
+            // Обработчик события для нажатия клавиш
+            document.addEventListener('keydown', event => {
+                switch (event.key) {
+                    case 'ArrowLeft':
+                        moveBlockLeft();
+                        break;
+                    case 'ArrowRight':
+                        if (checkCollisionsRight()) {
+                            currentBlock.style.left = parseInt(currentBlock.style.left) + 25 + 'px';
+                        }
+                        break;
+                    case 'ArrowDown':
+                        moveBlockDown();
+                        break;
+                    case 'ArrowUp':
+                        // Добавить обработку поворота фигуры
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Обработчик события для кнопки "Start Game"
+            startButton.addEventListener('click', startGame);
         });
     </script>
 
