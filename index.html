@@ -4,183 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
-    <style>
-        /* Стили для блока фигур */
-        .block {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
-
-        /* Стили для клеток фигур */
-        .cell {
-            width: 25px;
-            height: 25px;
-        }
-
-        /* Остальные общие стили */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            color: #fff;
-        }
-
-        .game-container {
-            position: relative;
-            display: flex;
-            flex-direction: row;
-            width: 95vw;
-            height: 95vh;
-            max-width: 600px;
-            max-height: 800px;
-            border: 1px solid #fff;
-        }
-
-        .game-board {
-            position: relative;
-            flex: 0 0 75%;
-            border-right: 1px solid #fff;
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            grid-template-rows: repeat(20, 1fr);
-        }
-
-        .info {
-            position: relative;
-            flex: 1;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
-            text-align: center;
-        }
-
-        #next-block {
-            border: 1px solid #fff;
-            background-color: #000;
-            max-width: 100px;
-            max-height: 100px;
-            width: 100%;
-            height: auto;
-        }
-
-        canvas {
-            border: none;
-            background-color: #000;
-            width: 100%;
-            height: auto;
-            max-height: 50%;
-            display: block;
-        }
-
-        @media screen and (max-width: 600px) {
-            h2, p {
-                font-size: 3vw;
-            }
-        }
-
-        .start-button {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 10px 20px;
-        background-color: #fff;
-        color: #000;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1.5rem;
-        }.hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
- <!-- Основной контейнер игры -->
- <div class="game-container">
-    <!-- Игровое поле -->
+<div class="game-container">
     <div class="game-board" id="game-board"></div>
-    <button class="start-button">Start Game</button> <!-- Добавленная кнопка "Start Game" -->
-
-    <!-- Информация о счете, уровне и следующей фигуре -->
+    <button class="start-button">Start Game</button>
     <div class="info">
-        <h2>Счет:</h2>
+        <h2>Score:</h2>
         <p id="score">0</p>
-        <h2>Уровень:</h2>
+        <h2>Level:</h2>
         <p id="level">1</p>
-        <h2>Следующая фигура:</h2>
+        <h2>Next Block:</h2>
         <canvas id="next-block" width="100" height="100"></canvas>
     </div>
 </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Получение игрового поля и кнопки "Start Game"
-            const gameBoard = document.querySelector('.game-board');
-            const startButton = document.querySelector('.start-button');
-
-            // Объявление переменных для счета, уровня, текущей фигуры, массива игрового поля и интервала игры
-            let score = 0;
-            let level = 1;
-            let currentBlock;
-            let grid = Array.from({ length: 20 }, () => Array(10).fill(0));
-            let gameInterval;
-
-            // Функция для создания новой фигуры
-            function createNewBlock() {
-                // Ваш код для создания новой фигуры
-            }
-
-            // Функция для начала игры
-            function startGame() {
-                // Создаем новую фигуру и запускаем интервал для падения фигур
-                createNewBlock();
-                gameInterval = setInterval(moveBlockDown, 1000);
-            }
-
-            // Функция для перемещения фигуры вниз
-            function moveBlockDown() {
-                // Ваш код для перемещения фигуры вниз
-            }
-
-            // Функция для перемещения фигуры влево
-            function moveBlockLeft() {
-                // Ваш код для перемещения фигуры влево
-            }
-
-            // Функция для проверки коллизий при перемещении вправо
-            function checkCollisionsRight() {
-                // Ваш код для проверки коллизий при перемещении вправо
-            }
-
-            // Функция для фиксации фигуры на игровом поле
-            function fixBlock() {
-                // Ваш код для фиксации фигуры на игровом поле
-            }
-
-            // Функция для изменения скорости падения фигуры
-            function changeFallSpeed() {
-                // Ваш код для изменения скорости падения фигуры
-            }
-
-            // Обработчик события для кнопки "Start Game"
-            startButton.addEventListener('click', () => {
-                startGame();
-                startButton.classList.add('hidden'); // Добавляем класс, чтобы скрыть кнопку
-            });
-
-            // Добавьте здесь остальные функции и обработчики событий
-        });
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
