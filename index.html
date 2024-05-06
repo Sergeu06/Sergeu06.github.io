@@ -101,9 +101,12 @@
     </style>
 </head>
 <body>
+    <!-- Основной контейнер игры -->
     <div class="game-container">
-        <div class="game-board" id="game-board">
-        </div>
+        <!-- Игровое поле -->
+        <div class="game-board" id="game-board"></div>
+        
+        <!-- Информация о счете, уровне и следующей фигуре -->
         <div class="info">
             <h2>Счет:</h2>
             <p id="score">0</p>
@@ -115,137 +118,94 @@
     </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const gameBoard = document.querySelector('.game-board'); // Получаем игровое поле
-    const startButton = document.querySelector('.start-button'); // Получаем кнопку "Start Game"
-    let score = 0; // Инициализируем переменную для счета
-    let level = 1; // Инициализируем переменную для уровня
-    let currentBlock; // Переменная для хранения текущей фигуры
-    let grid = Array.from({ length: 20 }, () => Array(10).fill(0)); // Массив, представляющий игровое поле
-    let gameInterval; // Интервал игры
+        // Ожидание загрузки DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            // Получение игрового поля и кнопки "Start Game"
+            const gameBoard = document.querySelector('.game-board');
+            const startButton = document.querySelector('.start-button');
+            
+            // Объявление переменных для счета, уровня, текущей фигуры, массива игрового поля и интервала игры
+            let score = 0;
+            let level = 1;
+            let currentBlock;
+            let grid = Array.from({ length: 20 }, () => Array(10).fill(0));
+            let gameInterval;
+            
+            // Функция для создания новой фигуры
+            function createNewBlock() {
+                // Создаем массив возможных фигур
+                const tetrominoes = [
+                    [[1, 1, 1, 1]], // I-фигура
+                    [[1, 1, 1], [0, 1, 0]], // T-фигура
+                    [[1, 1, 1], [1, 0, 0]], // L-фигура
+                    [[1, 1, 1], [0, 0, 1]], // J-фигура
+                    [[0, 1, 1], [1, 1, 0]], // S-фигура
+                    [[1, 1], [1, 1]] // O-фигура
+                ];
 
-    // Функция для создания новой фигуры
-    function createNewBlock() {
-        const tetrominoes = [
-            [[1, 1, 1, 1]], // I-фигура
-            [[1, 1, 1], [0, 1, 0]], // T-фигура
-            [[1, 1, 1], [1, 0, 0]], // L-фигура
-            [[1, 1, 1], [0, 0, 1]], // J-фигура
-            [[0, 1, 1], [1, 1, 0]], // S-фигура
-            [[1, 1], [1, 1]] // O-фигура
-        ];
+                // Генерируем случайный индекс фигуры из массива
+                const randomIndex = Math.floor(Math.random() * tetrominoes.length);
+                const tetromino = tetrominoes[randomIndex];
 
-        const randomIndex = Math.floor(Math.random() * tetrominoes.length);
-        const tetromino = tetrominoes[randomIndex];
+                // Создаем элемент div для текущей фигуры
+                currentBlock = document.createElement('div');
+                currentBlock.classList.add('block');
 
-        currentBlock = document.createElement('div');
-        currentBlock.classList.add('block');
+                // Проходим по каждой клетке фигуры и создаем соответствующий элемент div
+                tetromino.forEach((row, rowIndex) => {
+                    row.forEach((cell, cellIndex) => {
+                        if (cell === 1) {
+                            const blockCell = document.createElement('div');
+                            blockCell.classList.add('cell');
+                            blockCell.style.top = (rowIndex * 25) + 'px';
+                            blockCell.style.left = (cellIndex * 25) + 'px';
+                            currentBlock.appendChild(blockCell);
+                        }
+                    });
+                });
 
-        tetromino.forEach((row, rowIndex) => {
-            row.forEach((cell, cellIndex) => {
-                if (cell === 1) {
-                    const blockCell = document.createElement('div');
-                    blockCell.classList.add('cell');
-                    blockCell.style.top = (rowIndex * 25) + 'px';
-                    blockCell.style.left = (cellIndex * 25) + 'px';
-                    currentBlock.appendChild(blockCell);
+                // Добавляем текущую фигуру на игровое поле
+                gameBoard.appendChild(currentBlock);
+            }
+            
+            // Функция для перемещения фигуры вниз
+            function moveBlockDown() {
+                // Получаем все клетки текущей фигуры
+                const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+                
+                // Проверяем возможность движения вниз
+                const canMoveDown = cells.every(cell => {
+                    const top = parseInt(cell.style.top);
+                    return top < 475 && !grid[top / 25 + 1][parseInt(cell.style.left) / 25].classList.contains('fixed');
+                });
+
+                // Если можно двигаться вниз, перемещаем фигуру
+                if (canMoveDown) {
+                    currentBlock.style.top = parseInt(currentBlock.style.top) + 25 + 'px';
+                } else {
+                    // Иначе фиксируем фигуру
+                    fixBlock();
                 }
-            });
+            }
+            
+            // Функция для перемещения фигуры влево
+            function moveBlockLeft() {
+                // Получаем все клетки текущей фигуры
+                const cells = Array.from(currentBlock.querySelectorAll('.cell'));
+                
+                // Проверяем возможность движения влево
+                const canMoveLeft = cells.every(cell => {
+                    const left = parseInt(cell.style.left);
+                    return left > 0 && !grid[parseInt(cell.style.top) / 25][left / 25 - 1].classList.contains('fixed');
+                });
+
+                // Если можно двигаться влево, перемещаем фигуру
+                if (canMoveLeft) {
+                    currentBlock.style.left = parseInt(currentBlock.style.left) - 25 + 'px';
+                }
+            }
         });
-
-        gameBoard.appendChild(currentBlock); // Исправлено: добавляем фигуру на игровое поле
-    }
-
-    // Функция для перемещения фигуры вниз
-    function moveBlockDown() {
-        if (!checkCollisionsDown()) {
-            currentBlock.style.top = parseInt(currentBlock.style.top) + 25 + 'px';
-        }
-    }
-
-    // Функция для перемещения фигуры влево
-    function moveBlockLeft() {
-        if (!checkCollisionsLeft()) {
-            currentBlock.style.left = parseInt(currentBlock.style.left) - 25 + 'px';
-        }
-    }
-
-    // Функция для перемещения фигуры вправо
-    function moveBlockRight() {
-        if (!checkCollisionsRight()) {
-            currentBlock.style.left = parseInt(currentBlock.style.left) + 25 + 'px';
-        }
-    }
-
-    // Функция для поворота фигуры
-    function rotateBlock() {
-        // Пока не реализовано
-    }
-
-    // Функция для старта игры
-    function startGame() {
-        createNewBlock();
-        gameInterval = setInterval(moveBlockDown, 1000);
-    }
-
-    // Обработчик события для нажатия клавиш
-    document.addEventListener('keydown', event => {
-        switch (event.key) {
-            case 'ArrowLeft':
-                moveBlockLeft();
-                break;
-            case 'ArrowRight':
-                moveBlockRight();
-                break;
-            case 'ArrowDown':
-                moveBlockDown();
-                break;
-            case 'ArrowUp':
-                rotateBlock();
-                break;
-            default:
-                break;
-        }
-    });
-
-    // Обработчик события для кнопки "Start Game"
-    startButton.addEventListener('click', startGame);
-
-    // Функция для проверки коллизий при перемещении вниз
-    function checkCollisionsDown() {
-        // Пока не реализовано
-        return false; // временное значение для демонстрации
-    }
-
-    // Функция для проверки коллизий при перемещении влево
-    function checkCollisionsLeft() {
-        // Пока не реализовано
-        return false; // временное значение для демонстрации
-    }
-
-    // Функция для проверки коллизий при перемещении вправо
-    function checkCollisionsRight() {
-        // Пока не реализовано
-        return false; // временное значение для демонстрации
-    }
-
-    // Функция для проверки и удаления заполненных рядов
-    function checkAndClearRows() {
-        // Пока не реализовано
-    }
-
-    // Функция для обновления счета и уровня
-    function updateScoreAndLevel() {
-        // Пока не реализовано
-    }
-
-    // Функция для изменения скорости падения фигуры
-    function changeFallSpeed() {
-        // Пока не реализовано
-    }
-});
-
-</script>
+    </script>
 
 </body>
 </html>
