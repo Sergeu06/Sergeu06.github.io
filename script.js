@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'ArrowDown':
                 moveBlockDown();
                 break;
-            case 'Space':
+            case 'ArrowUp':
                 rotateBlock();
                 break;
             default:
