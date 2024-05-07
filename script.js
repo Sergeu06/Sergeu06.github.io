@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let touchEndY = 0;
     let rotateOnRelease = false;
     let swipeDirection = null; // Добавляем переменную для хранения направления свайпа
-    
+    let longPressTimer = null;
+    let isLongPress = false;
+
     // Определение различных типов фигур и их цветов
     const blockTypes = [
         // Прямоугольник
@@ -187,103 +189,111 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-// Функция для вращения фигуры
-function rotateBlock() {
-    const rotatedBlock = {
-        type: [], // Инициализируем пустой массив для новой формы фигуры
-        color: currentBlock.color,
-        x: currentBlock.x, // Координаты x остаются теми же
-        y: currentBlock.y, // Координаты y остаются теми же
-    };
+    // Функция для вращения фигуры
+    function rotateBlock() {
+        const rotatedBlock = {
+            type: [], // Инициализируем пустой массив для новой формы фигуры
+            color: currentBlock.color,
+            x: currentBlock.x, // Координаты x остаются теми же
+            y: currentBlock.y, // Координаты y остаются теми же
+        };
 
-    // Находим центральный блок фигуры
-    let sumX = 0;
-    let sumY = 0;
-    for (let i = 0; i < currentBlock.type.length; i++) {
-        sumX += currentBlock.type[i][0];
-        sumY += currentBlock.type[i][1];
-    }
-    const centerX = sumX / currentBlock.type.length;
-    const centerY = sumY / currentBlock.type.length;
+        // Находим центральный блок фигуры
+        let sumX = 0;
+        let sumY = 0;
+        for (let i = 0; i < currentBlock.type.length; i++) {
+            sumX += currentBlock.type[i][0];
+            sumY += currentBlock.type[i][1];
+        }
+        const centerX = sumX / currentBlock.type.length;
+        const centerY = sumY / currentBlock.type.length;
 
-    console.log("CenterX:", centerX, "CenterY:", centerY);
+        console.log("CenterX:", centerX, "CenterY:", centerY);
 
-    // Проходим по каждой клетке текущей фигуры
-    for (let i = 0; i < currentBlock.type.length; i++) {
-        // Изменяем координаты x и y клетки при вращении
-        const relativeX = currentBlock.type[i][0] - centerX;
-        const relativeY = currentBlock.type[i][1] - centerY;
-        const newX = Math.round(centerX - relativeY);
-        const newY = Math.round(centerY + relativeX);
-        rotatedBlock.type.push([newX, newY]);
-    }
+        // Проходим по каждой клетке текущей фигуры
+        for (let i = 0; i < currentBlock.type.length; i++) {
+            // Изменяем координаты x и y клетки при вращении
+            const relativeX = currentBlock.type[i][0] - centerX;
+            const relativeY = currentBlock.type[i][1] - centerY;
+            const newX = Math.round(centerX - relativeY);
+            const newY = Math.round(centerY + relativeX);
+            rotatedBlock.type.push([newX, newY]);
+        }
 
-    console.log("Rotated block:", rotatedBlock);
+        console.log("Rotated block:", rotatedBlock);
 
-    // Проверяем, не выходит ли новая фигура за границы поля или не пересекается ли с другими клетками
-    if (!checkRotationCollision(rotatedBlock)) {
-        // Обновляем текущую фигуру
-        currentBlock.type = rotatedBlock.type;
-        drawBlock(); // Отрисовываем обновленную фигуру
-    }
-}
-// Обработчик начала касания экрана
-document.addEventListener('touchstart', (event) => {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
-});
-
-// Обработчик окончания касания экрана
-document.addEventListener('touchend', (event) => {
-    touchEndX = event.changedTouches[0].clientX;
-    touchEndY = event.changedTouches[0].clientY;
-    handleSwipe();
-});
-
-// Функция для обработки свайпа
-function handleSwipe() {
-    const swipeDistanceX = touchEndX - touchStartX;
-    const swipeDistanceY = touchEndY - touchStartY;
-    const swipeThreshold = 50; // Минимальное расстояние свайпа для срабатывания (в пикселях)
-    
-    if (Math.abs(swipeDistanceX) >= swipeThreshold || Math.abs(swipeDistanceY) >= swipeThreshold) {
-        if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
-            // Свайп по горизонтали
-            if (swipeDistanceX > 0) {
-                // Свайп вправо
-                moveBlockRight();
-            } else {
-                // Свайп влево
-                moveBlockLeft();
-            }
-        } else {
-            // Свайп по вертикали
-            if (swipeDistanceY > 0) {
-                // Свайп вниз
-                moveBlockDown();
-            } else {
-                // Свайп вверх
-                rotateBlock();
-            }
+        // Проверяем, не выходит ли новая фигура за границы поля или не пересекается ли с другими клетками
+        if (!checkRotationCollision(rotatedBlock)) {
+            // Обновляем текущую фигуру
+            currentBlock.type = rotatedBlock.type;
+            drawBlock(); // Отрисовываем обновленную фигуру
         }
     }
-}
 
-
-
-// Функция для проверки коллизий при вращении фигуры
-function checkRotationCollision(rotatedBlock) {
-    return rotatedBlock.type.some(cell => {
-        const [x, y] = cell;
-        const newX = rotatedBlock.x + x;
-        const newY = rotatedBlock.y + y;
-        if (newX < 0 || newX >= 10 || newY >= 20 || grid[newY][newX]) {
-            return true; // есть коллизия
-        }
-        return false;
+    // Обработчик начала касания экрана
+    document.addEventListener('touchstart', (event) => {
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        isLongPress = false;
+        // Запускаем таймер для отслеживания длительного нажатия
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+            // Ускоряем падение фигуры при длительном нажатии
+            moveBlockDown();
+        }, 500); // Устанавливаем время задержки в миллисекундах
     });
-}
 
+    // Обработчик окончания касания экрана
+    document.addEventListener('touchend', (event) => {
+        clearTimeout(longPressTimer); // Очищаем таймер при окончании нажатия
+        if (!isLongPress) {
+            touchEndX = event.changedTouches[0].clientX;
+            touchEndY = event.changedTouches[0].clientY;
+            handleSwipe();
+        }
+    });
+
+    // Функция для обработки свайпа
+    function handleSwipe() {
+        const swipeDistanceX = touchEndX - touchStartX;
+        const swipeDistanceY = touchEndY - touchStartY;
+        const swipeThreshold = 50; // Минимальное расстояние свайпа для срабатывания (в пикселях)
+
+        if (Math.abs(swipeDistanceX) >= swipeThreshold || Math.abs(swipeDistanceY) >= swipeThreshold) {
+            if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
+                // Свайп по горизонтали
+                if (swipeDistanceX > 0) {
+                    // Свайп вправо
+                    moveBlockRight();
+                } else {
+                    // Свайп влево
+                    moveBlockLeft();
+                }
+            } else {
+                // Свайп по вертикали
+                if (swipeDistanceY > 0) {
+                    // Свайп вниз
+                    moveBlockDown();
+                } else {
+                    // Свайп вверх
+                    rotateBlock();
+                }
+            }
+        }
+    }
+
+    // Функция для проверки коллизий при вращении фигуры
+    function checkRotationCollision(rotatedBlock) {
+        return rotatedBlock.type.some(cell => {
+            const [x, y] = cell;
+            const newX = rotatedBlock.x + x;
+            const newY = rotatedBlock.y + y;
+            if (newX < 0 || newX >= 10 || newY >= 20 || grid[newY][newX]) {
+                return true; // есть коллизия
+            }
+            return false;
+        });
+    }
 
     // Функция для фиксации фигуры на игровом поле
     function fixBlock() {
@@ -296,26 +306,6 @@ function checkRotationCollision(rotatedBlock) {
         drawBlock(); // Отрисовываем замороженную фигуру
         removeFullRows(); // Удаляем заполненные строки
     }
-
-    // Функция для отрисовки следующей фигуры в блоке "Next Block"
-function drawNextBlock() {
-    const canvas = document.getElementById('next-block');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    const nextBlock = blockTypes[Math.floor(Math.random() * blockTypes.length)];
-    const blockSize = 20; // Размер каждой клетки в пикселях
-
-    nextBlock.shape.forEach(cell => {
-        const [x, y] = cell;
-        ctx.fillStyle = nextBlock.color;
-        ctx.fillRect((x + 1) * blockSize, (y + 1) * blockSize, blockSize, blockSize);
-    });
-}
-
-// Вызываем функцию для отрисовки следующей фигуры при загрузке страницы
-drawNextBlock();
-
 
     // Функция для удаления заполненных строк
     function removeFullRows() {
@@ -337,3 +327,4 @@ drawNextBlock();
         }
     }
 });
+
