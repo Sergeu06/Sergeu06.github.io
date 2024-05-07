@@ -2,19 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameBoard = document.querySelector('.game-board');
     const startButton = document.querySelector('.start-button');
     let score = 0;
-    let level = 1;
     let currentBlock;
     let grid = Array.from({ length: 20 }, () => Array(10).fill(0));
     let gameInterval;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
-    let rotateOnRelease = false;
-    let swipeDirection = null; // Добавляем переменную для хранения направления свайпа
-    let longPressTimer = null;
-    let isLongPress = false;
-    
 
     // Определение различных типов фигур и их цветов
     const blockTypes = [
@@ -109,6 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomIndex = Math.floor(Math.random() * blockTypes.length);
         const randomType = blockTypes[randomIndex];
 
+        // Удаляем все заполненные строки перед созданием новой фигуры
+        removeFullRows();
+
         // Создаем новую фигуру с центром в середине верхней горизонтальной линии игрового поля
         const newBlock = {
             type: randomType.shape,
@@ -158,11 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
         blocks.forEach(block => block.remove());
     }
 
-    // Функция для начала игры
-    function startGame() {
-        createNewBlock();
-        gameInterval = setInterval(moveBlockDown, 1000);
-    }
+// Функция для начала игры
+function startGame() {
+    console.log("Game started!"); // Добавляем отладочное сообщение
+    createNewBlock();
+    gameInterval = setInterval(moveBlockDown, 1000);
+    startButton.classList.add('hidden'); // Скрываем кнопку "Старт" после начала игры
+    console.log("Start button hidden:", startButton.classList.contains('hidden')); // Добавляем отладочное сообщение
+}
 
     // Обработчик нажатия кнопки "Старт"
     startButton.addEventListener('click', () => {
@@ -231,65 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-// Обработчик начала касания экрана
-document.addEventListener('touchstart', (event) => {
-    touchStartTime = Date.now();
-    isTouching = true;
-    accelerateInterval = setInterval(accelerateDownward, 100); // Запускаем таймер для ускорения падения
-});
-
-// Обработчик окончания касания экрана
-document.addEventListener('touchend', (event) => {
-    touchEndTime = Date.now();
-    isTouching = false;
-    clearInterval(accelerateInterval); // Останавливаем таймер ускорения падения
-    moveBlockDown(); // Выполняем обычное движение фигуры вниз
-});
-
-// Функция для ускорения падения фигуры
-function accelerateDownward() {
-    // Увеличиваем скорость падения фигуры
-    moveBlockDown();
-}
-
-// Функция для проверки продолжительности удержания пальца
-function checkTouchDuration() {
-    const touchDuration = touchEndTime - touchStartTime;
-    if (touchDuration < 300) {
-        // Если удержание короткое, выполнить действие, например, вращение фигуры
-        rotateBlock();
-    }
-}
-
-    // Функция для обработки свайпа
-    function handleSwipe() {
-        const swipeDistanceX = touchEndX - touchStartX;
-        const swipeDistanceY = touchEndY - touchStartY;
-        const swipeThreshold = 50; // Минимальное расстояние свайпа для срабатывания (в пикселях)
-
-        if (Math.abs(swipeDistanceX) >= swipeThreshold || Math.abs(swipeDistanceY) >= swipeThreshold) {
-            if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
-                // Свайп по горизонтали
-                if (swipeDistanceX > 0) {
-                    // Свайп вправо
-                    moveBlockRight();
-                } else {
-                    // Свайп влево
-                    moveBlockLeft();
-                }
-            } else {
-                // Свайп по вертикали
-                if (swipeDistanceY > 0) {
-                    // Свайп вниз
-                    moveBlockDown();
-                } else {
-                    // Свайп вверх
-                    rotateBlock();
-                }
-            }
-        }
-    }
-
     // Функция для проверки коллизий при вращении фигуры
     function checkRotationCollision(rotatedBlock) {
         return rotatedBlock.type.some(cell => {
@@ -315,24 +252,150 @@ function checkTouchDuration() {
         removeFullRows(); // Удаляем заполненные строки
     }
 
-    // Функция для удаления заполненных строк
+    // Функция для удаления всех заполненных строк одновременно
     function removeFullRows() {
-        let fullRows = 0;
+        let fullRows = [];
         for (let i = grid.length - 1; i >= 0; i--) {
             if (grid[i].every(cell => cell === 1)) {
-                // Удаляем текущую строку из сетки
-                grid.splice(i, 1);
-                // Добавляем новую пустую строку в начало сетки
-                grid.unshift(Array(10).fill(0));
-                fullRows++;
+                fullRows.push(i); // Запоминаем номера всех заполненных строк
             }
         }
-        if (fullRows > 0) {
-            score += fullRows * 100; // Увеличиваем счет за удаленные строки
-            level = Math.floor(score / 750) + 1; // Повышаем уровень каждые 750 очков
+        if (fullRows.length > 0) {
+            score += fullRows.length * 100; // Увеличиваем счет за удаленные строки
             document.getElementById('score').innerText = score;
+
+            // Увеличиваем уровень каждые 750 очков
+            level = Math.floor(score / 750) + 1;
             document.getElementById('level').innerText = level;
+
+            // Удаляем все заполненные строки и добавляем новые пустые строки
+            fullRows.forEach(rowIndex => {
+                grid.splice(rowIndex, 1);
+                grid.unshift(Array(10).fill(0));
+            });
+
+            // Уменьшаем интервал движения фигур для увеличения скорости игры
+            clearInterval(gameInterval);
+            gameInterval = setInterval(moveBlockDown, 1000 - (level * 50)); // Уменьшаем интервал на 50 мс каждый уровень
         }
     }
+
+    // Функция для стирания всех заполненных строк
+    function clearFullRows() {
+        let fullRowCount = 0;
+        for (let y = grid.length - 1; y >= 0; y--) {
+            if (grid[y].every(cell => cell === 1)) {
+                grid.splice(y, 1);
+                grid.unshift(Array(10).fill(0));
+                fullRowCount++;
+                y++; // После удаления строки, нужно проверить эту же строку заново
+            }
+        }
+        if (fullRowCount > 0) {
+            score += Math.pow(2, fullRowCount) * 100; // Увеличиваем счет за удаленные строки в зависимости от их количества
+            document.getElementById('score').innerText = score;
+
+            // Увеличиваем уровень каждые 750 очков
+            level = Math.floor(score / 750) + 1;
+            document.getElementById('level').innerText = level;
+
+            // Уменьшаем интервал движения фигур для увеличения скорости игры
+            clearInterval(gameInterval);
+            gameInterval = setInterval(moveBlockDown, 1000 - (level * 50)); // Уменьшаем интервал на 50 мс каждый уровень
+        }
+    }
+// Функция для удаления всех заполненных строк одновременно
+function removeFullRows() {
+    let fullRows = [];
+    for (let i = grid.length - 1; i >= 0; i--) {
+        if (grid[i].every(cell => cell === 1)) {
+            fullRows.push(i); // Запоминаем номера всех заполненных строк
+        }
+    }
+    if (fullRows.length > 0) {
+        let multiplier = 1; // Коэффициент множителя для сгорания одновременно нескольких строк
+        switch (fullRows.length) {
+            case 2:
+                multiplier = 1.5;
+                break;
+            case 3:
+                multiplier = 2;
+                break;
+            case 4:
+                multiplier = 2.5;
+                break;
+            default:
+                break;
+        }
+        score += multiplier * 100; // Увеличиваем счет с учетом множителя
+        document.getElementById('score').innerText = score;
+
+        // Увеличиваем уровень каждые 750 очков
+        level = Math.floor(score / 750) + 1;
+        document.getElementById('level').innerText = level;
+
+        // Удаляем все заполненные строки и добавляем новые пустые строки
+        fullRows.forEach(rowIndex => {
+            grid.splice(rowIndex, 1);
+            grid.unshift(Array(10).fill(0));
+        });
+
+        // Уменьшаем интервал движения фигур для увеличения скорости игры
+        clearInterval(gameInterval);
+        gameInterval = setInterval(moveBlockDown, 1000 - (level * 50)); // Уменьшаем интервал на 50 мс каждый уровень
+
+        // Повторно вызываем функцию для удаления оставшихся заполненных строк
+        removeFullRows();
+    }
+}
+
+
+// Вставляем этот код после обработчика нажатия клавиш для управления фигурой
+
+// Функция для отображения кнопки рестарта
+function showRestartButton() {
+    const restartButton = document.querySelector('.restart-button');
+    restartButton.classList.remove('hidden');
+}
+
+// Обработчик при достижении замороженных фигур верхней границы
+function checkGameOver() {
+    const topRow = grid[0]; // Получаем верхнюю строку игрового поля
+    if (topRow.some(cell => cell === 1)) {
+        clearInterval(gameInterval); // Останавливаем интервал игры
+        showRestartButton(); // Отображаем кнопку рестарта
+    }
+}
+
+// Обработчик проверки на конец игры
+function handleGameEnd() {
+    checkGameOver();
+}
+
+// Добавляем обработчик проверки на конец игры после создания новой фигуры
+createNewBlock = () => {
+    const randomIndex = Math.floor(Math.random() * blockTypes.length);
+    const randomType = blockTypes[randomIndex];
+
+    // Создаем новую фигуру с центром в середине верхней горизонтальной линии игрового поля
+    const newBlock = {
+        type: randomType.shape,
+        color: randomType.color,
+        x: 4, // начальное положение по горизонтали
+        y: 0, // начальное положение по вертикали
+    };
+
+    currentBlock = newBlock;
+    drawBlock();
+
+    // Проверяем на конец игры при появлении новой фигуры
+    handleGameEnd();
+}
+
+// Добавляем обработчик для кнопки рестарта
+document.querySelector('.restart-button').addEventListener('click', () => {
+    window.location.reload(); // Перезагружаем страницу при нажатии на кнопку рестарта
 });
 
+
+});
