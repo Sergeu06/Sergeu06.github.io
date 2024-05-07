@@ -398,4 +398,44 @@ document.querySelector('.restart-button').addEventListener('click', () => {
 });
 
 
+// Функция для обновления следующей фигуры
+function updateNextBlock(nextType) {
+    const nextBlockElement = document.getElementById('next-block');
+    nextBlockElement.innerHTML = ''; // Очищаем содержимое блока
+    nextType.shape.forEach(cell => {
+        const [x, y] = cell;
+        const blockElement = document.createElement('div');
+        blockElement.classList.add('next-block-cell'); // Добавляем класс для стилизации
+        blockElement.style.backgroundColor = nextType.color;
+        nextBlockElement.appendChild(blockElement);
+    });
+}
+
+// Добавляем обновление следующей фигуры при создании новой фигуры
+createNewBlock = () => {
+    const randomIndex = Math.floor(Math.random() * blockTypes.length);
+    const randomType = blockTypes[randomIndex];
+
+    // Обновляем следующую фигуру
+    const nextRandomIndex = Math.floor(Math.random() * blockTypes.length);
+    const nextRandomType = blockTypes[nextRandomIndex];
+    updateNextBlock(nextRandomType);
+
+    // Создаем новую фигуру с центром в середине верхней горизонтальной линии игрового поля
+    const newBlock = {
+        type: randomType.shape,
+        color: randomType.color,
+        x: 4, // начальное положение по горизонтали
+        y: 0, // начальное положение по вертикали
+    };
+
+    currentBlock = newBlock;
+    drawBlock();
+
+    // Проверяем на конец игры при появлении новой фигуры
+    handleGameEnd();
+}
+
+
+
 });
