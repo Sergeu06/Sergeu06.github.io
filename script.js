@@ -14,9 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let swipeDirection = null; // Добавляем переменную для хранения направления свайпа
     let longPressTimer = null;
     let isLongPress = false;
-    let isTouching = false; // Флаг для отслеживания касания экрана
-    let isLongPress = false; // Флаг для отслеживания длительного нажатия
-    let longPressTimer; // Таймер для отслеживания длительного нажатия
+    
 
     // Определение различных типов фигур и их цветов
     const blockTypes = [
@@ -235,28 +233,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Обработчик начала касания экрана
 document.addEventListener('touchstart', (event) => {
-    isTouching = true; // Устанавливаем флаг в true при начале касания
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
-    isLongPress = false;
-    // Запускаем таймер для отслеживания длительного нажатия
-    longPressTimer = setTimeout(() => {
-        isLongPress = true;
-        // Ускоряем падение фигуры при длительном нажатии
-        clearInterval(gameInterval); // Сбрасываем текущий интервал
-        gameInterval = setInterval(moveBlockDown, 100); // Устанавливаем более быстрый интервал
-    }, 500); // Устанавливаем время задержки в миллисекундах
+    touchStartTime = Date.now();
+    isTouching = true;
+    accelerateInterval = setInterval(accelerateDownward, 100); // Запускаем таймер для ускорения падения
 });
 
 // Обработчик окончания касания экрана
 document.addEventListener('touchend', (event) => {
-    isTouching = false; // Устанавливаем флаг в false при окончании касания
-    clearTimeout(longPressTimer); // Очищаем таймер при окончании нажатия
-    if (!isLongPress) {
-        clearInterval(gameInterval); // Сбрасываем текущий интервал
-        gameInterval = setInterval(moveBlockDown, 1000); // Возвращаем обычный интервал при коротком нажатии
-    }
+    touchEndTime = Date.now();
+    isTouching = false;
+    clearInterval(accelerateInterval); // Останавливаем таймер ускорения падения
+    moveBlockDown(); // Выполняем обычное движение фигуры вниз
 });
+
+// Функция для ускорения падения фигуры
+function accelerateDownward() {
+    // Увеличиваем скорость падения фигуры
+    moveBlockDown();
+}
+
+// Функция для проверки продолжительности удержания пальца
+function checkTouchDuration() {
+    const touchDuration = touchEndTime - touchStartTime;
+    if (touchDuration < 300) {
+        // Если удержание короткое, выполнить действие, например, вращение фигуры
+        rotateBlock();
+    }
+}
 
     // Функция для обработки свайпа
     function handleSwipe() {
