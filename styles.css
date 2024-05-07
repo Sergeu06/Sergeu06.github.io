@@ -1,9 +1,11 @@
 /* Styles for blocks */
 .block {
     position: relative;
-    width: 25px;
-    height: 25px;
-    background-color: transparent; /* Убираем цвет фона */
+    width: 95%;
+    height: 95%;
+    border: 1px solid hsl(0, 0%, 30%);
+
+    background-color: transparent; /* Убираем цвет фона */ 
 }
 
 /* Other common styles */
@@ -80,8 +82,8 @@ canvas {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 10px 20px;
-    background-color: #fff;
-    color: #000;
+    background-color: #000;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
