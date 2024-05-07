@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let swipeDirection = null; // Добавляем переменную для хранения направления свайпа
     let longPressTimer = null;
     let isLongPress = false;
+    let isTouching = false; // Флаг для отслеживания касания экрана
+    let isLongPress = false; // Флаг для отслеживания длительного нажатия
+    let longPressTimer; // Таймер для отслеживания длительного нажатия
 
     // Определение различных типов фигур и их цветов
     const blockTypes = [
