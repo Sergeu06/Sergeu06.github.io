@@ -6,13 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBlock;
     let grid = Array.from({ length: 20 }, () => Array(10).fill(0));
     let gameInterval;
-
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    let rotateOnRelease = false;
+    let swipeDirection = null; // Добавляем переменную для хранения направления свайпа
+    
     // Определение различных типов фигур и их цветов
     const blockTypes = [
         // Прямоугольник
         {
             shape: [[0, 0], [1, 0], [0, 1], [1, 1]],
-            color: 'cyan'
+            color: 'yellow'
         },
         // L-фигура
         {
@@ -42,13 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Заглавная T-фигура
         {
             shape: [[0, 1], [1, 0], [1, 1], [2, 1]],
-            color: 'yellow'
+            color: 'purple'
         },
         // Фигура 4 на 1
         {
             shape: [[0, 0], [1, 0], [2, 0], [3, 0]],
-            color: 'pink'
-        }
+            color: 'cyan'
+        },
     ];
 
     // Функция для перемещения фигуры влево
@@ -221,7 +227,47 @@ function rotateBlock() {
         drawBlock(); // Отрисовываем обновленную фигуру
     }
 }
+// Обработчик начала касания экрана
+document.addEventListener('touchstart', (event) => {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+});
 
+// Обработчик окончания касания экрана
+document.addEventListener('touchend', (event) => {
+    touchEndX = event.changedTouches[0].clientX;
+    touchEndY = event.changedTouches[0].clientY;
+    handleSwipe();
+});
+
+// Функция для обработки свайпа
+function handleSwipe() {
+    const swipeDistanceX = touchEndX - touchStartX;
+    const swipeDistanceY = touchEndY - touchStartY;
+    const swipeThreshold = 50; // Минимальное расстояние свайпа для срабатывания (в пикселях)
+    
+    if (Math.abs(swipeDistanceX) >= swipeThreshold || Math.abs(swipeDistanceY) >= swipeThreshold) {
+        if (Math.abs(swipeDistanceX) > Math.abs(swipeDistanceY)) {
+            // Свайп по горизонтали
+            if (swipeDistanceX > 0) {
+                // Свайп вправо
+                moveBlockRight();
+            } else {
+                // Свайп влево
+                moveBlockLeft();
+            }
+        } else {
+            // Свайп по вертикали
+            if (swipeDistanceY > 0) {
+                // Свайп вниз
+                moveBlockDown();
+            } else {
+                // Свайп вверх
+                rotateBlock();
+            }
+        }
+    }
+}
 
 
 
@@ -251,6 +297,26 @@ function checkRotationCollision(rotatedBlock) {
         removeFullRows(); // Удаляем заполненные строки
     }
 
+    // Функция для отрисовки следующей фигуры в блоке "Next Block"
+function drawNextBlock() {
+    const canvas = document.getElementById('next-block');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const nextBlock = blockTypes[Math.floor(Math.random() * blockTypes.length)];
+    const blockSize = 20; // Размер каждой клетки в пикселях
+
+    nextBlock.shape.forEach(cell => {
+        const [x, y] = cell;
+        ctx.fillStyle = nextBlock.color;
+        ctx.fillRect((x + 1) * blockSize, (y + 1) * blockSize, blockSize, blockSize);
+    });
+}
+
+// Вызываем функцию для отрисовки следующей фигуры при загрузке страницы
+drawNextBlock();
+
+
     // Функция для удаления заполненных строк
     function removeFullRows() {
         let fullRows = 0;
@@ -265,7 +331,7 @@ function checkRotationCollision(rotatedBlock) {
         }
         if (fullRows > 0) {
             score += fullRows * 100; // Увеличиваем счет за удаленные строки
-            level = Math.floor(score / 1000) + 1; // Повышаем уровень каждые 1000 очков
+            level = Math.floor(score / 750) + 1; // Повышаем уровень каждые 750 очков
             document.getElementById('score').innerText = score;
             document.getElementById('level').innerText = level;
         }
