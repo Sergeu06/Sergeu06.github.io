@@ -230,28 +230,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Обработчик начала касания экрана
-    document.addEventListener('touchstart', (event) => {
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-        isLongPress = false;
-        // Запускаем таймер для отслеживания длительного нажатия
-        longPressTimer = setTimeout(() => {
-            isLongPress = true;
-            // Ускоряем падение фигуры при длительном нажатии
-            moveBlockDown();
-        }, 500); // Устанавливаем время задержки в миллисекундах
-    });
+// Обработчик начала касания экрана
+document.addEventListener('touchstart', (event) => {
+    isTouching = true; // Устанавливаем флаг в true при начале касания
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+    isLongPress = false;
+    // Запускаем таймер для отслеживания длительного нажатия
+    longPressTimer = setTimeout(() => {
+        isLongPress = true;
+        // Ускоряем падение фигуры при длительном нажатии
+        clearInterval(gameInterval); // Сбрасываем текущий интервал
+        gameInterval = setInterval(moveBlockDown, 100); // Устанавливаем более быстрый интервал
+    }, 500); // Устанавливаем время задержки в миллисекундах
+});
 
-    // Обработчик окончания касания экрана
-    document.addEventListener('touchend', (event) => {
-        clearTimeout(longPressTimer); // Очищаем таймер при окончании нажатия
-        if (!isLongPress) {
-            touchEndX = event.changedTouches[0].clientX;
-            touchEndY = event.changedTouches[0].clientY;
-            handleSwipe();
-        }
-    });
+// Обработчик окончания касания экрана
+document.addEventListener('touchend', (event) => {
+    isTouching = false; // Устанавливаем флаг в false при окончании касания
+    clearTimeout(longPressTimer); // Очищаем таймер при окончании нажатия
+    if (!isLongPress) {
+        clearInterval(gameInterval); // Сбрасываем текущий интервал
+        gameInterval = setInterval(moveBlockDown, 1000); // Возвращаем обычный интервал при коротком нажатии
+    }
+});
 
     // Функция для обработки свайпа
     function handleSwipe() {
