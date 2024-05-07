@@ -4,7 +4,6 @@
     width: 95%;
     height: 95%;
     border: 1px solid hsl(0, 0%, 30%);
-
     background-color: transparent; /* Убираем цвет фона */ 
 }
 
@@ -76,7 +75,8 @@ canvas {
     }
 }
 
-.start-button {
+.start-button,
+.restart-button {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -90,14 +90,10 @@ canvas {
     font-size: 1.5rem;
 }
 
-.hidden {
+.restart-button.hidden {
     display: none;
 }
-.visible {
-    opacity: 1;
+.start-button.hidden {
+    display: none;
 }
-.fixed-block {
-    opacity: 1;
-    position: relative;
-    z-index: 1; /* Поднимаем блоки выше остального контента */
-}
+
