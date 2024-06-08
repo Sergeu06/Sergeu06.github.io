@@ -1,4 +1,4 @@
-/* style.css */
+/* styles_Snake.css */
 body {
     display: flex;
     justify-content: center;
@@ -9,10 +9,18 @@ body {
 }
 
 .game-container {
+    position: relative;
     border: 5px solid #333;
     background-color: #fff;
 }
 
 canvas {
     display: block;
+}
+
+#score, #speed {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 18px;
 }
