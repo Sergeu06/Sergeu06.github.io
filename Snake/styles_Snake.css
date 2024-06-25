@@ -1,26 +1,118 @@
 /* styles_Snake.css */
 body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
 }
 
 .game-container {
     position: relative;
     border: 5px solid #333;
     background-color: #fff;
+    width: 90vw;
+    height: 90vw;
+    max-width: 600px;
+    max-height: 600px;
 }
 
 canvas {
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
-#score, #speed {
+#score, #best-score {
     position: absolute;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#score {
     top: 10px;
     left: 10px;
+}
+
+#best-score {
+    top: 40px;
+    left: 10px;
+}
+
+#profile {
+    margin-top: 20px;
     font-size: 18px;
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.horizontal-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 160px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.control-btn:active {
+    background-color: #555;
+}
+
+/* Mobile specific styles */
+@media (max-width: 600px) {
+    body {
+        height: auto;
+        padding: 10px;
+    }
+
+    .game-container {
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+    }
+
+    #score, #best-score {
+        font-size: 16px;
+        padding: 3px;
+    }
+
+    #profile {
+        font-size: 16px;
+    }
+
+    .controls {
+        margin-top: 10px;
+    }
+
+    .horizontal-controls {
+        width: 120px;
+    }
+
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
 }
