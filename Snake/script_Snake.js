@@ -27,11 +27,9 @@ const urlParams = new URLSearchParams(window.location.search);
 const uidFromUrl = urlParams.get('uid');
 
 if (uidFromUrl) {
-    // If UID is provided in the URL, use it
     userId = uidFromUrl;
-    loadBestScore(uidFromUrl);
+    loadBestScore(userId);
 } else {
-    // Otherwise, sign in anonymously
     signInAnonymously(auth).then(() => {
         console.log("Signed in anonymously");
         onAuthStateChanged(auth, (user) => {
@@ -48,7 +46,6 @@ if (uidFromUrl) {
     });
 }
 
-// Load best score for a given user ID
 async function loadBestScore(uid) {
     const dbRef = ref(database);
     try {
@@ -66,7 +63,6 @@ async function loadBestScore(uid) {
     }
 }
 
-// Update best score for the current user
 async function updateBestScore(newScore) {
     console.log("Attempting to update best score:", newScore);
     if (newScore > bestScore) {
