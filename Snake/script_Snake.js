@@ -3,14 +3,14 @@ import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gsta
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
-authDomain: "snake-6da20.firebaseapp.com",
-databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
-projectId: "snake-6da20",
-storageBucket: "snake-6da20.appspot.com",
-messagingSenderId: "792222318675",
-appId: "1:792222318675:web:5ecacccf554824a7ef46a6",
-measurementId: "G-P9R1G79S57"
+    apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
+    authDomain: "snake-6da20.firebaseapp.com",
+    databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "snake-6da20",
+    storageBucket: "snake-6da20.appspot.com",
+    messagingSenderId: "792222318675",
+    appId: "1:792222318675:web:5ecacccf554824a7ef46a6",
+    measurementId: "G-P9R1G79S57"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -162,7 +162,6 @@ document.getElementById('left').addEventListener('click', () => {
 document.getElementById('right').addEventListener('click', () => {
     if (direction !== 'left') direction = 'right';
 });
-
 
 window.onload = function () {
     generateFood();
