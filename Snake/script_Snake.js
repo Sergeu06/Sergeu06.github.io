@@ -1,15 +1,7 @@
-// script.js
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const snake = [{ x: 10, y: 10 }];
-let direction = 'right';
-let food = { x: 20, y: 20 };
-let score = 0;
-let userId = null;
-let bestScore = 0;
-
-// Конфигурация Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
     authDomain: "snake-6da20.firebaseapp.com",
@@ -21,29 +13,71 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const database = firebase.database();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const database = getDatabase(app);
 
-auth.signInAnonymously().then(() => {
-    userId = auth.currentUser.uid;
-    loadBestScore();
-});
+let userId = null;
+let bestScore = 0;
+
+const urlParams = new URLSearchParams(window.location.search);
+const uid = urlParams.get('uid');
+
+if (uid) {
+    loadUserProfile(uid);
+} else {
+    signInAnonymously(auth).then(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                loadBestScore();
+            }
+        });
+    });
+}
+
+async function loadUserProfile(uid) {
+    const dbRef = ref(database);
+    const snapshot = await get(child(dbRef, `users/${uid}`));
+    if (snapshot.exists()) {
+        const userData = snapshot.val();
+        document.getElementById('profile').textContent = `Name: ${userData.name}, Email: ${userData.email}`;
+    } else {
+        document.getElementById('profile').textContent = 'No such user!';
+    }
+}
 
 async function loadBestScore() {
-    const snapshot = await database.ref('users/' + userId + '/bestScore').once('value');
-    bestScore = snapshot.val() || 0;
-    document.getElementById('best-score').textContent = `Лучший результат: ${bestScore}`;
+    const dbRef = ref(database);
+    const snapshot = await get(child(dbRef, `users/${userId}/bestScore`));
+    if (snapshot.exists()) {
+        bestScore = snapshot.val();
+        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+    } else {
+        bestScore = 0;
+        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+    }
 }
 
 async function updateBestScore(newScore) {
     if (newScore > bestScore) {
         bestScore = newScore;
-        await database.ref('users/' + userId).set({ bestScore });
-        document.getElementById('best-score').textContent = `Лучший результат: ${bestScore}`;
+        await set(ref(database, 'users/' + userId), { bestScore });
+        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
     }
 }
+
+// Логика игры Snake
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const snake = [{ x: 10, y: 10 }];
+let direction = 'right';
+let food = { x: 20, y: 20 };
+let score = 0;
+let speed = 10;
+
+const scoreElement = document.getElementById('score');
 
 function drawSnake() {
     ctx.fillStyle = '#333';
@@ -68,6 +102,7 @@ function moveSnake() {
     snake.unshift(head);
     if (head.x === food.x && head.y === food.y) {
         score++;
+        speed *= 1.05;
         updateBestScore(score);
         generateFood();
     } else {
@@ -76,10 +111,17 @@ function moveSnake() {
 }
 
 function generateFood() {
-    food = {
-        x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
-        y: Math.floor(Math.random() * (canvas.height / 10)) * 10
-    };
+    let newFoodPosition;
+    while (true) {
+        newFoodPosition = {
+            x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
+            y: Math.floor(Math.random() * (canvas.height / 10)) * 10
+        };
+        if (!snake.some(segment => segment.x === newFoodPosition.x && segment.y === newFoodPosition.y)) {
+            break;
+        }
+    }
+    food = newFoodPosition;
 }
 
 function gameLoop() {
@@ -87,8 +129,8 @@ function gameLoop() {
     drawSnake();
     drawFood();
     moveSnake();
-    // Добавьте логику обнаружения столкновений и окончания игры здесь
-    requestAnimationFrame(gameLoop);
+    scoreElement.textContent = `Score: ${score}`;
+    setTimeout(gameLoop, 1000 / speed);
 }
 
 document.addEventListener('keydown', event => {
@@ -108,11 +150,20 @@ document.addEventListener('keydown', event => {
     }
 });
 
-window.onload = function () {
-    if (!userId) {
-        auth.signInAnonymously();
-    }
-};
+document.getElementById('up').addEventListener('click', () => {
+    if (direction !== 'down') direction = 'up';
+});
+document.getElementById('down').addEventListener('click', () => {
+    if (direction !== 'up') direction = 'down';
+});
+document.getElementById('left').addEventListener('click', () => {
+    if (direction !== 'right') direction = 'left';
+});
+document.getElementById('right').addEventListener('click', () => {
+    if (direction !== 'left') direction = 'right';
+});
 
-generateFood();
-gameLoop();
+window.onload = function () {
+    generateFood();
+    gameLoop();
+};
