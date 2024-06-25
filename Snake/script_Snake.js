@@ -58,6 +58,7 @@ async function loadBestScore() {
 
 // Update best score
 async function updateBestScore(newScore) {
+    console.log("Attempting to update best score:", newScore);
     if (newScore > bestScore) {
         bestScore = newScore;
         try {
@@ -106,6 +107,7 @@ function moveSnake() {
     if (head.x === food.x && head.y === food.y) {
         score++;
         speed *= 1.05;
+        console.log("Food eaten, new score:", score);
         updateBestScore(score);
         generateFood();
     } else {
