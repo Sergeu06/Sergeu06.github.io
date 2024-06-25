@@ -2,6 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
     authDomain: "snake-6da20.firebaseapp.com",
@@ -13,6 +14,7 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const database = getDatabase(app);
@@ -20,54 +22,53 @@ const database = getDatabase(app);
 let userId = null;
 let bestScore = 0;
 
-const urlParams = new URLSearchParams(window.location.search);
-const uid = urlParams.get('uid');
-
-if (uid) {
-    loadUserProfile(uid);
-} else {
-    signInAnonymously(auth).then(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userId = user.uid;
-                loadBestScore();
-            }
-        });
+// Sign in anonymously
+signInAnonymously(auth).then(() => {
+    console.log("Signed in anonymously");
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userId = user.uid;
+            console.log("User ID:", userId);
+            loadBestScore();
+        }
     });
-}
+}).catch((error) => {
+    console.error("Error signing in anonymously: ", error);
+});
 
-async function loadUserProfile(uid) {
-    const dbRef = ref(database);
-    const snapshot = await get(child(dbRef, `users/${uid}`));
-    if (snapshot.exists()) {
-        const userData = snapshot.val();
-        document.getElementById('profile').textContent = `Name: ${userData.name}, Email: ${userData.email}`;
-    } else {
-        document.getElementById('profile').textContent = 'No such user!';
-    }
-}
-
+// Load best score
 async function loadBestScore() {
     const dbRef = ref(database);
-    const snapshot = await get(child(dbRef, `users/${userId}/bestScore`));
-    if (snapshot.exists()) {
-        bestScore = snapshot.val();
+    try {
+        const snapshot = await get(child(dbRef, `users/${userId}/bestScore`));
+        if (snapshot.exists()) {
+            bestScore = snapshot.val();
+            console.log("Loaded best score:", bestScore);
+        } else {
+            bestScore = 0;
+            console.log("No best score found, setting to 0");
+        }
         document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
-    } else {
-        bestScore = 0;
-        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+    } catch (error) {
+        console.error("Error loading best score: ", error);
     }
 }
 
+// Update best score
 async function updateBestScore(newScore) {
     if (newScore > bestScore) {
         bestScore = newScore;
-        await set(ref(database, 'users/' + userId), { bestScore });
-        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+        try {
+            await set(ref(database, `users/${userId}/bestScore`), bestScore);
+            console.log("Updated best score to:", bestScore);
+            document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+        } catch (error) {
+            console.error("Error updating best score: ", error);
+        }
     }
 }
 
-// Логика игры Snake
+// Game logic
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
