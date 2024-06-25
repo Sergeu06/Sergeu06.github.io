@@ -30,6 +30,8 @@ signInAnonymously(auth).then(() => {
             userId = user.uid;
             console.log("User ID:", userId);
             loadBestScore();
+        } else {
+            console.error("User is not signed in");
         }
     });
 }).catch((error) => {
