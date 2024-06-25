@@ -22,27 +22,37 @@ const database = getDatabase(app);
 let userId = null;
 let bestScore = 0;
 
-// Sign in anonymously
-signInAnonymously(auth).then(() => {
-    console.log("Signed in anonymously");
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            userId = user.uid;
-            console.log("User ID:", userId);
-            loadBestScore();
-        } else {
-            console.error("User is not signed in");
-        }
-    });
-}).catch((error) => {
-    console.error("Error signing in anonymously: ", error);
-});
+// Extract UID from URL if present
+const urlParams = new URLSearchParams(window.location.search);
+const uidFromUrl = urlParams.get('uid');
 
-// Load best score
-async function loadBestScore() {
+if (uidFromUrl) {
+    // If UID is provided in the URL, use it
+    userId = uidFromUrl;
+    loadBestScore(uidFromUrl);
+} else {
+    // Otherwise, sign in anonymously
+    signInAnonymously(auth).then(() => {
+        console.log("Signed in anonymously");
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                console.log("User ID:", userId);
+                loadBestScore(userId);
+            } else {
+                console.error("User is not signed in");
+            }
+        });
+    }).catch((error) => {
+        console.error("Error signing in anonymously: ", error);
+    });
+}
+
+// Load best score for a given user ID
+async function loadBestScore(uid) {
     const dbRef = ref(database);
     try {
-        const snapshot = await get(child(dbRef, `users/${userId}/bestScore`));
+        const snapshot = await get(child(dbRef, `users/${uid}/bestScore`));
         if (snapshot.exists()) {
             bestScore = snapshot.val();
             console.log("Loaded best score:", bestScore);
@@ -56,7 +66,7 @@ async function loadBestScore() {
     }
 }
 
-// Update best score
+// Update best score for the current user
 async function updateBestScore(newScore) {
     console.log("Attempting to update best score:", newScore);
     if (newScore > bestScore) {
