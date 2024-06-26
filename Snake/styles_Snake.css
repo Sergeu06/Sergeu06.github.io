@@ -56,21 +56,21 @@ canvas {
     margin-top: 20px;
 }
 
-.horizontal-controls {
+.control-row {
     display: flex;
-    justify-content: space-between;
-    width: 180px; /* Increased width for better spacing */
+    justify-content: center;
+    margin: 5px 0;
 }
 
 .control-btn {
-    width: 60px; /* Increased button size for better usability */
-    height: 60px;
+    width: 70px; /* Increased button size for better usability */
+    height: 70px;
     font-size: 24px;
     border: none;
     background-color: #333;
     color: white;
     border-radius: 5px;
-    margin: 10px; /* Increased margin for better spacing */
+    margin: 5px;
     cursor: pointer;
 }
 
@@ -105,13 +105,9 @@ canvas {
         margin-top: 10px;
     }
 
-    .horizontal-controls {
-        width: 140px; /* Increased width for better spacing on mobile */
-    }
-
     .control-btn {
-        width: 50px; /* Increased button size for better usability on mobile */
-        height: 50px;
+        width: 60px; /* Increased button size for better usability on mobile */
+        height: 60px;
         font-size: 20px;
     }
 }
