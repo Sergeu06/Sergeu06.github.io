@@ -99,6 +99,7 @@ canvas {
 
     #profile {
         font-size: 16px;
+        padding: 3px;
     }
 
     .controls {
