@@ -28,11 +28,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         const userNick = urlParams.get('usernick');
         
-        // Display usernick on the page and in the console
+        // Display usernick in the console and on the page
         if (userNick) {
+            console.log(`Player: @${userNick}`);
             const profileDiv = document.getElementById('profile');
             profileDiv.innerHTML = `Player: @${userNick}`;
-            console.log(`Player: @${userNick}`);
         }
     </script>
 </body>
