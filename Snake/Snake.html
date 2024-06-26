@@ -23,6 +23,16 @@
     </div>
 
     <script type="module" src="script_Snake.js"></script>
-
+    <script>
+        // Extract usernick from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userNick = urlParams.get('usernick');
+        
+        // Display usernick on the page
+        if (userNick) {
+            const profileDiv = document.getElementById('profile');
+            profileDiv.innerHTML = `Player: @${userNick}`;
+        }
+    </script>
 </body>
 </html>
