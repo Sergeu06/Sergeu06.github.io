@@ -29,6 +29,7 @@ const userNick = urlParams.get('usernick');
 
 if (userNick) {
     document.getElementById('profile').textContent = `Player: @${userNick}`;
+    console.log(`Player: @${userNick}`);
 }
 
 if (uidFromUrl) {
@@ -188,3 +189,4 @@ window.onload = function () {
     generateFood();
     gameLoop();
 };
+
