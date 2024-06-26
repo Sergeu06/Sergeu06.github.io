@@ -4,7 +4,7 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
     authDomain: "snake-6da20.firebaseapp.com",
     databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "snake-6da20",
