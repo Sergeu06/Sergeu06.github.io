@@ -59,18 +59,18 @@ canvas {
 .horizontal-controls {
     display: flex;
     justify-content: space-between;
-    width: 160px;
+    width: 180px; /* Increased width for better spacing */
 }
 
 .control-btn {
-    width: 50px;
-    height: 50px;
+    width: 60px; /* Increased button size for better usability */
+    height: 60px;
     font-size: 24px;
     border: none;
     background-color: #333;
     color: white;
     border-radius: 5px;
-    margin: 5px;
+    margin: 10px; /* Increased margin for better spacing */
     cursor: pointer;
 }
 
@@ -99,7 +99,6 @@ canvas {
 
     #profile {
         font-size: 16px;
-        padding: 3px;
     }
 
     .controls {
@@ -107,12 +106,12 @@ canvas {
     }
 
     .horizontal-controls {
-        width: 120px;
+        width: 140px; /* Increased width for better spacing on mobile */
     }
 
     .control-btn {
-        width: 120px;
-        height: 100px;
+        width: 50px; /* Increased button size for better usability on mobile */
+        height: 50px;
         font-size: 20px;
     }
 }
