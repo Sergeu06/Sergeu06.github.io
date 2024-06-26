@@ -28,8 +28,8 @@ const uidFromUrl = urlParams.get('uid');
 const userNick = urlParams.get('usernick');
 
 if (userNick) {
-    document.getElementById('profile').textContent = `Player: @${userNick}`;
     console.log(`Player: @${userNick}`);
+    document.getElementById('profile').textContent = `Player: @${userNick}`;
 }
 
 if (uidFromUrl) {
@@ -189,4 +189,3 @@ window.onload = function () {
     generateFood();
     gameLoop();
 };
-
