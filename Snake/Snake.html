@@ -23,19 +23,6 @@
             <button id="right" class="control-btn">→</button>
         </div>
     </div>
-     
     <script type="module" src="script_Snake.js"></script>
-    <script>
-        // Extract usernick from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userNick = urlParams.get('usernick');
-        
-        // Display usernick in the console and on the page
-        if (userNick) {
-            console.log(`Player: @${userNick}`);
-            const profileDiv = document.getElementById('profile');
-            profileDiv.innerHTML = `Player: @${userNick}`;
-        }
-    </script>
 </body>
 </html>
