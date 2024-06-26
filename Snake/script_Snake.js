@@ -4,6 +4,7 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
+    // Your Firebase configuration here
     apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
     authDomain: "snake-6da20.firebaseapp.com",
     databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
@@ -21,19 +22,17 @@ const database = getDatabase(app);
 
 let userId = null;
 let bestScore = 0;
+let username = "";
 
-// Extract UID and usernick from URL if present
+// Extract UID and username from URL if present
 const urlParams = new URLSearchParams(window.location.search);
 const uidFromUrl = urlParams.get('uid');
-const userNick = urlParams.get('usernick');
-
-if (userNick) {
-    console.log(`Player: @${userNick}`);
-    document.getElementById('profile').textContent = `Player: @${userNick}`;
-}
+const usernameFromUrl = urlParams.get('username');
 
 if (uidFromUrl) {
     userId = uidFromUrl;
+    username = usernameFromUrl;
+    displayUsername(username);
     loadBestScore(userId);
 } else {
     signInAnonymously(auth).then(() => {
@@ -41,7 +40,9 @@ if (uidFromUrl) {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 userId = user.uid;
+                username = usernameFromUrl || "Anonymous";
                 console.log("User ID:", userId);
+                displayUsername(username);
                 loadBestScore(userId);
             } else {
                 console.error("User is not signed in");
@@ -50,6 +51,11 @@ if (uidFromUrl) {
     }).catch((error) => {
         console.error("Error signing in anonymously: ", error);
     });
+}
+
+function displayUsername(name) {
+    console.log("Username:", name);
+    document.getElementById('profile').textContent = `Username: ${name}`;
 }
 
 async function loadBestScore(uid) {
@@ -165,11 +171,6 @@ document.addEventListener('keydown', event => {
             if (direction !== 'left') direction = 'right';
             break;
     }
-});
-
-// JavaScript код для обработки двойного нажатия
-document.addEventListener('dblclick', function(event) {
-    event.preventDefault(); // Отключает стандартное действие двойного нажатия
 });
 
 document.getElementById('up').addEventListener('click', () => {
