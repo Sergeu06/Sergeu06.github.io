@@ -22,9 +22,14 @@ const database = getDatabase(app);
 let userId = null;
 let bestScore = 0;
 
-// Extract UID from URL if present
+// Extract UID and usernick from URL if present
 const urlParams = new URLSearchParams(window.location.search);
 const uidFromUrl = urlParams.get('uid');
+const userNick = urlParams.get('usernick');
+
+if (userNick) {
+    document.getElementById('profile').textContent = `Player: @${userNick}`;
+}
 
 if (uidFromUrl) {
     userId = uidFromUrl;
@@ -121,7 +126,6 @@ function moveSnake() {
     }
 }
 
-
 function generateFood() {
     let newFoodPosition;
     while (true) {
@@ -162,7 +166,7 @@ document.addEventListener('keydown', event => {
     }
 });
 
-       // JavaScript код для обработки двойного нажатия
+// JavaScript код для обработки двойного нажатия
 document.addEventListener('dblclick', function(event) {
     event.preventDefault(); // Отключает стандартное действие двойного нажатия
 });
