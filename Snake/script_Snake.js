@@ -121,6 +121,7 @@ function moveSnake() {
     }
 }
 
+
 function generateFood() {
     let newFoodPosition;
     while (true) {
@@ -159,6 +160,11 @@ document.addEventListener('keydown', event => {
             if (direction !== 'left') direction = 'right';
             break;
     }
+});
+
+       // JavaScript код для обработки двойного нажатия
+document.addEventListener('dblclick', function(event) {
+    event.preventDefault(); // Отключает стандартное действие двойного нажатия
 });
 
 document.getElementById('up').addEventListener('click', () => {
