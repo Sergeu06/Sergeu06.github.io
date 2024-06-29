@@ -1,80 +1,62 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
-apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
-authDomain: "snake-6da20.firebaseapp.com",
-databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
-projectId: "snake-6da20",
-storageBucket: "snake-6da20.appspot.com",
-messagingSenderId: "792222318675",
-appId: "1:792222318675:web:5ecacccf554824a7ef46a6",
-measurementId: "G-P9R1G79S57"
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+    databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+    projectId: "YOUR_FIREBASE_PROJECT_ID",
+    storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+    appId: "YOUR_FIREBASE_APP_ID",
+    measurementId: "YOUR_FIREBASE_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
 const database = getDatabase(app);
 
 let userId = null;
 let bestScore = 0;
 
-// Extract UID, user nick, and avatar URL from URL
+// Extract UID from URL
 const urlParams = new URLSearchParams(window.location.search);
 const uidFromUrl = urlParams.get('uid');
-const userNickFromUrl = urlParams.get('usernick');
-const avatarUrlFromUrl = urlParams.get('avatar_url');
-
-// Display user nick and avatar
-if (userNickFromUrl) {
-    document.getElementById('profile').textContent = `Player: ${userNickFromUrl}`;
-    console.log(`Player: ${userNickFromUrl}`);
-}
-if (avatarUrlFromUrl) {
-    const avatarImg = document.createElement('img');
-    avatarImg.src = avatarUrlFromUrl;
-    avatarImg.alt = 'Avatar';
-    avatarImg.classList.add('avatar');
-    document.getElementById('profile').appendChild(avatarImg);
-}
 
 if (uidFromUrl) {
     userId = uidFromUrl;
-    loadBestScore(userId);
+    loadUserData(userId);
 } else {
-    signInAnonymously(auth).then(() => {
-        console.log("Signed in anonymously");
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userId = user.uid;
-                console.log("User ID:", userId);
-                loadBestScore(userId);
-            } else {
-                console.error("User is not signed in");
-            }
-        });
-    }).catch((error) => {
-        console.error("Error signing in anonymously: ", error);
-    });
+    console.error("No UID found in URL");
 }
 
-async function loadBestScore(uid) {
+async function loadUserData(uid) {
     const dbRef = ref(database);
     try {
-        const snapshot = await get(child(dbRef, `users/${uid}/bestScore`));
+        const snapshot = await get(child(dbRef, `users/${uid}`));
         if (snapshot.exists()) {
-            bestScore = snapshot.val();
-            console.log("Loaded best score:", bestScore);
+            const userData = snapshot.val();
+            bestScore = userData.bestScore || 0;
+            const userNick = userData.nickname || "Unknown";
+            const avatarUrl = userData.avatar_url || "";
+
+            document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
+            document.getElementById('profile').textContent = `Player: ${userNick}`;
+            
+            if (avatarUrl) {
+                const avatarImg = document.createElement('img');
+                avatarImg.src = avatarUrl;
+                avatarImg.alt = `${userNick}'s avatar`;
+                avatarImg.style.width = "50px";  // Adjust size as needed
+                avatarImg.style.height = "50px"; // Adjust size as needed
+                document.getElementById('profile').appendChild(avatarImg);
+            }
         } else {
-            bestScore = 0;
-            console.log("No best score found, setting to 0");
+            console.error("User data not found");
         }
-        document.getElementById('best-score').textContent = `Best Score: ${bestScore}`;
     } catch (error) {
-        console.error("Error loading best score: ", error);
+        console.error("Error loading user data: ", error);
     }
 }
 
@@ -91,6 +73,9 @@ async function updateBestScore(newScore) {
         }
     }
 }
+
+// Game logic...
+
 
 // Game logic
 const canvas = document.getElementById('gameCanvas');
