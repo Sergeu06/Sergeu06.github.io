@@ -3,14 +3,14 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-    databaseURL: "YOUR_FIREBASE_DATABASE_URL",
-    projectId: "YOUR_FIREBASE_PROJECT_ID",
-    storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
-    appId: "YOUR_FIREBASE_APP_ID",
-    measurementId: "YOUR_FIREBASE_MEASUREMENT_ID"
+apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
+authDomain: "snake-6da20.firebaseapp.com",
+databaseURL: "https://snake-6da20-default-rtdb.europe-west1.firebasedatabase.app",
+projectId: "snake-6da20",
+storageBucket: "snake-6da20.appspot.com",
+messagingSenderId: "792222318675",
+appId: "1:792222318675:web:5ecacccf554824a7ef46a6",
+measurementId: "G-P9R1G79S57"
 };
 
 // Initialize Firebase
