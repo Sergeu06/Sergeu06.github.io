@@ -22,15 +22,23 @@ const database = getDatabase(app);
 let userId = null;
 let bestScore = 0;
 
-// Extract UID and user nick from URL
+// Extract UID, user nick, and avatar URL from URL
 const urlParams = new URLSearchParams(window.location.search);
 const uidFromUrl = urlParams.get('uid');
 const userNickFromUrl = urlParams.get('usernick');
+const avatarUrlFromUrl = urlParams.get('avatar_url');
 
-// Display user nick
+// Display user nick and avatar
 if (userNickFromUrl) {
     document.getElementById('profile').textContent = `Player: ${userNickFromUrl}`;
     console.log(`Player: ${userNickFromUrl}`);
+}
+if (avatarUrlFromUrl) {
+    const avatarImg = document.createElement('img');
+    avatarImg.src = avatarUrlFromUrl;
+    avatarImg.alt = 'Avatar';
+    avatarImg.classList.add('avatar');
+    document.getElementById('profile').appendChild(avatarImg);
 }
 
 if (uidFromUrl) {
