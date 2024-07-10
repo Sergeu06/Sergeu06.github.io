@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database(app);
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
     // Извлекаем UID из текущего URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -30,10 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Функция загрузки данных пользователя из Firebase
-    async function loadUserData(uid) {
+    function loadUserData(uid) {
         const dbRef = firebase.database().ref();
-        try {
-            const snapshot = await dbRef.child(`users/${uid}`).get();
+        return dbRef.child(`users/${uid}`).get().then((snapshot) => {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
                 return userData;
@@ -41,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("User data not found");
                 return null;
             }
-        } catch (error) {
+        }).catch((error) => {
             console.error("Error loading user data: ", error);
             return null;
-        }
+        });
     }
 
     // Загрузка данных пользователя и установка URL аватара
