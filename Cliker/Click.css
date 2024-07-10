@@ -2,124 +2,105 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    height: 100vh;
+    background-color: #f4f4f9;
 }
 
 .container {
-    width: 100%;
-    max-width: 500px;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-.currency, .stats {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
-
-.currency-item, .stat-item {
-    flex: 1;
-    padding: 5px;
-}
-
-.target-container {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#target-hp {
-    margin-bottom: 20px;
-}
-
-#target {
-    font-size: 64px;
-    cursor: pointer;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
     align-items: center;
     width: 100%;
+    max-width: 425px;
+    height: 100%;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.menu {
+.header, .footer {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
     display: flex;
     justify-content: space-around;
-    width: 100%;
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.menu button {
+.content {
     flex: 1;
-    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    position: absolute;
+    bottom: 0;
+}
+
+.footer button {
+    flex: 1;
+    margin: 0 5px;
     padding: 10px;
-    background-color: #007BFF;
+    font-size: 14px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    box-sizing: border-box;
+    transition: background-color 0.3s;
 }
 
-.menu button:hover {
+.footer button:hover {
     background-color: #0056b3;
 }
 
-/* Стили для модальных окон */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
+    background-color: white;
     padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 10px;
-    box-sizing: border-box;
+    width: 100%;
+    max-width: 425px;
+    border-radius: 8px;
     position: relative;
 }
 
-.close {
+.modal-content .close {
     position: absolute;
     top: 10px;
     left: 10px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
+    background: none;
+    border: none;
+    font-size: 24px;
     cursor: pointer;
 }
 
-.close:hover, .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+@media (min-width: 426px) {
+    .footer button {
+        font-size: 16px;
+    }
 }
