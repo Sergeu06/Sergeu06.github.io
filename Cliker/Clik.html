@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер Игра</title>
+    <link rel="stylesheet" href="Click.css">
+</head>
+<body>
+    <div class="container">
+        <div class="currency">
+            <div class="currency-item">Валюта 1</div>
+            <div class="currency-item">Валюта 2</div>
+            <div class="currency-item">Валюта 3</div>
+            <div class="currency-item">Валюта 4</div>
+        </div>
+        <div class="stats">
+            <div class="stat-item">Урон за клик: <span id="damage-per-click">1</span></div>
+            <div class="stat-item">Пассивный урон в секунду: <span id="passive-damage">0</span></div>
+        </div>
+        <div class="target-container">
+            <div id="target-hp">HP "Цели": <span id="target-hp-value">100</span></div>
+            <div id="target">?</div>
+        </div>
+    </div>
+    <div class="menu">
+        <button id="profile">Профиль</button>
+        <button id="upgrade">Прокачка (база)</button>
+        <button id="quests">Игровые задания и награды за них</button>
+        <button id="qr-code">QR код для передачи</button>
+        <button id="marketplace">Торговая площадка</button>
+    </div>
 
+    <!-- Модальные окна -->
+    <div id="modal-profile" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-profile">&larr; Назад</span>
+            <h2>Профиль</h2>
+            <p>Содержимое окна Профиль</p>
+        </div>
+    </div>
+    <div id="modal-upgrade" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-upgrade">&larr; Назад</span>
+            <h2>Прокачка (база)</h2>
+            <p>Содержимое окна Прокачка (база)</p>
+        </div>
+    </div>
+    <div id="modal-quests" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-quests">&larr; Назад</span>
+            <h2>Игровые задания и награды за них</h2>
+            <p>Содержимое окна Игровые задания и награды за них</p>
+        </div>
+    </div>
+    <div id="modal-qr-code" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-qr-code">&larr; Назад</span>
+            <h2>QR код для передачи</h2>
+            <p>Содержимое окна QR код для передачи</p>
+        </div>
+    </div>
+    <div id="modal-marketplace" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-marketplace">&larr; Назад</span>
+            <h2>Торговая площадка</h2>
+            <p>Содержимое окна Торговая площадка</p>
+        </div>
+    </div>
+
+    <script src="Click.js"></script>
+</body>
+</html>
