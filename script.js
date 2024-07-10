@@ -21,9 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (avatarUrl) {
         avatarImg.src = avatarUrl;
         avatarImg.onload = () => console.log("Avatar loaded successfully");
-        avatarImg.onerror = () => console.error("Failed to load avatar image");
+        avatarImg.onerror = () => {
+            console.error("Failed to load avatar image, using default.");
+            avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
+        };
     } else {
-        avatarImg.src = 'default-avatar.png'; // Путь к изображению аватара по умолчанию
+        avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
     }
 
     // Добавляем обработчик клика для аватара
