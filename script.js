@@ -1,13 +1,12 @@
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.game-btn');
     const overlay = document.getElementById('overlay');
     const newPageContent = document.getElementById('new-page-content');
     const avatarImg = document.getElementById('avatar');
-    
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
     // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyD0SXNWUjftNziCo-TImzA1ksA8w8n-Rfc",
@@ -21,8 +20,8 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
     // Извлекаем UID из текущего URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,9 +33,10 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
     }
 
     // Функция загрузки данных пользователя из Firebase
-    function loadUserData(uid) {
-        const dbRef = firebase.database().ref();
-        return dbRef.child(`users/${uid}`).get().then((snapshot) => {
+    async function loadUserData(uid) {
+        const dbRef = ref(database);
+        try {
+            const snapshot = await get(child(dbRef, `users/${uid}`));
             if (snapshot.exists()) {
                 const userData = snapshot.val();
                 return userData;
@@ -44,10 +44,10 @@ import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/fireb
                 console.error("User data not found");
                 return null;
             }
-        }).catch((error) => {
+        } catch (error) {
             console.error("Error loading user data: ", error);
             return null;
-        });
+        }
     }
 
     // Загрузка данных пользователя и установка URL аватара
