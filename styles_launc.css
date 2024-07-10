@@ -159,3 +159,17 @@ body {
     display: block;
     animation: contentFadeIn 1s ease-in-out forwards;
 }
+
+#profile {
+    margin-top: 10px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+#profile img.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
