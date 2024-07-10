@@ -14,9 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Логируем URL аватара для отладки
+    console.log("Avatar URL:", avatarUrl);
+
     // Устанавливаем URL аватара
     if (avatarUrl) {
         avatarImg.src = avatarUrl;
+        avatarImg.onload = () => console.log("Avatar loaded successfully");
+        avatarImg.onerror = () => console.error("Failed to load avatar image");
     } else {
         avatarImg.src = 'default-avatar.png'; // Путь к изображению аватара по умолчанию
     }
