@@ -3,6 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const newPageContent = document.getElementById('new-page-content');
 
+    // Извлекаем UID из текущего URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const uid = urlParams.get('uid');
+
+    if (!uid) {
+        document.body.innerHTML = "<h1>UID not found in URL. Please start the game from Telegram.</h1>";
+        return;
+    }
+
     buttons.forEach(button => {
         button.addEventListener('click', (event) => {
             const rect = button.getBoundingClientRect();
@@ -21,7 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 newPageContent.classList.add('show');
                 setTimeout(() => {
-                    const url = button.getAttribute('data-url');
+                    let url = button.getAttribute('data-url');
+                    if (url.includes('?')) {
+                        url += `&uid=${uid}`;
+                    } else {
+                        url += `?uid=${uid}`;
+                    }
                     window.location.href = url;
                 }, 1000); // Время для завершения анимации контента
             }, 1000); // Время для завершения анимации кнопки и overlay
