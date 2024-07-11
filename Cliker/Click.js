@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const closeBtn = document.querySelector('.close-btn');
     const footerButtons = document.querySelectorAll('.footer-btn');
+    const notification = document.getElementById('notification');
     
     let damagePerClick = 1;
     let damagePerSecond = 0;
@@ -76,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Math.random() < 0.25) {
             knowledgeAboutTarget = true;
             console.log('Получены знания о противнике.');
+            showNotification('Вы получили знания о противнике!');
         } else {
             console.log('Знания о противнике не получены.');
         }
@@ -90,6 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
         console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
+    }
+    
+    function showNotification(message) {
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000); // Уведомление исчезает через 3 секунды
     }
     
     setInterval(() => {
