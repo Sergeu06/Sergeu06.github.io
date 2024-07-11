@@ -8,34 +8,47 @@
 </head>
 <body>
     <div id="notification" class="notification hidden">Получены знания о противнике!</div>
-    <div class="header">
-        <!-- Заголовок и другие элементы -->
-    </div>
-    <div class="main-content">
-        <div class="resource">
-            <div class="resource-item">
-                <img src="path/to/resource1-icon.png" alt="Ресурс 1">
+    <div class="container">
+        <div class="currencies">
+            <div class="currency yellow">
+                <div class="icon"></div>
                 <span id="currency1">0</span>
             </div>
-            <div class="resource-item">
-                <img src="path/to/resource2-icon.png" alt="Ресурс 2">
+            <div class="currency gray">
+                <div class="icon"></div>
                 <span id="currency2">0</span>
             </div>
-        </div>
-        <div class="target-container">
-            <img id="targetImage" src="path/to/target-image.png" alt="Цель">
-            <div class="hp-bar">
-                <div id="hpFill" class="hp-fill"></div>
-                <div id="hpText" class="hp-text">?</div>
+            <div class="currency light-green">
+                <div class="icon"></div>
+                <span id="currency3">0</span>
+            </div>
+            <div class="currency light-brown">
+                <div class="icon"></div>
+                <span id="currency4">0</span>
+            </div>
+            <div class="currency light-gray">
+                <div class="icon"></div>
+                <span id="currency5">0</span>
             </div>
         </div>
-        <div class="buttons">
+        <div class="stats">
+            <div class="stat">Урон за клик: <span id="damagePerClick">1</span></div>
+            <div class="stat">Урон в секунду: <span id="damagePerSecond">0</span></div>
+        </div>
+        <div class="hp-bar">
+            <div id="hpFill" class="hp-fill"></div>
+            <div id="hpText" class="hp-text">?</div>
+        </div>
+        <div class="target">
+            <img id="targetImage" src="path/to/target-image.png" alt="Цель">
+        </div>
+        <div class="footer">
             <button id="upgradeClickDamage" class="footer-btn">Улучшить урон за клик</button>
             <button id="upgradeDPS" class="footer-btn">Улучшить урон в секунду</button>
         </div>
     </div>
     <div id="overlay" class="overlay">
-        <div class="popup">
+        <div class="overlay-content">
             <button class="close-btn">&times;</button>
             <!-- Содержимое всплывающих окон -->
         </div>
