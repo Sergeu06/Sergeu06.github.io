@@ -62,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
             hpFill.style.backgroundColor = 'red'; // Полоска всегда красная при знании о противнике
             hpText.textContent = `${targetHP} / ${maxHP}`;
         } else {
-            const hpPercentage = Math.max(0, 100 - ((maxHP - targetHP) / maxHP) * 100);
-            hpFill.style.width = `${hpPercentage}%`;
-            hpFill.style.backgroundColor = `rgba(0, 0, 0, ${1 - hpPercentage / 100})`;
+            hpFill.style.width = '100%';
+            const darknessLevel = 1 - (targetHP / maxHP);
+            hpFill.style.backgroundColor = `rgba(0, 0, 0, ${darknessLevel})`;
             hpText.textContent = '?';
         }
         console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
