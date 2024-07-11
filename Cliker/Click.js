@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (knowledgeAboutTarget) {
             const hpPercentage = (targetHP / maxHP) * 100;
             hpFill.style.width = `${hpPercentage}%`;
+            hpFill.style.backgroundColor = 'red'; // Полоска всегда красная при знании о противнике
             hpText.textContent = `${targetHP} / ${maxHP}`;
         } else {
             const hpPercentage = Math.max(0, 100 - ((maxHP - targetHP) / maxHP) * 100);
@@ -106,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Инициализация начального отображения
+    hpFill.style.backgroundColor = 'red'; // Изначально полоска красная
     updateHPDisplay();
     updateDisplays();
 });
