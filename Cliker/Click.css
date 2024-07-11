@@ -19,6 +19,7 @@ body {
     padding: 10px;
     box-sizing: border-box;
     border-radius: 25px;
+    border: 2px solid #444;
 }
 
 .currencies {
@@ -73,6 +74,24 @@ body {
     font-size: 1.2em;
 }
 
+.hp-bar {
+    background-color: #555;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    height: 20px;
+    position: relative;
+}
+
+.hp-fill {
+    background-color: red;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 10px 0 0 10px;
+}
+
 .target {
     display: flex;
     justify-content: center;
@@ -99,6 +118,19 @@ body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    position: relative;
+}
+
+.footer-btn::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: -1;
 }
 
 #overlay {
@@ -120,6 +152,7 @@ body {
     text-align: center;
     width: 90%;
     max-width: 400px;
+    position: relative;
 }
 
 .close-btn {
