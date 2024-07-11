@@ -25,12 +25,11 @@ body {
 .currencies {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     background-color: #444;
     padding: 5px;
     border-radius: 10px;
     border: 2px solid #555;
-    position: relative;
 }
 
 .currency {
@@ -42,7 +41,6 @@ body {
     font-weight: bold;
     position: relative;
     border: 2px solid #555;
-    margin: 0 2px;
     background-color: #555;
 }
 
@@ -79,8 +77,8 @@ body {
 
 .stats {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .stat {
@@ -98,7 +96,7 @@ body {
     background-color: #555;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     height: 20px;
     position: relative;
     border: 2px solid #444;
@@ -118,7 +116,7 @@ body {
     justify-content: center;
     align-items: center;
     flex: 1;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .target img {
@@ -130,7 +128,7 @@ body {
 
 .footer {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-top: 10px;
     background-color: #444;
     padding: 10px 0;
