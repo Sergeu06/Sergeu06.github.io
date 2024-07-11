@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const closeBtn = document.querySelector('.close-btn');
     const footerButtons = document.querySelectorAll('.footer-btn');
+    const notification = document.getElementById('notification');
     
     let damagePerClick = 1;
     let damagePerSecond = 0;
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Шанс получить знание о противнике
         if (Math.random() < 0.25) {
             knowledgeAboutTarget = true;
+            showNotification();
             console.log('Получены знания о противнике.');
         } else {
             console.log('Знания о противнике не получены.');
@@ -85,11 +87,20 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHPDisplay();
     }
     
+    function showNotification() {
+        notification.classList.remove('hidden');
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 4000);
+    }
+    
     function updateDisplays() {
         currencyDisplay.textContent = currency;
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
-        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
+        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damage### script.js (продолжение)
+```javascript
+        PerSecond}`);
     }
     
     setInterval(() => {
