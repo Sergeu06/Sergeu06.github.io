@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер игра</title>
+    <title>Кликер Игра</title>
     <link rel="stylesheet" href="Click.css">
 </head>
 <body>
-    <div id="notification" class="notification hidden">Получены знания о противнике!</div>
     <div class="container">
         <div class="currencies">
             <div class="currency yellow">
@@ -32,25 +31,28 @@
             </div>
         </div>
         <div class="stats">
-            <div class="stat">Урон/клик: <span id="damagePerClick">1</span></div>
-            <div class="stat">Урон/секунду: <span id="damagePerSecond">0</span></div>
+            <div class="stat">Урон/К<br><span id="damagePerClick">1</span></div>
+            <div class="stat">Урон/Сек<br><span id="damagePerSecond">0</span></div>
         </div>
         <div class="hp-bar">
-            <div id="hpFill" class="hp-fill"></div>
-            <div id="hpText" class="hp-text">?</div>
+            <div class="hp-fill" id="hpFill"></div>
+            <div class="hp-text" id="hpText">?</div>
         </div>
         <div class="target">
-            <img id="targetImage" src="path/to/target-image.png" alt="Цель">
+            <img src="pepe.png" alt="Pepe" id="targetImage">
         </div>
         <div class="footer">
-            <button id="upgradeClickDamage" class="footer-btn">Улучшить урон за клик</button>
-            <button id="upgradeDPS" class="footer-btn">Улучшить урон в секунду</button>
+            <button class="footer-btn" id="upgradeClickDamage">Прокачать Урон/К</button>
+            <button class="footer-btn" id="upgradeDPS">Прокачать Урон/Сек</button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
         </div>
     </div>
-    <div id="overlay" class="overlay">
+    <div id="overlay">
         <div class="overlay-content">
-            <button class="close-btn">&times;</button>
-            <!-- Содержимое всплывающих окон -->
+            <button class="close-btn">&larr; Назад</button>
+            <p>Содержимое окна</p>
         </div>
     </div>
     <script src="Click.js"></script>
