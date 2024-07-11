@@ -205,23 +205,3 @@ body {
     font-size: 1.5em;
     cursor: pointer;
 }
-
-.notification {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #00ff00;
-    border: 2px solid #008000;
-    padding: 10px;
-    color: #000000;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.hidden {
-    display: none;
-}
