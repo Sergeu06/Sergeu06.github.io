@@ -4,71 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кликер Игра</title>
-    <link rel="stylesheet" href="Click.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <span>Валюта 1</span>
-            <span>Валюта 2</span>
-            <span>Валюта 3</span>
-            <span>Валюта 4</span>
+        <div class="currencies">
+            <div class="currency yellow">123</div>
+            <div class="currency gray">123</div>
+            <div class="currency light-green">123</div>
+            <div class="currency light-brown">123</div>
+            <div class="currency light-gray">123</div>
         </div>
-        <div class="content">
-            <div>Урон за клик: <span id="damage">1</span></div>
-            <div>Пассивный урон в секунду: <span id="dps">0</span></div>
-            <div>HP "Цели": <span id="hp">100</span></div>
-            <div id="target">?</div>
+        <div class="stats">
+            <div class="stat">Урон/К: <span>321</span></div>
+            <div class="stat">Урон/Сек: <span>321</span></div>
+        </div>
+        <div class="target">
+            <img src="pepe.png" alt="Pepe">
         </div>
         <div class="footer">
-            <button id="profile-btn">Профиль</button>
-            <button id="upgrade-btn">Прокачка (база)</button>
-            <button id="quests-btn">Игровые задания и награды за них</button>
-            <button id="qr-code-btn">QR код для передачи</button>
-            <button id="marketplace-btn">Торговая площадка</button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
+            <button class="footer-btn"></button>
         </div>
     </div>
-
-    <div id="profile-modal" class="modal">
-        <div class="modal-content">
-            <button class="close">&larr;</button>
-            <h2>Профиль</h2>
-            <p>Контент профиля</p>
-        </div>
-    </div>
-
-    <div id="upgrade-modal" class="modal">
-        <div class="modal-content">
-            <button class="close">&larr;</button>
-            <h2>Прокачка (база)</h2>
-            <p>Контент прокачки</p>
-        </div>
-    </div>
-
-    <div id="quests-modal" class="modal">
-        <div class="modal-content">
-            <button class="close">&larr;</button>
-            <h2>Игровые задания и награды за них</h2>
-            <p>Контент игровых заданий</p>
-        </div>
-    </div>
-
-    <div id="qr-code-modal" class="modal">
-        <div class="modal-content">
-            <button class="close">&larr;</button>
-            <h2>QR код для передачи</h2>
-            <p>Контент QR кода</p>
-        </div>
-    </div>
-
-    <div id="marketplace-modal" class="modal">
-        <div class="modal-content">
-            <button class="close">&larr;</button>
-            <h2>Торговая площадка</h2>
-            <p>Контент торговой площадки</p>
-        </div>
-    </div>
-
-    <script src="Click.js"></script>
 </body>
 </html>
