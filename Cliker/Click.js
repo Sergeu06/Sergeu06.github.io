@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let damagePerClick = 1;
     let damagePerSecond = 0;
-    let currency = 10000; // Пример стартовой валюты
+    let currency = 1000; // Пример стартовой валюты
     let targetHP = 100;
     let maxHP = 100;
     let knowledgeAboutTarget = false;
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             hpFill.style.width = '100%';
             const darknessLevel = 1 - (targetHP / maxHP);
-            hpFill.style.backgroundColor = `rgba(0, 0, 0, ${darknessLevel})`;
+            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`; // Полоска изначально красная и постепенно чернеет
             hpText.textContent = '?';
         }
         console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
