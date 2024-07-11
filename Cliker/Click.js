@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const hpPercentage = Math.max(0, 100 - ((maxHP - targetHP) / maxHP) * 100);
             hpFill.style.width = `${hpPercentage}%`;
+            hpFill.style.backgroundColor = `rgba(0, 0, 0, ${1 - hpPercentage / 100})`;
             hpText.textContent = '?';
         }
     }
