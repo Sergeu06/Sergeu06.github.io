@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 50;
             damagePerClick += 1;
             updateDisplays();
+            console.log(`Урон за клик увеличен до ${damagePerClick}`);
+        } else {
+            console.log("Недостаточно валюты для прокачки урона за клик");
         }
     });
     
@@ -32,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 100;
             damagePerSecond += 1;
             updateDisplays();
+            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
+        } else {
+            console.log("Недостаточно валюты для прокачки урона в секунду");
         }
     });
     
@@ -41,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function dealDamage(damage) {
         targetHP -= damage;
+        console.log(`Нанесен урон: ${damage}. Осталось HP: ${targetHP}`);
         if (targetHP <= 0) {
             targetHP = 0;
             targetDefeated();
@@ -59,13 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
             hpFill.style.backgroundColor = `rgba(0, 0, 0, ${1 - hpPercentage / 100})`;
             hpText.textContent = '?';
         }
+        console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
     }
     
     function targetDefeated() {
-        console.log('Target defeated!');
+        console.log('Противник побежден!');
         // Шанс получить знание о противнике
         if (Math.random() < 0.25) {
             knowledgeAboutTarget = true;
+            console.log('Получены знания о противнике.');
+        } else {
+            console.log('Знания о противнике не получены.');
         }
         // Возвращаем HP противника
         maxHP += 100;
@@ -77,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currencyDisplay.textContent = currency;
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
+        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
     }
     
     setInterval(() => {
@@ -92,4 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
     closeBtn.addEventListener('click', () => {
         overlay.style.display = 'none';
     });
+    
+    // Инициализация начального отображения
+    updateHPDisplay();
+    updateDisplays();
 });
