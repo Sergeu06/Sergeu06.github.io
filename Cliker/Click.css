@@ -211,14 +211,15 @@ body {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #ccffcc; /* Тускло-зеленый фон */
+    background-color: rgba(204, 255, 204, 0.9); /* Тускло-зеленый фон с прозрачностью */
     color: #000000; /* Черный текст */
     padding: 10px 20px;
     border: 2px solid #006600; /* Темно-зеленая рамка */
-    border-radius: 5px;
+    border-radius: 10px; /* Сглаживание углов */
     font-size: 1.2em;
     text-align: center;
     z-index: 1000;
     display: none;
+    white-space: nowrap; /* Однострочное отображение */
 }
 
