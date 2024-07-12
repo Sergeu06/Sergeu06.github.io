@@ -1,62 +1,46 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кликер Игра</title>
-    <link rel="stylesheet" href="Click.css">
+    <title>Clicker Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="notification" class="notification"></div>
-
-    <div class="container">
-        <div class="currencies">
-            <div class="currency yellow">
-                <div class="icon"></div>
-                <span id="currency1">0</span>
-            </div>
-            <div class="currency gray">
-                <div class="icon"></div>
-                <span id="currency2">0</span>
-            </div>
-            <div class="currency light-green">
-                <div class="icon"></div>
-                <span id="currency3">0</span>
-            </div>
-            <div class="currency light-brown">
-                <div class="icon"></div>
-                <span id="currency4">0</span>
-            </div>
-            <div class="currency light-gray">
-                <div class="icon"></div>
-                <span id="currency5">0</span>
-            </div>
+    <div id="stats">
+        <div class="resource">
+            <span>Валюта: </span><span id="currency1">0</span>
         </div>
-        <div class="stats">
-            <div class="stat">Урон/К<br><span id="damagePerClick">1</span></div>
-            <div class="stat">Урон/Сек<br><span id="damagePerSecond">0</span></div>
+        <div class="resource">
+            <span>Урон/Клик: </span><span id="damagePerClick">1</span>
         </div>
-        <div class="hp-bar">
-            <div class="hp-fill" id="hpFill"></div>
-            <div class="hp-text" id="hpText">?</div>
-        </div>
-        <div class="target">
-            <img src="pepe.png" alt="Pepe" id="targetImage">
-        </div>
-        <div class="footer">
-            <button class="footer-btn" id="profileBtn">Профиль</button>
-            <button class="footer-btn" id="upgradeBtn">Прокачка (База)</button>
-            <button class="footer-btn" id="questsBtn">Задания</button>
-            <button class="footer-btn" id="qrBtn">QR</button>
-            <button class="footer-btn" id="marketplaceBtn">Торговая площадка</button>
+        <div class="resource">
+            <span>Урон/Сек: </span><span id="damagePerSecond">0</span>
         </div>
     </div>
-    <div id="overlay">
-        <div class="overlay-content">
-            <button class="close-btn">&larr; Назад</button>
-            <p>Содержимое окна</p>
+    <div id="targetContainer">
+        <div id="target">
+            <img id="targetImage" src="target.png" alt="Target">
+            <div id="hpBar">
+                <div id="hpFill"></div>
+            </div>
+            <div id="hpText">?</div>
         </div>
     </div>
-    <script src="Click.js"></script>
+    <div class="footer">
+        <button class="footer-btn" id="profileBtn">Профиль</button>
+        <button class="footer-btn" id="upgradeBtn">Прокачка (База)</button>
+        <button class="footer-btn" id="questsBtn">Задания</button>
+        <button class="footer-btn" id="qrBtn">QR</button>
+        <button class="footer-btn" id="marketplaceBtn">Торговая площадка</button>
+    </div>
+    <div id="overlay" class="overlay">
+        <div class="popup">
+            <button class="close-btn">Назад</button>
+            <!-- Здесь будет содержимое окна -->
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
