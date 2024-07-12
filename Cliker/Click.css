@@ -211,7 +211,7 @@ body {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(204, 255, 204, 0.9); /* Тускло-зеленый фон с прозрачностью */
+    background-color: rgba(204, 255, 204, 0.3); /* Тускло-зеленый фон с прозрачностью */
     color: #000000; /* Черный текст */
     padding: 10px 20px;
     border: 2px solid #006600; /* Темно-зеленая рамка */
