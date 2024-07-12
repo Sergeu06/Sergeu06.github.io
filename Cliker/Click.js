@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const closeBtn = document.querySelector('.close-btn');
-    const footerButtons = document.querySelectorAll('.footer-btn');
     const notification = document.getElementById('notification');
     
     let damagePerClick = 1;
@@ -106,10 +105,24 @@ document.addEventListener('DOMContentLoaded', () => {
         dealDamage(damagePerSecond);
     }, 1000);
     
-    footerButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            overlay.style.display = 'flex';
-        });
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('upgradeBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('questsBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('qrBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('marketplaceBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
     });
     
     closeBtn.addEventListener('click', () => {
