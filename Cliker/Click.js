@@ -18,28 +18,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const hpText = document.getElementById('hpText');
     
     currencyDisplay.textContent = currency;
+
+    // Обработчики кнопок прокачки
+    const upgradeClickDamageBtn = document.getElementById('upgradeClickDamage');
+    const upgradeDPSBtn = document.getElementById('upgradeDPS');
     
-    document.getElementById('upgradeClickDamage').addEventListener('click', () => {
-        if (currency >= 50) { // Пример стоимости прокачки
-            currency -= 50;
-            damagePerClick += 1;
-            updateDisplays();
-            console.log(`Урон за клик увеличен до ${damagePerClick}`);
-        } else {
-            console.log("Недостаточно валюты для прокачки урона за клик");
-        }
-    });
+    if (upgradeClickDamageBtn) {
+        upgradeClickDamageBtn.addEventListener('click', () => {
+            if (currency >= 50) { // Пример стоимости прокачки
+                currency -= 50;
+                damagePerClick += 1;
+                updateDisplays();
+                console.log(`Урон за клик увеличен до ${damagePerClick}`);
+            } else {
+                console.log("Недостаточно валюты для прокачки урона за клик");
+            }
+        });
+    }
     
-    document.getElementById('upgradeDPS').addEventListener('click', () => {
-        if (currency >= 100) { // Пример стоимости прокачки
-            currency -= 100;
-            damagePerSecond += 1;
-            updateDisplays();
-            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
-        } else {
-            console.log("Недостаточно валюты для прокачки урона в секунду");
-        }
-    });
+    if (upgradeDPSBtn) {
+        upgradeDPSBtn.addEventListener('click', () => {
+            if (currency >= 100) { // Пример стоимости прокачки
+                currency -= 100;
+                damagePerSecond += 1;
+                updateDisplays();
+                console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
+            } else {
+                console.log("Недостаточно валюты для прокачки урона в секунду");
+            }
+        });
+    }
     
     targetImage.addEventListener('click', () => {
         dealDamage(damagePerClick);
