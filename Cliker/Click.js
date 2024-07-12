@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let damagePerClick = 1;
     let damagePerSecond = 0;
-    let currency = 100000; // Пример стартовой валюты
+    let currency = 1000; // Пример стартовой валюты
     let targetHP = 100;
     let maxHP = 100;
     let knowledgeAboutTarget = false;
