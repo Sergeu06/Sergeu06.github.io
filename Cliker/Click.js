@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             hpFill.style.width = '100%';
             const darknessLevel = 1 - (targetHP / maxHP);
-            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`; // Полоска изначально красная и постепенно чернеет
+            hpFill.style.backgroundColor = `rgba(0, 0, 0, ${darknessLevel})`; // Полоска постепенно чернеет
             hpText.textContent = '?';
         }
         console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
