@@ -19,26 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     currencyDisplay.textContent = currency;
     
-    document.getElementById('upgradeClickDamage').addEventListener('click', () => {
-        if (currency >= 50) { // Пример стоимости прокачки
-            currency -= 50;
-            damagePerClick += 1;
-            updateDisplays();
-            console.log(`Урон за клик увеличен до ${damagePerClick}`);
-        } else {
-            console.log("Недостаточно валюты для прокачки урона за клик");
-        }
+    document.getElementById('upgradeBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
     });
     
-    document.getElementById('upgradeDPS').addEventListener('click', () => {
-        if (currency >= 100) { // Пример стоимости прокачки
-            currency -= 100;
-            damagePerSecond += 1;
-            updateDisplays();
-            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
-        } else {
-            console.log("Недостаточно валюты для прокачки урона в секунду");
-        }
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('questsBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('qrBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+
+    document.getElementById('marketplaceBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        overlay.style.display = 'none';
     });
     
     targetImage.addEventListener('click', () => {
@@ -103,30 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         dealDamage(damagePerSecond);
     }, 1000);
-    
-    document.getElementById('profileBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('upgradeBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('questsBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('qrBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('marketplaceBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-    
-    closeBtn.addEventListener('click', () => {
-        overlay.style.display = 'none';
-    });
     
     // Инициализация начального отображения
     hpFill.style.backgroundColor = 'red'; // Изначально полоска красная
