@@ -4,40 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clicker Game</title>
-    <link rel="stylesheet" href="Click.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="notification" class="notification"></div>
-    <div id="stats">
-        <div class="resource">
-            <span>Валюта 1: </span><span id="currency1">0</span>
-        </div>
-        <div class="resource">
-            <span>Валюта 2: </span><span id="currency2">0</span>
-        </div>
-        <div class="resource">
-            <span>Валюта 3: </span><span id="currency3">0</span>
-        </div>
-        <div class="resource">
-            <span>Валюта 4: </span><span id="currency4">0</span>
-        </div>
-        <div class="resource">
-            <span>Валюта 5: </span><span id="currency5">0</span>
-        </div>
-        <div class="resource">
-            <span>Урон/Клик: </span><span id="damagePerClick">1</span>
-        </div>
-        <div class="resource">
-            <span>Урон/Сек: </span><span id="damagePerSecond">0</span>
-        </div>
-    </div>
-    <div id="targetContainer">
-        <div id="target">
-            <img id="targetImage" src="target.png" alt="Target">
-            <div id="hpBar">
-                <div id="hpFill"></div>
+    <div class="container">
+        <div class="currencies">
+            <div class="currency yellow">
+                <div class="icon"></div>
+                Валюта: <span id="currency1">0</span>
             </div>
-            <div id="hpText">?</div>
+            <div class="currency gray">
+                <div class="icon"></div>
+                Серебро: <span id="currency2">0</span>
+            </div>
+            <div class="currency light-green">
+                <div class="icon"></div>
+                Золото: <span id="currency3">0</span>
+            </div>
+            <div class="currency light-brown">
+                <div class="icon"></div>
+                Бронза: <span id="currency4">0</span>
+            </div>
+            <div class="currency light-gray">
+                <div class="icon"></div>
+                Платина: <span id="currency5">0</span>
+            </div>
+        </div>
+        <div class="hp-bar">
+            <div class="hp-fill" id="hpFill"></div>
+            <div class="hp-text" id="hpText">?</div>
+        </div>
+        <div class="target">
+            <img id="targetImage" src="target.png" alt="Target">
         </div>
     </div>
     <div class="footer">
@@ -48,11 +47,11 @@
         <button class="footer-btn" id="marketplaceBtn">Торговая площадка</button>
     </div>
     <div id="overlay" class="overlay">
-        <div class="popup">
+        <div class="overlay-content">
             <button class="close-btn">Назад</button>
-            <div id="baseUpgrades">
-                <button id="upgradeClickDamage">Улучшить урон за клик (50 валюты)</button>
-                <button id="upgradeDPS">Улучшить урон в секунду (100 валюты)</button>
+            <div id="baseUpgrades" style="display: none;">
+                <button id="upgradeClickDamage">Улучшить урон за клик (50)</button>
+                <button id="upgradeDPS">Улучшить урон в секунду (100)</button>
             </div>
         </div>
     </div>
