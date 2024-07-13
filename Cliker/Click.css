@@ -133,101 +133,81 @@ body {
     margin-bottom: 20px;
 }
 
-.target img {
-    max-width: 80%;
-    max-height: 80%;
+.target img    max-width: 100%;
+    max-height: 100%;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid #444;
+    box-sizing: border-box;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+    background-color: #444;
+    padding: 10px;
     border-radius: 10px;
     border: 2px solid #555;
 }
 
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: #333;
-    padding: 10px 0;
-    z-index: 100;
-}
-
 .footer-btn {
-    background-color: #fff;
-    border: 2px solid #006600;
-    border-radius: 10px;
-    color: #000;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    flex-grow: 1;
-    text-align: center;
+    flex: 1;
     margin: 0 5px;
-    max-width: 18%;
-    box-sizing: border-box;
+    padding: 10px;
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1em;
 }
 
 .footer-btn:hover {
-    background-color: #ccffcc;
+    background-color: #888;
 }
 
-.footer-btn::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    border-radius: 15px;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: -1;
-}
-
-#overlay {
-    display: none;
+.overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
     justify-content: center;
     align-items: center;
 }
 
 .overlay-content {
-    background: #fff;
+    background-color: #222;
     padding: 20px;
     border-radius: 10px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-    position: relative;
+    color: #fff;
+    border: 2px solid #444;
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px; /* Исправлено на правый верхний угол */
-    background: none;
+    background-color: #666;
+    color: #fff;
     border: none;
-    font-size: 1.5em;
+    padding: 10px;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: 1em;
+}
+
+.close-btn:hover {
+    background-color: #888;
 }
 
 .notification {
     position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(204, 255, 204, 0.3); /* Тускло-зеленый фон с прозрачностью */
-    color: #000000; /* Черный текст */
-    padding: 10px 20px;
-    border: 2px solid #006600; /* Темно-зеленая рамка */
-    border-radius: 10px; /* Сглаживание углов */
-    font-size: 1.2em;
-    text-align: center;
-    z-index: 1000;
+    top: 20px;
+    right: 20px;
+    background-color: #444;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
     display: none;
-    white-space: nowrap; /* Однострочное отображение */
+    border: 2px solid #555;
 }
