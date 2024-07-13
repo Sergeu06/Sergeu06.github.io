@@ -1,58 +1,42 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clicker Game</title>
-    <link rel="stylesheet" href="Click.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="notification" class="notification"></div>
     <div class="container">
         <div class="currencies">
             <div class="currency yellow">
-                <span class="icon"></span>
-                <span id="currency1">0</span>
+                <div class="icon"></div>
+                Валюта: <span id="currency1">0</span>
             </div>
             <div class="currency gray">
-                <span class="icon"></span>
-                <span id="currency2">0</span>
+                <div class="icon"></div>
+                Урон/Клик: <span id="damagePerClick">1</span>
             </div>
             <div class="currency light-green">
-                <span class="icon"></span>
-                <span id="currency3">0</span>
-            </div>
-            <div class="currency light-brown">
-                <span class="icon"></span>
-                <span id="currency4">0</span>
-            </div>
-            <div class="currency light-gray">
-                <span class="icon"></span>
-                <span id="currency5">0</span>
+                <div class="icon"></div>
+                Урон/Сек: <span id="damagePerSecond">0</span>
             </div>
         </div>
-        <div class="stats">
-            <div class="stat">
-                <span>Урон/Клик: </span><span id="damagePerClick">1</span>
-            </div>
-            <div class="stat">
-                <span>Урон/Сек: </span><span id="damagePerSecond">0</span>
-            </div>
+        <div class="hp-bar">
+            <div class="hp-fill" id="hpFill"></div>
+            <div class="hp-text" id="hpText">?</div>
         </div>
         <div class="target">
             <img id="targetImage" src="target.png" alt="Target">
-            <div class="hp-bar">
-                <div class="hp-fill" id="hpFill"></div>
-                <div class="hp-text" id="hpText">?</div>
-            </div>
         </div>
-        <div class="footer">
-            <button class="footer-btn" id="profileBtn">Профиль</button>
-            <button class="footer-btn" id="upgradeBtn">Прокачка (База)</button>
-            <button class="footer-btn" id="questsBtn">Задания</button>
-            <button class="footer-btn" id="qrBtn">QR</button>
-            <button class="footer-btn" id="marketplaceBtn">Торговая площадка</button>
-        </div>
+    </div>
+    <div class="footer">
+        <button class="footer-btn" id="profileBtn">Профиль</button>
+        <button class="footer-btn" id="upgradeBtn">Прокачка (База)</button>
+        <button class="footer-btn" id="questsBtn">Задания</button>
+        <button class="footer-btn" id="qrBtn">QR</button>
+        <button class="footer-btn" id="marketplaceBtn">Торговая площадка</button>
     </div>
     <div id="overlay" class="overlay">
         <div class="overlay-content">
@@ -60,6 +44,6 @@
             <!-- Здесь будет содержимое окна -->
         </div>
     </div>
-    <script src="Click.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
