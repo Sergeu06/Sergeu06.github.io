@@ -208,7 +208,7 @@ body {
 .close-btn {
     position: absolute;
     top: 10px;
-    right: 10px; /* Исправлено на правый верхний угол */
+    left: 10px;
     background: none;
     border: none;
     font-size: 1.5em;
