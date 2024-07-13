@@ -2,45 +2,56 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const closeBtn = document.querySelector('.close-btn');
     const notification = document.getElementById('notification');
+    const baseUpgrades = document.getElementById('baseUpgrades');
     
     let damagePerClick = 1;
     let damagePerSecond = 0;
-    let currency = 10000; // Пример стартовой валюты
+    let currency1 = 10000;
+    let currency2 = 0;
+    let currency3 = 0;
+    let currency4 = 0;
+    let currency5 = 0;
     let targetHP = 100;
     let maxHP = 100;
     let knowledgeAboutTarget = false;
     
-    const currencyDisplay = document.getElementById('currency1');
+    const currencyDisplay1 = document.getElementById('currency1');
+    const currencyDisplay2 = document.getElementById('currency2');
+    const currencyDisplay3 = document.getElementById('currency3');
+    const currencyDisplay4 = document.getElementById('currency4');
+    const currencyDisplay5 = document.getElementById('currency5');
     const dpcDisplay = document.getElementById('damagePerClick');
     const dpsDisplay = document.getElementById('damagePerSecond');
     const targetImage = document.getElementById('targetImage');
     const hpFill = document.getElementById('hpFill');
     const hpText = document.getElementById('hpText');
     
-    currencyDisplay.textContent = currency;
+    currencyDisplay1.textContent = currency1;
+    currencyDisplay2.textContent = currency2;
+    currencyDisplay3.textContent = currency3;
+    currencyDisplay4.textContent = currency4;
+    currencyDisplay5.textContent = currency5;
     
-    document.getElementById('upgradeBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-    
-    document.getElementById('profileBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('questsBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('qrBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('marketplaceBtn').addEventListener('click', () => {
-        overlay.style.display = 'flex';
+    document.getElementById('upgradeClickDamage').addEventListener('click', () => {
+        if (currency1 >= 50) { // Пример стоимости прокачки
+            currency1 -= 50;
+            damagePerClick += 1;
+            updateDisplays();
+            console.log(`Урон за клик увеличен до ${damagePerClick}`);
+        } else {
+            console.log("Недостаточно валюты для прокачки урона за клик");
+        }
     });
     
-    closeBtn.addEventListener('click', () => {
-        overlay.style.display = 'none';
+    document.getElementById('upgradeDPS').addEventListener('click', () => {
+        if (currency1 >= 100) { // Пример стоимости прокачки
+            currency1 -= 100;
+            damagePerSecond += 1;
+            updateDisplays();
+            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
+        } else {
+            console.log("Недостаточно валюты для прокачки урона в секунду");
+        }
     });
     
     targetImage.addEventListener('click', () => {
@@ -58,12 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateHPDisplay() {
-        const hpPercentage = (targetHP / maxHP) * 100;
-        hpFill.style.width = `${hpPercentage}%`;
         if (knowledgeAboutTarget) {
+            const hpPercentage = (targetHP / maxHP) * 100;
+            hpFill.style.width = `${hpPercentage}%`;
             hpFill.style.backgroundColor = 'red'; // Полоска всегда красная при знании о противнике
             hpText.textContent = `${targetHP} / ${maxHP}`;
         } else {
+            hpFill.style.width = '100%';
             const darknessLevel = 1 - (targetHP / maxHP);
             hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`; // Полоска изначально красная и постепенно чернеет
             hpText.textContent = '?';
@@ -88,10 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateDisplays() {
-        currencyDisplay.textContent = currency;
+        currencyDisplay1.textContent = currency1;
+        currencyDisplay2.textContent = currency2;
+        currencyDisplay3.textContent = currency3;
+        currencyDisplay4.textContent = currency4;
+        currencyDisplay5.textContent = currency5;
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
-        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
+        console.log(`Обновлены показатели: Валюта: ${currency1}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
     }
     
     function showNotification(message) {
@@ -105,6 +121,35 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         dealDamage(damagePerSecond);
     }, 1000);
+    
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        baseUpgrades.style.display = 'none';
+    });
+
+    document.getElementById('upgradeBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        baseUpgrades.style.display = 'block';
+    });
+
+    document.getElementById('questsBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        baseUpgrades.style.display = 'none';
+    });
+
+    document.getElementById('qrBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        baseUpgrades.style.display = 'none';
+    });
+
+    document.getElementById('marketplaceBtn').addEventListener('click', () => {
+        overlay.style.display = 'flex';
+        baseUpgrades.style.display = 'none';
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        overlay.style.display = 'none';
+    });
     
     // Инициализация начального отображения
     hpFill.style.backgroundColor = 'red'; // Изначально полоска красная
