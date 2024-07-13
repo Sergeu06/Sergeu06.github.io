@@ -13,6 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const currencyDisplay = document.getElementById('currency1');
     const dpcDisplay = document.getElementById('damagePerClick');
     const dpsDisplay = document.getElementById('damagePerSecond');
+    const targetImage = document.getElement.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.querySelector('.close-btn');
+    const notification = document.getElementById('notification');
+    
+    let damagePerClick = 1;
+    let damagePerSecond = 0;
+    let currency = 10000; // Пример стартовой валюты
+    let targetHP = 100;
+    let maxHP = 100;
+    let knowledgeAboutTarget = false;
+    
+    const currencyDisplay = document.getElementById('currency1');
+    const dpcDisplay = document.getElementById('damagePerClick');
+    const dpsDisplay = document.getElementById('damagePerSecond');
     const targetImage = document.getElementById('targetImage');
     const hpFill = document.getElementById('hpFill');
     const hpText = document.getElementById('hpText');
@@ -24,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 50;
             damagePerClick += 1;
             updateDisplays();
-            console.log(Урон за клик увеличен до ${damagePerClick});
+            console.log(`Урон за клик увеличен до ${damagePerClick}`);
         } else {
             console.log("Недостаточно валюты для прокачки урона за клик");
         }
@@ -35,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 100;
             damagePerSecond += 1;
             updateDisplays();
-            console.log(Урон в секунду увеличен до ${damagePerSecond});
+            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
         } else {
             console.log("Недостаточно валюты для прокачки урона в секунду");
         }
@@ -47,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function dealDamage(damage) {
         targetHP -= damage;
-        console.log(Нанесен урон: ${damage}. Осталось HP: ${targetHP});
+        console.log(`Нанесен урон: ${damage}. Осталось HP: ${targetHP}`);
         if (targetHP <= 0) {
             targetHP = 0;
             targetDefeated();
@@ -56,18 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateHPDisplay() {
+        const hpPercentage = (targetHP / maxHP) * 100;
+        hpFill.style.width = `${hpPercentage}%`;
         if (knowledgeAboutTarget) {
-            const hpPercentage = (targetHP / maxHP) * 100;
-            hpFill.style.width = ${hpPercentage}%;
             hpFill.style.backgroundColor = 'red'; // Полоска всегда красная при знании о противнике
-            hpText.textContent = ${targetHP} / ${maxHP};
+            hpText.textContent = `${targetHP} / ${maxHP}`;
         } else {
-            hpFill.style.width = '100%';
             const darknessLevel = 1 - (targetHP / maxHP);
-            hpFill.style.backgroundColor = rgba(255, 0, 0, ${1 - darknessLevel}); // Полоска изначально красная и постепенно чернеет
+            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`; // Полоска изначально красная и постепенно чернеет
             hpText.textContent = '?';
         }
-        console.log(HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget});
+        console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
     }
     
     function targetDefeated() {
@@ -90,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currencyDisplay.textContent = currency;
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
-        console.log(Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond});
+        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
     }
     
     function showNotification(message) {
