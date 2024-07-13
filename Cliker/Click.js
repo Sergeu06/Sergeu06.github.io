@@ -13,21 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const currencyDisplay = document.getElementById('currency1');
     const dpcDisplay = document.getElementById('damagePerClick');
     const dpsDisplay = document.getElementById('damagePerSecond');
-    const targetImage = document.getElement.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('overlay');
-    const closeBtn = document.querySelector('.close-btn');
-    const notification = document.getElementById('notification');
-    
-    let damagePerClick = 1;
-    let damagePerSecond = 0;
-    let currency = 10000; // Пример стартовой валюты
-    let targetHP = 100;
-    let maxHP = 100;
-    let knowledgeAboutTarget = false;
-    
-    const currencyDisplay = document.getElementById('currency1');
-    const dpcDisplay = document.getElementById('damagePerClick');
-    const dpsDisplay = document.getElementById('damagePerSecond');
     const targetImage = document.getElementById('targetImage');
     const hpFill = document.getElementById('hpFill');
     const hpText = document.getElementById('hpText');
