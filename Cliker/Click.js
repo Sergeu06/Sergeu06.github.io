@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 50;
             damagePerClick += 1;
             updateDisplays();
-            console.log(`Урон за клик увеличен до ${damagePerClick}`);
+            console.log(Урон за клик увеличен до ${damagePerClick});
         } else {
             console.log("Недостаточно валюты для прокачки урона за клик");
         }
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currency -= 100;
             damagePerSecond += 1;
             updateDisplays();
-            console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
+            console.log(Урон в секунду увеличен до ${damagePerSecond});
         } else {
             console.log("Недостаточно валюты для прокачки урона в секунду");
         }
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function dealDamage(damage) {
         targetHP -= damage;
-        console.log(`Нанесен урон: ${damage}. Осталось HP: ${targetHP}`);
+        console.log(Нанесен урон: ${damage}. Осталось HP: ${targetHP});
         if (targetHP <= 0) {
             targetHP = 0;
             targetDefeated();
@@ -58,16 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateHPDisplay() {
         if (knowledgeAboutTarget) {
             const hpPercentage = (targetHP / maxHP) * 100;
-            hpFill.style.width = `${hpPercentage}%`;
+            hpFill.style.width = ${hpPercentage}%;
             hpFill.style.backgroundColor = 'red'; // Полоска всегда красная при знании о противнике
-            hpText.textContent = `${targetHP} / ${maxHP}`;
+            hpText.textContent = ${targetHP} / ${maxHP};
         } else {
             hpFill.style.width = '100%';
             const darknessLevel = 1 - (targetHP / maxHP);
-            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`; // Полоска изначально красная и постепенно чернеет
+            hpFill.style.backgroundColor = rgba(255, 0, 0, ${1 - darknessLevel}); // Полоска изначально красная и постепенно чернеет
             hpText.textContent = '?';
         }
-        console.log(`HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget}`);
+        console.log(HP Display Updated. Current HP: ${targetHP}. Knowledge: ${knowledgeAboutTarget});
     }
     
     function targetDefeated() {
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currencyDisplay.textContent = currency;
         dpcDisplay.textContent = damagePerClick;
         dpsDisplay.textContent = damagePerSecond;
-        console.log(`Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond}`);
+        console.log(Обновлены показатели: Валюта: ${currency}, Урон/Клик: ${damagePerClick}, Урон/Сек: ${damagePerSecond});
     }
     
     function showNotification(message) {
