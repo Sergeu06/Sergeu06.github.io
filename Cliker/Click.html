@@ -16,11 +16,19 @@
             </div>
             <div class="currency gray">
                 <div class="icon"></div>
-                Урон/Клик: <span id="damagePerClick">1</span>
+                Серебро: <span id="currency2">0</span>
             </div>
             <div class="currency light-green">
                 <div class="icon"></div>
-                Урон/Сек: <span id="damagePerSecond">0</span>
+                Золото: <span id="currency3">0</span>
+            </div>
+            <div class="currency light-brown">
+                <div class="icon"></div>
+                Бронза: <span id="currency4">0</span>
+            </div>
+            <div class="currency light-gray">
+                <div class="icon"></div>
+                Платина: <span id="currency5">0</span>
             </div>
         </div>
         <div class="hp-bar">
@@ -41,7 +49,10 @@
     <div id="overlay" class="overlay">
         <div class="overlay-content">
             <button class="close-btn">Назад</button>
-            <!-- Здесь будет содержимое окна -->
+            <div id="baseUpgrades" style="display: none;">
+                <button id="upgradeClickDamage">Улучшить урон за клик (50)</button>
+                <button id="upgradeDPS">Улучшить урон в секунду (100)</button>
+            </div>
         </div>
     </div>
     <script src="Click.js"></script>
