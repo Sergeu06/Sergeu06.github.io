@@ -8,148 +8,87 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.container {
-    width: 100%;
-    max-width: 425px;
-    height: 100%;
-    background-color: #222;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 25px;
-    border: 2px solid #444;
-}
-
-.currencies {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    background-color: #444;
-    padding: 5px;
-    border-radius: 10px;
-    border: 2px solid #555;
-}
-
-.currency {
-    width: 18%;
-    text-align: center;
-    border-radius: 10px;
-    padding: 5px;
-    color: #fff;
-    font-weight: bold;
-    position: relative;
-    border: 2px solid #555;
-    background-color: #555;
-    margin: 0 5px;
-}
-
-.currency .icon {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    position: absolute;
-    top: -5px;
+#notification {
+    position: fixed;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
-}
-
-.yellow .icon {
-    background-color: #ffd700;
-}
-
-.gray .icon {
-    background-color: #a9a9a9;
-}
-
-.light-green .icon {
-    background-color: #8fbc8f;
-}
-
-.light-brown .icon {
-    background-color: #deb887;
-}
-
-.light-gray .icon {
-    background-color: #d3d3d3;
-}
-
-.stats {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.stat {
-    background-color: #444;
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    width: 45%;
+    background-color: rgba(204, 255, 204, 0.3); /* Тускло-зеленый фон с прозрачностью */
+    color: #000000; /* Черный текст */
+    padding: 10px 20px;
+    border: 2px solid #006600; /* Темно-зеленая рамка */
+    border-radius: 10px; /* Сглаживание углов */
     font-size: 1.2em;
-    border: 2px solid #555;
-    margin: 0 5px;
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    white-space: nowrap; /* Однострочное отображение */
 }
 
-.hp-bar {
-    background-color: #555;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    height: 30px;
+#stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.resource {
+    color: white;
+    margin: 5px 0;
+}
+
+#targetContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+#target {
     position: relative;
-    border: 2px solid #444;
 }
 
-.hp-fill {
-    background-color: red;
-    height: 100%;
+#target img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+
+#hpBar {
     position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 10px 0 0 10px;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: black;
+    border: 1px solid #fff;
+    height: 20px;
+}
+
+#hpFill {
+    height: 100%;
+    background-color: red;
+    width: 100%;
     transition: width 0.3s;
 }
 
-.hp-text {
+#hpText {
     position: absolute;
     width: 100%;
     text-align: center;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     color: white;
     font-weight: bold;
-}
-
-.target {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    margin-bottom: 20px;
-}
-
-.target img {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 10px;
-    border: 2px solid #555;
 }
 
 .footer {
     position: fixed;
     bottom: 0;
-    left: 0;
     width: 100%;
+    background-color: #333;
     display: flex;
     justify-content: space-around;
-    background-color: #333;
     padding: 10px 0;
-    z-index: 100;
 }
 
 .footer-btn {
@@ -171,7 +110,7 @@ body {
     background-color: #ccffcc;
 }
 
-#overlay {
+.overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -181,9 +120,10 @@ body {
     background: rgba(0, 0, 0, 0.8);
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
-.overlay-content {
+.popup {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -196,26 +136,40 @@ body {
 .close-btn {
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: 10px;
     background: none;
     border: none;
     font-size: 1.5em;
     cursor: pointer;
 }
 
-.notification {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(204, 255, 204, 0.3); /* Тускло-зеленый фон с прозрачностью */
-    color: #000000; /* Черный текст */
-    padding: 10px 20px;
-    border: 2px solid #006600; /* Темно-зеленая рамка */
-    border-radius: 10px; /* Сглаживание углов */
-    font-size: 1.2em;
-    text-align: center;
-    z-index: 1000;
+#baseUpgrades button {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #006600;
+    color: white;
+}
+
+.upgrade-popup {
     display: none;
-    white-space: nowrap; /* Однострочное отображение */
+    margin: 10px 0;
+}
+
+.upgrade-popup p {
+    margin-bottom: 10px;
+}
+
+.upgrade-popup button {
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #006600;
+    color: white;
 }
