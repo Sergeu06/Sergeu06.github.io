@@ -10,19 +10,19 @@
     <div id="notification" class="notification"></div>
     <div id="stats">
         <div class="resource">
-            <span></span><span id="currency1">0</span>
+            <span>Валюта 1: </span><span id="currency1">0</span>
         </div>
         <div class="resource">
-            <span></span><span id="currency2">0</span>
+            <span>Валюта 2: </span><span id="currency2">0</span>
         </div>
         <div class="resource">
-            <span></span><span id="currency3">0</span>
+            <span>Валюта 3: </span><span id="currency3">0</span>
         </div>
         <div class="resource">
-            <span></span><span id="currency4">0</span>
+            <span>Валюта 4: </span><span id="currency4">0</span>
         </div>
         <div class="resource">
-            <span></span><span id="currency5">0</span>
+            <span>Валюта 5: </span><span id="currency5">0</span>
         </div>
         <div class="resource">
             <span>Урон/Клик: </span><span id="damagePerClick">1</span>
@@ -50,17 +50,20 @@
     <div id="overlay" class="overlay">
         <div class="popup">
             <button class="close-btn">Назад</button>
-            <div id="baseUpgrades">
+            <div id="baseUpgrades" style="display: none;">
+                <h2>Улучшения базы</h2>
                 <button id="upgradeClickDamageBtn">Улучшить урон за клик</button>
                 <button id="upgradeDPSBtn">Улучшить урон в секунду</button>
             </div>
-            <div id="upgradeClickDamagePopup" class="upgrade-popup">
-                <p>Улучшить урон за клик за 50 валюты</p>
-                <button id="upgradeClickDamage">Улучшить</button>
+            <div id="upgradeClickDamagePopup" style="display: none;">
+                <h2>Улучшение урона за клик</h2>
+                <p>Стоимость: 50 валюты 1</p>
+                <button id="upgradeClickDamage">Подтвердить</button>
             </div>
-            <div id="upgradeDPSPopup" class="upgrade-popup">
-                <p>Улучшить урон в секунду за 100 валюты</p>
-                <button id="upgradeDPS">Улучшить</button>
+            <div id="upgradeDPSPopup" style="display: none;">
+                <h2>Улучшение урона в секунду</h2>
+                <p>Стоимость: 100 валюты 1</p>
+                <button id="upgradeDPS">Подтвердить</button>
             </div>
         </div>
     </div>
