@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.close-btn');
     const notification = document.getElementById('notification');
     const baseUpgrades = document.getElementById('baseUpgrades');
-    const upgradeClickDamagePopup = document.getElementById('upgradeClickDamagePopup');
-    const upgradeDPSPopup = document.getElementById('upgradeDPSPopup');
 
     let damagePerClick = 1;
     let damagePerSecond = 0;
@@ -40,8 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
             damagePerClick += 1;
             updateDisplays();
             console.log(`Урон за клик увеличен до ${damagePerClick}`);
-            upgradeClickDamagePopup.style.display = 'none';
-            overlay.style.display = 'none';
         } else {
             console.log("Недостаточно валюты для прокачки урона за клик");
         }
@@ -53,21 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
             damagePerSecond += 1;
             updateDisplays();
             console.log(`Урон в секунду увеличен до ${damagePerSecond}`);
-            upgradeDPSPopup.style.display = 'none';
-            overlay.style.display = 'none';
         } else {
             console.log("Недостаточно валюты для прокачки урона в секунду");
         }
-    });
-
-    document.getElementById('upgradeClickDamageBtn').addEventListener('click', () => {
-        upgradeClickDamagePopup.style.display = 'block';
-        upgradeDPSPopup.style.display = 'none';
-    });
-
-    document.getElementById('upgradeDPSBtn').addEventListener('click', () => {
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'block';
     });
 
     targetImage.addEventListener('click', () => {
@@ -139,36 +123,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('profileBtn').addEventListener('click', () => {
         overlay.style.display = 'flex';
         baseUpgrades.style.display = 'none';
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'none';
     });
 
     document.getElementById('upgradeBtn').addEventListener('click', () => {
         overlay.style.display = 'flex';
         baseUpgrades.style.display = 'block';
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'none';
     });
 
     document.getElementById('questsBtn').addEventListener('click', () => {
         overlay.style.display = 'flex';
         baseUpgrades.style.display = 'none';
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'none';
     });
 
     document.getElementById('qrBtn').addEventListener('click', () => {
         overlay.style.display = 'flex';
         baseUpgrades.style.display = 'none';
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'none';
     });
 
     document.getElementById('marketplaceBtn').addEventListener('click', () => {
         overlay.style.display = 'flex';
         baseUpgrades.style.display = 'none';
-        upgradeClickDamagePopup.style.display = 'none';
-        upgradeDPSPopup.style.display = 'none';
     });
 
     closeBtn.addEventListener('click', () => {
