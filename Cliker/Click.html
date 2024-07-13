@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clicker Game</title>
-    <link rel="stylesheet" href="Click.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="notification" class="notification"></div>
@@ -50,20 +50,9 @@
     <div id="overlay" class="overlay">
         <div class="popup">
             <button class="close-btn">Назад</button>
-            <div id="baseUpgrades" style="display: none;">
-                <h2>Улучшения базы</h2>
-                <button id="upgradeClickDamageBtn">Улучшить урон за клик</button>
-                <button id="upgradeDPSBtn">Улучшить урон в секунду</button>
-            </div>
-            <div id="upgradeClickDamagePopup" style="display: none;">
-                <h2>Улучшение урона за клик</h2>
-                <p>Стоимость: 50 валюты 1</p>
-                <button id="upgradeClickDamage">Подтвердить</button>
-            </div>
-            <div id="upgradeDPSPopup" style="display: none;">
-                <h2>Улучшение урона в секунду</h2>
-                <p>Стоимость: 100 валюты 1</p>
-                <button id="upgradeDPS">Подтвердить</button>
+            <div id="baseUpgrades">
+                <button id="upgradeClickDamage">Улучшить урон за клик (50 валюты)</button>
+                <button id="upgradeDPS">Улучшить урон в секунду (100 валюты)</button>
             </div>
         </div>
     </div>
