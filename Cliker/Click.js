@@ -52,15 +52,40 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplays();
     }
 
+    function distributeCurrency() {
+        const totalHP = currentEnemy.hp;
+        const currencyAmount = Math.floor(totalHP * 0.32);
+        const rand = Math.random() * 100;
+        let currencyType;
+        if (rand < 0.5) {
+            currency1 += currencyAmount;
+            currencyType = 'currency1';
+        } else if (rand < 0.5 + 20) {
+            currency2 += currencyAmount;
+            currencyType = 'currency2';
+        } else if (rand < 0.5 + 20 + 10) {
+            currency3 += currencyAmount;
+            currencyType = 'currency3';
+        } else if (rand < 0.5 + 20 + 10 + 2) {
+            currency4 += currencyAmount;
+            currencyType = 'currency4';
+        } else if (rand < 0.5 + 20 + 10 + 2 + 0.5) {
+            currency5 += currencyAmount;
+            currencyType = 'currency5';
+        }
+        showNotification(`Получено ${currencyAmount} ${currencyType}`);
+    }
+
     document.getElementById('targetImage').addEventListener('click', () => {
         targetHP -= damagePerClick;
         if (targetHP <= 0) {
             if (!currentEnemy.knowledgeDropped) {
-                currency1 += 1;
-                showNotification('Target defeated! +1 currency1 and knowledge acquired');
+                distributeCurrency();
+                showNotification('Target defeated and knowledge acquired');
                 currentEnemy.knowledgeDropped = true; // Знания получены
             } else {
-                showNotification('Target defeated! +1 currency1');
+                distributeCurrency();
+                showNotification('Target defeated!');
             }
             switchToNextEnemy();
         }
@@ -100,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Урон за клик улучшен!');
             updateDisplays();
         } else {
-            showNotification('Недостаточно валюты');
+            showNotification('Недостаточно валюты для прокачки урона за клик');
         }
     });
 
@@ -111,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Урон в секунду улучшен!');
             updateDisplays();
         } else {
-            showNotification('Недостаточно валюты');
+            showNotification('Недостаточно валюты для прокачки урона в секунду');
         }
     });
 
@@ -119,11 +144,12 @@ document.addEventListener('DOMContentLoaded', () => {
         targetHP -= damagePerSecond;
         if (targetHP <= 0) {
             if (!currentEnemy.knowledgeDropped) {
-                currency1 += 1;
-                showNotification('Target defeated! +1 currency1 and knowledge acquired');
+                distributeCurrency();
+                showNotification('Target defeated and knowledge acquired');
                 currentEnemy.knowledgeDropped = true; // Знания получены
             } else {
-                showNotification('Target defeated! +1 currency1');
+                distributeCurrency();
+                showNotification('Target defeated!');
             }
             switchToNextEnemy();
         }
