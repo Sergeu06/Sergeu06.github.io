@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currency5 = 0;
     let targetHP = 100;
     const maxHP = 100;
+    let knowledgeAboutTarget = false;
 
     // Враги и их знания
     const enemies = [
@@ -31,9 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('currency3').textContent = currency3;
         document.getElementById('currency4').textContent = currency4;
         document.getElementById('currency5').textContent = currency5;
-        const hpFill = document.getElementById('hpFill');
-        hpFill.style.width = `${(targetHP / maxHP) * 100}%`;
-        document.getElementById('hpText').textContent = `${targetHP} / ${maxHP}`;
+        updateHPDisplay();
     }
 
     function showNotification(message) {
@@ -44,11 +43,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
+    function updateHPDisplay() {
+        const hpFill = document.getElementById('hpFill');
+        const hpText = document.getElementById('hpText');
+        if (knowledgeAboutTarget) {
+            const hpPercentage = (targetHP / maxHP) * 100;
+            hpFill.style.width = `${hpPercentage}%`;
+            hpFill.style.backgroundColor = 'red';
+            hpText.textContent = `${targetHP} / ${maxHP}`;
+        } else {
+            hpFill.style.width = '100%';
+            const darknessLevel = 1 - (targetHP / maxHP);
+            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`;
+            hpText.textContent = '?';
+        }
+    }
+
     function switchToNextEnemy() {
         currentEnemyIndex = (currentEnemyIndex + 1) % enemies.length;
         currentEnemy = enemies[currentEnemyIndex];
         targetHP = currentEnemy.hp;
-        currentEnemy.knowledgeDropped = false; // Сбросить знания для нового врага
+        knowledgeAboutTarget = false; // Знания о новом враге отсутствуют
         updateDisplays();
     }
 
@@ -57,19 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const currencyAmount = Math.floor(totalHP * 0.32);
         const rand = Math.random() * 100;
         let currencyType;
-        if (rand < 0.5) {
+        if (rand < 50) {
             currency1 += currencyAmount;
             currencyType = 'currency1';
-        } else if (rand < 0.5 + 20) {
+        } else if (rand < 50 + 20) {
             currency2 += currencyAmount;
             currencyType = 'currency2';
-        } else if (rand < 0.5 + 20 + 10) {
+        } else if (rand < 50 + 20 + 10) {
             currency3 += currencyAmount;
             currencyType = 'currency3';
-        } else if (rand < 0.5 + 20 + 10 + 2) {
+        } else if (rand < 50 + 20 + 10 + 2) {
             currency4 += currencyAmount;
             currencyType = 'currency4';
-        } else if (rand < 0.5 + 20 + 10 + 2 + 0.5) {
+        } else if (rand < 50 + 20 + 10 + 2 + 0.5) {
             currency5 += currencyAmount;
             currencyType = 'currency5';
         }
@@ -79,14 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('targetImage').addEventListener('click', () => {
         targetHP -= damagePerClick;
         if (targetHP <= 0) {
+            targetHP = 0;
             if (!currentEnemy.knowledgeDropped) {
-                distributeCurrency();
                 showNotification('Target defeated and knowledge acquired');
                 currentEnemy.knowledgeDropped = true; // Знания получены
+                knowledgeAboutTarget = true;
             } else {
-                distributeCurrency();
                 showNotification('Target defeated!');
             }
+            distributeCurrency();
             switchToNextEnemy();
         }
         updateDisplays();
@@ -143,14 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         targetHP -= damagePerSecond;
         if (targetHP <= 0) {
+            targetHP = 0;
             if (!currentEnemy.knowledgeDropped) {
-                distributeCurrency();
                 showNotification('Target defeated and knowledge acquired');
                 currentEnemy.knowledgeDropped = true; // Знания получены
+                knowledgeAboutTarget = true;
             } else {
-                distributeCurrency();
                 showNotification('Target defeated!');
             }
+            distributeCurrency();
             switchToNextEnemy();
         }
         updateDisplays();
