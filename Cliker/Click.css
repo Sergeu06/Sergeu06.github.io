@@ -176,16 +176,16 @@ body {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(204, 255, 204, 0.3); /* Тускло-зеленый фон с прозрачностью */
-    color: #000000; /* Черный текст */
+    background-color: rgba(204, 255, 204, 0.3);
+    color: #000000;
     padding: 10px 20px;
-    border: 2px solid #006600; /* Темно-зеленая рамка */
-    border-radius: 10px; /* Сглаживание углов */
+    border: 2px solid #006600;
+    border-radius: 10px;
     font-size: 1.2em;
     text-align: center;
     z-index: 1000;
     display: none;
-    white-space: nowrap; /* Однострочное отображение */
+    white-space: nowrap;
 }
 
 .overlay {
@@ -233,4 +233,6 @@ body {
     cursor: pointer;
     border: none;
     border-radius: 10px;
-    background-color: #
+    background-color: #006600;
+    color: #fff;
+}
