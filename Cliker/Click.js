@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetHP = 100;
     const maxHP = 100;
 
+    // Враги и их знания
+    const enemies = [
+        { name: 'Enemy1', hp: 100, knowledgeDropped: false },
+        { name: 'Enemy2', hp: 200, knowledgeDropped: false },
+        { name: 'Enemy3', hp: 300, knowledgeDropped: false }
+    ];
+    let currentEnemyIndex = 0;
+    let currentEnemy = enemies[currentEnemyIndex];
+
     function updateDisplays() {
         document.getElementById('damagePerClick').textContent = `Урон/Клик: ${damagePerClick}`;
         document.getElementById('damagePerSecond').textContent = `Урон/Сек: ${damagePerSecond}`;
@@ -35,12 +44,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
+    function switchToNextEnemy() {
+        currentEnemyIndex = (currentEnemyIndex + 1) % enemies.length;
+        currentEnemy = enemies[currentEnemyIndex];
+        targetHP = currentEnemy.hp;
+        currentEnemy.knowledgeDropped = false; // Сбросить знания для нового врага
+        updateDisplays();
+    }
+
     document.getElementById('targetImage').addEventListener('click', () => {
         targetHP -= damagePerClick;
         if (targetHP <= 0) {
-            targetHP = maxHP;
-            currency1 += 1;
-            showNotification('Target defeated! +1 currency1');
+            if (!currentEnemy.knowledgeDropped) {
+                currency1 += 1;
+                showNotification('Target defeated! +1 currency1 and knowledge acquired');
+                currentEnemy.knowledgeDropped = true; // Знания получены
+            } else {
+                showNotification('Target defeated! +1 currency1');
+            }
+            switchToNextEnemy();
         }
         updateDisplays();
     });
@@ -96,9 +118,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => {
         targetHP -= damagePerSecond;
         if (targetHP <= 0) {
-            targetHP = maxHP;
-            currency1 += 1;
-            showNotification('Target defeated! +1 currency1');
+            if (!currentEnemy.knowledgeDropped) {
+                currency1 += 1;
+                showNotification('Target defeated! +1 currency1 and knowledge acquired');
+                currentEnemy.knowledgeDropped = true; // Знания получены
+            } else {
+                showNotification('Target defeated! +1 currency1');
+            }
+            switchToNextEnemy();
         }
         updateDisplays();
     }, 1000);
