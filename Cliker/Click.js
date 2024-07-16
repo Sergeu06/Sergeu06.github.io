@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currency3 = 0;
     let currency4 = 0;
     let currency5 = 0;
-    const maxHP = 100;
+    let maxHP = 100;
     let targetHP = maxHP;
     let knowledgeAboutTarget = false;
 
@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchToNextEnemy() {
         currentEnemyIndex = (currentEnemyIndex + 1) % enemies.length;
         currentEnemy = enemies[currentEnemyIndex];
-        targetHP = currentEnemy.hp;
+        maxHP = Math.floor(maxHP * 1.08); // Увеличение HP врага на 8%
+        targetHP = maxHP;
         knowledgeAboutTarget = false; // Знания о новом враге отсутствуют
         updateDisplays();
     }
@@ -70,27 +71,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function distributeCurrency() {
         const totalHP = currentEnemy.hp;
         const currencyAmount = Math.floor(totalHP * 0.32);
-        const rand = Math.random() * 100;
-        let currencyType;
-
-        if (rand < 50) {
-            currency1 += currencyAmount;
-            currencyType = 'currency1';
-        } else if (rand < 50 + 20) {
-            currency2 += currencyAmount;
-            currencyType = 'currency2';
-        } else if (rand < 50 + 10) {
-            currency3 += currencyAmount;
-            currencyType = 'currency3';
-        } else if (rand < 50 + 2) {
-            currency4 += currencyAmount;
-            currencyType = 'currency4';
-        } else if (rand < 50 + 0.5) {
-            currency5 += currencyAmount;
-            currencyType = 'currency5';
+        
+        // Функция для распределения валюты
+        function assignCurrency() {
+            const rand = Math.random() * 100;
+            if (rand < 50) {
+                currency1 += currencyAmount;
+                return 'currency1';
+            } else if (rand < 70) {
+                currency2 += currencyAmount;
+                return 'currency2';
+            } else if (rand < 80) {
+                currency3 += currencyAmount;
+                return 'currency3';
+            } else if (rand < 82) {
+                currency4 += currencyAmount;
+                return 'currency4';
+            } else if (rand < 82.5) {
+                currency5 += currencyAmount;
+                return 'currency5';
+            }
+            return null;
         }
 
-        showNotification(`Получено ${currencyAmount} ${currencyType}`);
+        let currenciesDistributed = [];
+        for (let i = 0; i < 5; i++) {
+            currenciesDistributed.push(assignCurrency());
+        }
+
+        showNotification(`Получено: ${currenciesDistributed.join(', ')}`);
     }
 
     document.getElementById('targetImage').addEventListener('click', () => {
