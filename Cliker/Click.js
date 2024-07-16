@@ -72,22 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const currencyAmount = Math.floor(totalHP * 0.32);
         const rand = Math.random() * 100;
         let currencyType;
+
         if (rand < 50) {
             currency1 += currencyAmount;
             currencyType = 'currency1';
         } else if (rand < 50 + 20) {
             currency2 += currencyAmount;
             currencyType = 'currency2';
-        } else if (rand < 50 + 20 + 10) {
+        } else if (rand < 50 + 10) {
             currency3 += currencyAmount;
             currencyType = 'currency3';
-        } else if (rand < 50 + 20 + 10 + 2) {
+        } else if (rand < 50 + 2) {
             currency4 += currencyAmount;
             currencyType = 'currency4';
-        } else if (rand < 50 + 20 + 10 + 2 + 0.5) {
+        } else if (rand < 50 + 0.5) {
             currency5 += currencyAmount;
             currencyType = 'currency5';
         }
+
         showNotification(`Получено ${currencyAmount} ${currencyType}`);
     }
 
