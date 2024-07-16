@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currency3 = 0;
     let currency4 = 0;
     let currency5 = 0;
-    let targetHP = 100;
     const maxHP = 100;
+    let targetHP = maxHP;
     let knowledgeAboutTarget = false;
 
     // Враги и их знания
@@ -96,11 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetHP <= 0) {
             targetHP = 0;
             if (!currentEnemy.knowledgeDropped) {
-                showNotification('Target defeated and knowledge acquired');
+                showNotification('Получены знания!');
                 currentEnemy.knowledgeDropped = true; // Знания получены
                 knowledgeAboutTarget = true;
             } else {
-                showNotification('Target defeated!');
+                showNotification('Враг побежден!');
             }
             distributeCurrency();
             switchToNextEnemy();
@@ -161,11 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetHP <= 0) {
             targetHP = 0;
             if (!currentEnemy.knowledgeDropped) {
-                showNotification('Target defeated and knowledge acquired');
+                showNotification('Получены знания!');
                 currentEnemy.knowledgeDropped = true; // Знания получены
                 knowledgeAboutTarget = true;
             } else {
-                showNotification('Target defeated!');
+                showNotification('Враг побежден!');
             }
             distributeCurrency();
             switchToNextEnemy();
