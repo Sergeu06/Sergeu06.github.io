@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.close-btn');
     const notification = document.getElementById('notification');
     const baseUpgrades = document.getElementById('baseUpgrades');
+    const nextEnemyBtn = document.getElementById('nextEnemyBtn');
+    const targetImage = document.getElementById('targetImage');
+    const targetContainer = document.querySelector('.target-container');
 
     let damagePerClick = 1;
     let damagePerSecond = 0;
@@ -15,10 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetHP = maxHP;
     let knowledgeAboutTarget = false;
     let enemyLevel = 1;
-    const enemyName = 'Enemy1'; // Имя врага
-    
+    let enemyIndex = 0;
+    const enemies = ['Enemy1', 'Enemy2'];
+    const enemyNames = ['Enemy1', 'Enemy2'];
+
     const enemiesKnowledge = {
-        'Enemy1': false
+        'Enemy1': false,
+        'Enemy2': false
     };
 
     function updateDisplays() {
@@ -29,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('currency3').textContent = currency3;
         document.getElementById('currency4').textContent = currency4;
         document.getElementById('currency5').textContent = currency5;
-        document.getElementById('enemyName').textContent = `Враг: ${enemyName}`;
+        document.getElementById('enemyName').textContent = `Враг: ${enemies[enemyIndex]}`;
         document.getElementById('enemyLevel').textContent = `Уровень: ${enemyLevel}`;
         updateHPDisplay();
     }
@@ -59,10 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function switchToNextEnemy() {
+        if (enemies[enemyIndex] === 'Enemy1' && enemyLevel >= 10) {
+            nextEnemyBtn.style.display = 'block';
+        } else {
+            nextEnemyBtn.style.display = 'none';
+        }
         maxHP = Math.floor(maxHP * 1.08); // Увеличиваем HP врага на 8%
         targetHP = maxHP;
         enemyLevel++; // Увеличиваем уровень врага
-        knowledgeAboutTarget = enemiesKnowledge[enemyName]; // Знания о новом враге
+        knowledgeAboutTarget = enemiesKnowledge[enemies[enemyIndex]]; // Знания о новом враге
         updateDisplays();
     }
 
@@ -95,9 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkKnowledgeDrop() {
         const knowledgeChance = Math.random();
-        if (knowledgeChance < 0.25 && !enemiesKnowledge[enemyName]) {
+        if (knowledgeChance < 0.25 && !enemiesKnowledge[enemies[enemyIndex]]) {
             showNotification('Получены знания!');
-            enemiesKnowledge[enemyName] = true; // Знания получены
+            enemiesKnowledge[enemies[enemyIndex]] = true; // Знания получены
             knowledgeAboutTarget = true;
             updateHPDisplay();
         }
@@ -117,66 +128,54 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplays();
     });
 
-    document.getElementById('profileBtn').addEventListener('click', () => {
-        showNotification('Профиль');
-    });
-
-    document.getElementById('upgradeBtn').addEventListener('click', () => {
-        baseUpgrades.style.display = 'block';
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('questsBtn').addEventListener('click', () => {
-        showNotification('Задания');
-    });
-
-    document.getElementById('qrBtn').addEventListener('click', () => {
-        showNotification('QR');
-    });
-
-    document.getElementById('marketplaceBtn').addEventListener('click', () => {
-        showNotification('Торговая площадь');
+    nextEnemyBtn.addEventListener('click', () => {
+        enemyIndex = (enemyIndex + 1) % enemies.length;
+        enemyLevel = 1;
+        maxHP = 100;
+        targetHP = maxHP;
+        knowledgeAboutTarget = enemiesKnowledge[enemies[enemyIndex]];
+        targetContainer.style.transform = `translateX(-${enemyIndex * 100}%)`; // Двигаем картинку врага
+        updateDisplays();
     });
 
     closeBtn.addEventListener('click', () => {
-        baseUpgrades.style.display = 'none';
         overlay.style.display = 'none';
     });
 
     document.getElementById('upgradeClickDamage').addEventListener('click', () => {
         if (currency1 >= 50) {
             currency1 -= 50;
-            damagePerClick += 1;
-            showNotification('Урон за клик улучшен!');
+            damagePerClick++;
             updateDisplays();
         } else {
-            showNotification('Недостаточно валюты для прокачки урона за клик');
+            showNotification('Недостаточно валюты!');
         }
     });
 
     document.getElementById('upgradeDPS').addEventListener('click', () => {
-        if (currency1 >= 100) {
-            currency1 -= 100;
-            damagePerSecond += 1;
-            showNotification('Урон в секунду улучшен!');
+        if (currency2 >= 100) {
+            currency2 -= 100;
+            damagePerSecond++;
             updateDisplays();
         } else {
-            showNotification('Недостаточно валюты для прокачки урона в секунду');
+            showNotification('Недостаточно валюты!');
         }
     });
 
     setInterval(() => {
-        targetHP -= damagePerSecond;
-        if (targetHP <= 0) {
-            targetHP = 0;
-            checkKnowledgeDrop();
-            if (knowledgeAboutTarget) {
-                showNotification('Враг побежден!');
-                distributeCurrency();
-                switchToNextEnemy();
+        if (damagePerSecond > 0 && targetHP > 0) {
+            targetHP -= damagePerSecond;
+            if (targetHP <= 0) {
+                targetHP = 0;
+                checkKnowledgeDrop();
+                if (knowledgeAboutTarget) {
+                    showNotification('Враг побежден!');
+                    distributeCurrency();
+                    switchToNextEnemy();
+                }
             }
+            updateDisplays();
         }
-        updateDisplays();
     }, 1000);
 
     updateDisplays();
