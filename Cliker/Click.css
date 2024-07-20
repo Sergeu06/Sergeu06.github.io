@@ -125,7 +125,7 @@ body {
     font-weight: bold;
 }
 
-.target {
+.target-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -133,7 +133,7 @@ body {
     margin-bottom: 20px;
 }
 
-.target img {
+.target {
     max-width: 80%;
     max-height: 80%;
     border-radius: 10px;
@@ -141,15 +141,14 @@ body {
 }
 
 .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
     width: 100%;
     display: flex;
     justify-content: space-around;
     background-color: #333;
     padding: 10px 0;
     z-index: 100;
+    position: absolute;
+    bottom: 0;
 }
 
 .footer-btn {
