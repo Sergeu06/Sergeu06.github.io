@@ -101,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let currenciesDistributed = [];
         for (let i = 0; i < 5; i++) {
-            currenciesDistributed.push(assignCurrency());
+            const currencyType = assignCurrency();
+            if (currencyType) {
+                currenciesDistributed.push(currencyType);
+            }
         }
 
         showNotification(`Получено: ${currenciesDistributed.join(', ')}`);
@@ -114,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Урон нанесен: ${damagePerClick}, оставшееся HP: ${targetHP}`);
         if (targetHP <= 0) {
             targetHP = 0;
+            console.log('Цель уничтожена');
             if (!enemy.knowledgeDropped) {
                 showNotification('Получены знания!');
                 enemy.knowledgeDropped = true; // Знания получены
@@ -193,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Урон нанесен: ${damagePerSecond}, оставшееся HP: ${targetHP}`);
         if (targetHP <= 0) {
             targetHP = 0;
+            console.log('Цель уничтожена');
             if (!enemy.knowledgeDropped) {
                 showNotification('Получены знания!');
                 enemy.knowledgeDropped = true; // Знания получены
