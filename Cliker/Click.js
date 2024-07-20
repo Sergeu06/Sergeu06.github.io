@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalHP = currentEnemy.hp;
         const currencyAmount = Math.floor(totalHP * 0.32);
         
-        // Функция для распределения валюты
         function assignCurrency() {
             const rand = Math.random() * 100;
             if (rand < 50) {
