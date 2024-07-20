@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let damagePerClick = 1;
     let damagePerSecond = 0;
-    let currency1 = 0;
+    let currency1 = 1488;
     let currency2 = 0;
     let currency3 = 0;
     let currency4 = 0;
@@ -62,28 +62,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function distributeCurrency() {
         const totalHP = maxHP;
         const totalCurrency = Math.floor(totalHP * 0.32);
-        let remainingCurrency = totalCurrency;
 
         for (let i = 0; i < totalCurrency; i++) {
             const rand = Math.random() * 100;
             if (rand < 50) {
                 currency1++;
-                showNotification(`Получено 1 валюты типа 1`);
             } else if (rand < 50 + 30) {
                 currency2++;
-                showNotification(`Получено 1 валюты типа 2`);
             } else if (rand < 50 + 30 + 15) {
                 currency3++;
-                showNotification(`Получено 1 валюты типа 3`);
             } else if (rand < 50 + 30 + 15 + 4.5) {
                 currency4++;
-                showNotification(`Получено 1 валюты типа 4`);
             } else if (rand < 50 + 30 + 15 + 4.5 + 0.5) {
                 currency5++;
-                showNotification(`Получено 1 валюты типа 5`);
             }
-            remainingCurrency--;
         }
+
+        showNotification(`Получено валюты: 
+            1 типа: ${currency1}, 
+            2 типа: ${currency2}, 
+            3 типа: ${currency3}, 
+            4 типа: ${currency4}, 
+            5 типа: ${currency5}`);
     }
 
     document.getElementById('targetImage').addEventListener('click', () => {
@@ -94,11 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Получены знания!');
                 knowledgeDropped = true; // Знания получены
                 knowledgeAboutTarget = true;
+                updateHPDisplay();
             } else {
                 showNotification('Враг побежден!');
+                distributeCurrency();
+                switchToNextEnemy();
             }
-            distributeCurrency();
-            switchToNextEnemy();
         }
         updateDisplays();
     });
@@ -159,11 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNotification('Получены знания!');
                 knowledgeDropped = true; // Знания получены
                 knowledgeAboutTarget = true;
+                updateHPDisplay();
             } else {
                 showNotification('Враг побежден!');
+                distributeCurrency();
+                switchToNextEnemy();
             }
-            distributeCurrency();
-            switchToNextEnemy();
         }
         updateDisplays();
     }, 1000);
