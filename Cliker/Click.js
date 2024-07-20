@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let damagePerClick = 1;
     let damagePerSecond = 0;
-    let currency1 = 14880000;
+    let currency1 = 14880;
     let currency2 = 0;
     let currency3 = 0;
     let currency4 = 0;
