@@ -1,238 +1,182 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #333;
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.querySelector('.close-btn');
+    const notification = document.getElementById('notification');
+    const baseUpgrades = document.getElementById('baseUpgrades');
+    const nextEnemyBtn = document.getElementById('nextEnemyBtn');
+    const targetImage = document.getElementById('targetImage');
+    const targetContainer = document.querySelector('.target-container');
 
-.container {
-    width: 100%;
-    max-width: 425px;
-    height: 100%;
-    background-color: #222;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 25px;
-    border: 2px solid #444;
-}
+    let damagePerClick = 1;
+    let damagePerSecond = 0;
+    let currency1 = 0;
+    let currency2 = 0;
+    let currency3 = 0;
+    let currency4 = 0;
+    let currency5 = 0;
+    let maxHP = 100;
+    let targetHP = maxHP;
+    let knowledgeAboutTarget = false;
+    let enemyLevel = 1;
+    let enemyIndex = 0;
+    const enemies = ['Enemy1', 'Enemy2'];
+    const enemyNames = ['Enemy1', 'Enemy2'];
 
-.currencies {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    background-color: #444;
-    padding: 5px;
-    border-radius: 10px;
-    border: 2px solid #555;
-}
+    const enemiesKnowledge = {
+        'Enemy1': false,
+        'Enemy2': false
+    };
 
-.currency {
-    width: 18%;
-    text-align: center;
-    border-radius: 10px;
-    padding: 5px;
-    color: #fff;
-    font-weight: bold;
-    position: relative;
-    border: 2px solid #555;
-    background-color: #555;
-    margin: 0 5px;
-}
+    function updateDisplays() {
+        document.getElementById('damagePerClick').textContent = `Урон/Клик: ${damagePerClick}`;
+        document.getElementById('damagePerSecond').textContent = `Урон/Сек: ${damagePerSecond}`;
+        document.getElementById('currency1').textContent = currency1;
+        document.getElementById('currency2').textContent = currency2;
+        document.getElementById('currency3').textContent = currency3;
+        document.getElementById('currency4').textContent = currency4;
+        document.getElementById('currency5').textContent = currency5;
+        document.getElementById('enemyName').textContent = `Враг: ${enemies[enemyIndex]}`;
+        document.getElementById('enemyLevel').textContent = `Уровень: ${enemyLevel}`;
+        updateHPDisplay();
+    }
 
-.currency .icon {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    position: absolute;
-    top: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-}
+    function showNotification(message) {
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 2000);
+    }
 
-.yellow .icon {
-    background-color: #ffd700;
-}
+    function updateHPDisplay() {
+        const hpFill = document.getElementById('hpFill');
+        const hpText = document.getElementById('hpText');
+        if (knowledgeAboutTarget) {
+            const hpPercentage = (targetHP / maxHP) * 100;
+            hpFill.style.width = `${hpPercentage}%`;
+            hpFill.style.backgroundColor = 'red';
+            hpText.textContent = `${targetHP} / ${maxHP}`;
+        } else {
+            hpFill.style.width = '100%';
+            const darknessLevel = 1 - (targetHP / maxHP);
+            hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`;
+            hpText.textContent = '?';
+        }
+    }
 
-.gray .icon {
-    background-color: #a9a9a9;
-}
+    function switchToNextEnemy() {
+        if (enemies[enemyIndex] === 'Enemy1' && enemyLevel >= 10) {
+            nextEnemyBtn.style.display = 'block';
+        } else {
+            nextEnemyBtn.style.display = 'none';
+        }
+        maxHP = Math.floor(maxHP * 1.08); // Увеличиваем HP врага на 8%
+        targetHP = maxHP;
+        enemyLevel++; // Увеличиваем уровень врага
+        knowledgeAboutTarget = enemiesKnowledge[enemies[enemyIndex]]; // Знания о новом враге
+        updateDisplays();
+    }
 
-.light-green .icon {
-    background-color: #8fbc8f;
-}
+    function distributeCurrency() {
+        const totalHP = maxHP;
+        const totalCurrency = Math.floor(totalHP * 0.32);
 
-.light-brown .icon {
-    background-color: #deb887;
-}
+        for (let i = 0; i < totalCurrency; i++) {
+            const rand = Math.random() * 100;
+            if (rand < 50) {
+                currency1++;
+            } else if (rand < 50 + 30) {
+                currency2++;
+            } else if (rand < 50 + 30 + 15) {
+                currency3++;
+            } else if (rand < 50 + 30 + 15 + 4.5) {
+                currency4++;
+            } else if (rand < 50 + 30 + 15 + 4.5 + 0.5) {
+                currency5++;
+            }
+        }
 
-.light-gray .icon {
-    background-color: #d3d3d3;
-}
+        showNotification(`Получено валюты: 
+            1 типа: ${currency1}, 
+            2 типа: ${currency2}, 
+            3 типа: ${currency3}, 
+            4 типа: ${currency4}, 
+            5 типа: ${currency5}`);
+    }
 
-.stats {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
+    function checkKnowledgeDrop() {
+        const knowledgeChance = Math.random();
+        if (knowledgeChance < 0.25 && !enemiesKnowledge[enemies[enemyIndex]]) {
+            showNotification('Получены знания!');
+            enemiesKnowledge[enemies[enemyIndex]] = true; // Знания получены
+            knowledgeAboutTarget = true;
+            updateHPDisplay();
+        }
+    }
 
-.stat {
-    background-color: #444;
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    width: 45%;
-    font-size: 1.2em;
-    border: 2px solid #555;
-    margin: 0 5px;
-}
+    document.getElementById('targetImage').addEventListener('click', () => {
+        targetHP -= damagePerClick;
+        if (targetHP <= 0) {
+            targetHP = 0;
+            checkKnowledgeDrop();
+            if (knowledgeAboutTarget) {
+                showNotification('Враг побежден!');
+                distributeCurrency();
+                switchToNextEnemy();
+            }
+        }
+        updateDisplays();
+    });
 
-.hp-bar {
-    background-color: #555;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    height: 30px;
-    position: relative;
-    border: 2px solid #444;
-}
+    nextEnemyBtn.addEventListener('click', () => {
+        enemyIndex = (enemyIndex + 1) % enemies.length;
+        enemyLevel = 1;
+        maxHP = 100;
+        targetHP = maxHP;
+        knowledgeAboutTarget = enemiesKnowledge[enemies[enemyIndex]];
+        targetContainer.style.transform = `translateX(-${enemyIndex * 100}%)`; // Двигаем картинку врага
+        updateDisplays();
+    });
 
-.hp-fill {
-    background-color: red;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 10px 0 0 10px;
-    transition: width 0.3s;
-}
+    closeBtn.addEventListener('click', () => {
+        overlay.style.display = 'none';
+    });
 
-.hp-text {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-weight: bold;
-}
+    document.getElementById('upgradeClickDamage').addEventListener('click', () => {
+        if (currency1 >= 50) {
+            currency1 -= 50;
+            damagePerClick++;
+            updateDisplays();
+        } else {
+            showNotification('Недостаточно валюты!');
+        }
+    });
 
-.target {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    margin-bottom: 20px;
-}
+    document.getElementById('upgradeDPS').addEventListener('click', () => {
+        if (currency2 >= 100) {
+            currency2 -= 100;
+            damagePerSecond++;
+            updateDisplays();
+        } else {
+            showNotification('Недостаточно валюты!');
+        }
+    });
 
-.target img {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 10px;
-    border: 2px solid #555;
-}
+    setInterval(() => {
+        if (damagePerSecond > 0 && targetHP > 0) {
+            targetHP -= damagePerSecond;
+            if (targetHP <= 0) {
+                targetHP = 0;
+                checkKnowledgeDrop();
+                if (knowledgeAboutTarget) {
+                    showNotification('Враг побежден!');
+                    distributeCurrency();
+                    switchToNextEnemy();
+                }
+            }
+            updateDisplays();
+        }
+    }, 1000);
 
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    background-color: #333;
-    padding: 10px 0;
-    z-index: 100;
-}
-
-.footer-btn {
-    background-color: #fff;
-    border: 2px solid #006600;
-    border-radius: 10px;
-    color: #000;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    flex-grow: 1;
-    text-align: center;
-    margin: 0 5px;
-    max-width: 18%;
-    box-sizing: border-box;
-}
-
-.footer-btn:hover {
-    background-color: #ccffcc;
-}
-
-.notification {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(204, 255, 204, 0.3);
-    color: #000000;
-    padding: 10px 20px;
-    border: 2px solid #006600;
-    border-radius: 10px;
-    font-size: 1.2em;
-    text-align: center;
-    z-index: 1000;
-    display: none;
-    white-space: nowrap;
-}
-
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.popup {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-    position: relative;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-}
-
-#baseUpgrades {
-    display: none;
-}
-
-#baseUpgrades button {
-    display: block;
-    margin: 10px 0;
-    padding: 10px;
-    font-size: 1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    background-color: #006600;
-    color: #fff;
-}
+    updateDisplays();
+});
