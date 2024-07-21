@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
     const closeBtn = document.querySelector('.close-btn');
     const notification = document.getElementById('notification');
+    const knowledgeNotification = document.getElementById('knowledgeNotification');
     const baseUpgrades = document.getElementById('baseUpgrades');
     const nextEnemyBtn = document.getElementById('nextEnemyBtn');
     const targetImage = document.getElementById('targetImage');
     const targetContainer = document.querySelector('.target-container');
+    const upgradeBtn = document.getElementById('upgradeBtn');
 
     let damagePerClick = 81;
     let damagePerSecond = 10;
@@ -48,6 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
+    function showKnowledgeNotification(message) {
+        knowledgeNotification.textContent = message;
+        knowledgeNotification.style.display = 'block';
+        setTimeout(() => {
+            knowledgeNotification.style.display = 'none';
+        }, 2000);
+    }
+
     function updateHPDisplay() {
         const hpFill = document.getElementById('hpFill');
         const hpText = document.getElementById('hpText');
@@ -62,14 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
             hpFill.style.backgroundColor = `rgba(255, 0, 0, ${1 - darknessLevel})`;
             hpText.textContent = '?';
         }
+        console.log('HP отображение обновлено:', knowledgeAboutTarget, targetHP, maxHP); // Лог HP
     }
 
     function switchToNextEnemy() {
-        if (enemies[enemyIndex] === 'Enemy1' && enemyLevel >= 10) {
-            nextEnemyBtn.style.display = 'block';
-        } else {
-            nextEnemyBtn.style.display = 'none';
-        }
         maxHP = Math.floor(maxHP * 1.08); // Увеличиваем HP врага на 8%
         targetHP = maxHP;
         enemyLevel++; // Увеличиваем уровень врага
@@ -96,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        showNotification(`Получено валюты: 
+        showNotification(`Получено валюты:
             1 типа: ${currency1}, 
             2 типа: ${currency2}, 
             3 типа: ${currency3}, 
@@ -106,8 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkKnowledgeDrop() {
         const knowledgeChance = Math.random();
-        if (knowledgeChance < 0.25 && !enemiesKnowledge[enemies[enemyIndex]]) {
-            showNotification('Получены знания!');
+        console.log('Знания проверены:', enemiesKnowledge[enemies[enemyIndex]], knowledgeChance); // Лог знаний
+        if (knowledgeChance < 0.20 && !enemiesKnowledge[enemies[enemyIndex]]) {
+            showKnowledgeNotification('Получены знания!');
             enemiesKnowledge[enemies[enemyIndex]] = true; // Знания получены
             knowledgeAboutTarget = true;
             updateHPDisplay();
@@ -119,11 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetHP <= 0) {
             targetHP = 0;
             checkKnowledgeDrop();
-            if (knowledgeAboutTarget) {
-                showNotification('Враг побежден!');
-                distributeCurrency();
-                switchToNextEnemy();
-            }
+            showNotification('Враг побежден!');
+            distributeCurrency();
+            switchToNextEnemy();
         }
         updateDisplays();
     });
@@ -138,8 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplays();
     });
 
+    upgradeBtn.addEventListener('click', () => {
+        overlay.style.display = 'block';
+        baseUpgrades.style.display = 'block';
+    });
+
     closeBtn.addEventListener('click', () => {
         overlay.style.display = 'none';
+        baseUpgrades.style.display = 'none';
     });
 
     document.getElementById('upgradeClickDamage').addEventListener('click', () => {
@@ -168,11 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetHP <= 0) {
                 targetHP = 0;
                 checkKnowledgeDrop();
-                if (knowledgeAboutTarget) {
-                    showNotification('Враг побежден!');
-                    distributeCurrency();
-                    switchToNextEnemy();
-                }
+                showNotification('Враг побежден!');
+                distributeCurrency();
+                switchToNextEnemy();
             }
             updateDisplays();
         }
