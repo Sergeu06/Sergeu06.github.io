@@ -131,13 +131,13 @@ body {
     align-items: center;
     flex: 1;
     margin-bottom: 20px;
+    overflow: hidden;
 }
 
-.target {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 10px;
-    border: 2px solid #555;
+#targetImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .footer {
