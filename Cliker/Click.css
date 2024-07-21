@@ -173,19 +173,23 @@ body {
 .notification {
     position: fixed;
     top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 10px;
     background-color: rgba(204, 255, 204, 0.3);
     color: #000000;
     padding: 10px 20px;
     border: 2px solid #006600;
     border-radius: 10px;
     font-size: 1.2em;
-    text-align: center;
+    text-align: left;
     z-index: 1000;
     display: none;
     white-space: nowrap;
 }
+
+.notification .currency-item {
+    display: block;
+}
+
 
 .overlay {
     display: none;
@@ -243,4 +247,19 @@ body {
     padding: 10px;
     font-size: 24px;
     cursor: pointer;
+}
+
+.knowledge-notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #deb887;
+    color: #000000;
+    padding: 10px 20px;
+    border: 2px solid #8b4513; 
+    border-radius: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    z-index: 1000;
+    display: none;
 }
