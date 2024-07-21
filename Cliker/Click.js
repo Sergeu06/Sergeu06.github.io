@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetImage = document.getElementById('targetImage');
     const targetContainer = document.querySelector('.target-container');
 
-    let damagePerClick = 1;
-    let damagePerSecond = 0;
+    let damagePerClick = 81;
+    let damagePerSecond = 10;
     let currency1 = 0;
     let currency2 = 0;
     let currency3 = 0;
