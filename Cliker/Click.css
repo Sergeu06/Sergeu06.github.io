@@ -3,33 +3,35 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #333;
+    background-color: #2c3e50;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ecf0f1;
 }
 
 .container {
     width: 100%;
-    max-width: 425px;
-    height: 100%;
-    background-color: #222;
+    max-width: 450px;
+    height: auto;
+    background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
     box-sizing: border-box;
     border-radius: 25px;
-    border: 2px solid #444;
+    border: 3px solid #34495e;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .currencies {
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
-    background-color: #444;
+    background: rgba(44, 62, 80, 0.8);
     padding: 5px;
     border-radius: 10px;
-    border: 2px solid #555;
+    border: 2px solid #2ecc71;
 }
 
 .currency {
@@ -40,9 +42,14 @@ body {
     color: #fff;
     font-weight: bold;
     position: relative;
-    border: 2px solid #555;
-    background-color: #555;
+    border: 2px solid #2ecc71;
+    background-color: #27ae60;
     margin: 0 5px;
+    transition: transform 0.3s;
+}
+
+.currency:hover {
+    transform: scale(1.1);
 }
 
 .currency .icon {
@@ -83,25 +90,25 @@ body {
 }
 
 .stat {
-    background-color: #444;
+    background: rgba(52, 73, 94, 0.8);
     color: #fff;
     padding: 10px;
     border-radius: 10px;
     text-align: center;
     width: 45%;
     font-size: 1.2em;
-    border: 2px solid #555;
+    border: 2px solid #2ecc71;
     margin: 0 5px;
 }
 
 .hp-bar {
-    background-color: #555;
+    background-color: #34495e;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 20px;
     height: 30px;
     position: relative;
-    border: 2px solid #444;
+    border: 2px solid #2ecc71;
 }
 
 .hp-fill {
@@ -123,6 +130,7 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     font-weight: bold;
+    text-shadow: 1px 1px 2px black;
 }
 
 .target-container {
@@ -132,12 +140,43 @@ body {
     flex: 1;
     margin-bottom: 20px;
     overflow: hidden;
+    position: relative;
 }
 
 #targetImage {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 90%;
+    max-height: 90%;
     object-fit: contain;
+    border-radius: 15px;
+    border: 3px solid #2ecc71;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s;
+}
+
+#targetImage:hover {
+    transform: scale(1.05);
+}
+
+.next-enemy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid #e67e22;
+    background-color: #f39c12;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.next-enemy-btn:hover {
+    background-color: #e67e22;
+    transform: scale(1.1);
 }
 
 .footer {
@@ -146,16 +185,14 @@ body {
     justify-content: space-around;
     background-color: #333;
     padding: 10px 0;
-    z-index: 100;
-    position: absolute;
-    bottom: 0;
+    border-top: 3px solid #2ecc71;
 }
 
 .footer-btn {
-    background-color: #fff;
-    border: 2px solid #006600;
+    background-color: #27ae60;
+    border: 2px solid #2ecc71;
     border-radius: 10px;
-    color: #000;
+    color: #fff;
     padding: 10px 20px;
     font-size: 1em;
     cursor: pointer;
@@ -164,10 +201,12 @@ body {
     margin: 0 5px;
     max-width: 18%;
     box-sizing: border-box;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .footer-btn:hover {
-    background-color: #ccffcc;
+    background-color: #2ecc71;
+    transform: scale(1.05);
 }
 
 .notification {
@@ -175,12 +214,11 @@ body {
     top: 10px;
     left: 10px;
     background-color: rgba(204, 255, 204, 0.3);
-    color: #000000;
+    color: #fff;
     padding: 10px 20px;
-    border: 2px solid #006600;
     border-radius: 10px;
     font-size: 1.2em;
-    text-align: left;
+    text-align: center;
     z-index: 1000;
     display: none;
     white-space: nowrap;
@@ -189,7 +227,6 @@ body {
 .notification .currency-item {
     display: block;
 }
-
 
 .overlay {
     display: none;
@@ -217,7 +254,7 @@ body {
 .close-btn {
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: 10px;
     background: none;
     border: none;
     font-size: 1.5em;
@@ -225,7 +262,7 @@ body {
 }
 
 #baseUpgrades {
-    display: none;
+    display: none; /* Скрываем по умолчанию */
 }
 
 #baseUpgrades button {
@@ -238,15 +275,12 @@ body {
     border-radius: 10px;
     background-color: #006600;
     color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.next-enemy-btn {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    padding: 10px;
-    font-size: 24px;
-    cursor: pointer;
+#baseUpgrades button:hover {
+    background-color: #2ecc71;
+    transform: scale(1.05);
 }
 
 .knowledge-notification {
@@ -262,4 +296,23 @@ body {
     text-align: center;
     z-index: 1000;
     display: none;
+}
+
+/* Стили для enemyName и enemyLevel */
+.enemy-info {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#enemyName, #enemyLevel {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 2px solid #2ecc71;
+    display: inline-block;
+    margin: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
