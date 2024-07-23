@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('baseUpgrades');
     const closeBtn = document.querySelector('.close-btn');
     const notification = document.getElementById('notification');
     const knowledgeNotification = document.getElementById('knowledgeNotification');
-    const baseUpgrades = document.getElementById('baseUpgrades');
     const nextEnemyBtn = document.getElementById('nextEnemyBtn');
     const targetImage = document.getElementById('targetImage');
     const targetContainer = document.querySelector('.target-container');
@@ -22,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let enemyLevel = 1;
     let enemyIndex = 0;
     const enemies = ['Enemy1', 'Enemy2'];
-    const enemyNames = ['Enemy1', 'Enemy2'];
-
     const enemiesKnowledge = {
         'Enemy1': false,
         'Enemy2': false
@@ -37,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('currency3').textContent = currency3;
         document.getElementById('currency4').textContent = currency4;
         document.getElementById('currency5').textContent = currency5;
-        document.getElementById('enemyName').textContent = `Враг: ${enemies[enemyIndex]}`;
-        document.getElementById('enemyLevel').textContent = `Уровень: ${enemyLevel}`;
+        updateEnemyInfo();
         updateHPDisplay();
+        checkNextEnemyButton();
     }
 
     function showNotification(message) {
@@ -73,6 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
             hpText.textContent = '?';
         }
         console.log('HP отображение обновлено:', knowledgeAboutTarget, targetHP, maxHP); // Лог HP
+    }
+
+    function updateEnemyInfo() {
+        const enemyName = document.getElementById('enemyName');
+        const enemyLevelDisplay = document.getElementById('enemyLevel');
+        if (knowledgeAboutTarget) {
+            enemyName.textContent = `Враг: ${enemies[enemyIndex]}`;
+            enemyLevelDisplay.textContent = `Уровень: ${enemyLevel}`;
+        } else {
+            enemyName.textContent = 'Враг: ?';
+            enemyLevelDisplay.textContent = 'Уровень: ?';
+        }
+        console.log('Информация о враге обновлена:', knowledgeAboutTarget); // Лог информации о враге
     }
 
     function switchToNextEnemy() {
@@ -118,10 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
             enemiesKnowledge[enemies[enemyIndex]] = true; // Знания получены
             knowledgeAboutTarget = true;
             updateHPDisplay();
+            updateEnemyInfo();
         }
     }
 
-    document.getElementById('targetImage').addEventListener('click', () => {
+    function checkNextEnemyButton() {
+        if (enemyLevel >= 20 && enemyIndex < enemies.length - 1) {
+            nextEnemyBtn.style.display = 'block';
+        } else {
+            nextEnemyBtn.style.display = 'none';
+        }
+    }
+
+    targetImage.addEventListener('click', () => {
         targetHP -= damagePerClick;
         if (targetHP <= 0) {
             targetHP = 0;
@@ -143,14 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateDisplays();
     });
 
-    upgradeBtn.addEventListener('click', () => {
-        overlay.style.display = 'block';
-        baseUpgrades.style.display = 'block';
-    });
-
     closeBtn.addEventListener('click', () => {
         overlay.style.display = 'none';
-        baseUpgrades.style.display = 'none';
+    });
+
+    upgradeBtn.addEventListener('click', () => {
+        overlay.style.display = 'block';
     });
 
     document.getElementById('upgradeClickDamage').addEventListener('click', () => {
