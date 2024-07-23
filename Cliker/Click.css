@@ -213,8 +213,8 @@ body {
     position: fixed;
     top: 10px;
     left: 10px;
-    background-color: rgba(204, 255, 204, 0.3);
-    color: #fff;
+    background-color: rgba(204, 255, 204, 0.9); /* Более непрозрачный фон */
+    color: #333;
     padding: 10px 20px;
     border-radius: 10px;
     font-size: 1.2em;
@@ -222,10 +222,28 @@ body {
     z-index: 1000;
     display: none;
     white-space: nowrap;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .notification .currency-item {
     display: block;
+}
+
+.knowledge-notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #deb887;
+    color: #000;
+    padding: 10px 20px;
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    white-space: nowrap;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .overlay {
@@ -290,7 +308,7 @@ body {
     background-color: #deb887;
     color: #000000;
     padding: 10px 20px;
-    border: 2px solid #8b4513; 
+    border: 2px solid #8b4513;
     border-radius: 10px;
     font-size: 1.2em;
     text-align: center;
@@ -298,7 +316,6 @@ body {
     display: none;
 }
 
-/* Стили для enemyName и enemyLevel */
 .enemy-info {
     text-align: center;
     margin: 20px 0;
@@ -315,4 +332,86 @@ body {
     display: inline-block;
     margin: 5px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 600px) {
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .currencies {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .currency {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+
+    .stats {
+        flex-direction: column;
+    }
+
+    .stat {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .footer {
+        flex-direction: column;
+    }
+
+    .footer-btn {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .target-container {
+        flex-direction: column;
+    }
+
+    #targetImage {
+        max-width: 100%;
+        max-height: 50vh;
+    }
+
+    .next-enemy-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .enemy-info {
+        margin: 10px 0;
+    }
+
+    #enemyName, #enemyLevel {
+        font-size: 16px;
+        padding: 5px;
+    }
+
+    .notification {
+        top: auto;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        font-size: 1em;
+        padding: 10px;
+        white-space: normal;
+        text-align: left;
+    }
+
+    .knowledge-notification {
+        top: auto;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        font-size: 1em;
+        padding: 10px;
+        white-space: normal;
+        text-align: left;
+    }
 }
