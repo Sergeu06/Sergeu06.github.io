@@ -1,55 +1,76 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicker Game</title>
     <link rel="stylesheet" href="Click.css">
+    <title>Click</title>
 </head>
 <body>
     <div class="container">
         <div class="currencies">
-            <div id="currency1" class="currency yellow"><span class="icon"></span></div>
-            <div id="currency2" class="currency gray"><span class="icon"></span></div>
-            <div id="currency3" class="currency light-green"><span class="icon"></span></div>
-            <div id="currency4" class="currency light-brown"><span class="icon"></span></div>
-            <div id="currency5" class="currency light-gray"><span class="icon"></span></div>
-        </div>
-        <div class="stats">
-            <div id="damagePerClick" class="stat">Урон/Клик: 1</div>
-            <div id="damagePerSecond" class="stat">Урон/Сек: 0</div>
-        </div>
-        <div class="enemy-info">
-            <div id="enemyName" class="enemy-name">Враг: Enemy1</div>
-            <div id="enemyLevel" class="enemy-level">Уровень: 1</div>
-        </div>
-        <div class="hp-bar">
-            <div id="hpFill" class="hp-fill"></div>
-            <div id="hpText" class="hp-text">100 / 100</div>
-        </div>
-        <div class="target-container">
-            <img id="targetImage" src="target.png" alt="Target" class="target">
-        </div>
-        <button id="nextEnemyBtn" class="next-enemy-btn" style="display: none;">&#10132;</button>
-    </div>
-    <div class="footer">
-        <button id="profileBtn" class="footer-btn">Профиль</button>
-        <button id="upgradeBtn" class="footer-btn">Прокачка (База)</button>
-        <button id="questsBtn" class="footer-btn">Задания</button>
-        <button id="qrBtn" class="footer-btn">QR</button>
-        <button id="marketplaceBtn" class="footer-btn">Торговая площадь</button>
-    </div>
-    <div id="overlay" class="overlay">
-        <div class="popup">
-            <button class="close-btn">&times;</button>
-            <div id="baseUpgrades" style="display: none;">
-                <button id="upgradeClickDamage">Улучшить Урон за Клик (50 валюты)</button>
-                <button id="upgradeDPS">Улучшить Урон в Секунду (100 валюты)</button>
+            <div class="currency yellow">
+                <div class="icon"></div>
+                <span id="currency1">0</span>
+            </div>
+            <div class="currency gray">
+                <div class="icon"></div>
+                <span id="currency2">0</span>
+            </div>
+            <div class="currency light-green">
+                <div class="icon"></div>
+                <span id="currency3">0</span>
+            </div>
+            <div class="currency light-brown">
+                <div class="icon"></div>
+                <span id="currency4">0</span>
+            </div>
+            <div class="currency light-gray">
+                <div class="icon"></div>
+                <span id="currency5">0</span>
             </div>
         </div>
+
+        <div class="stats">
+            <div class="stat" id="damagePerClick">Урон/Клик: 81</div>
+            <div class="stat" id="damagePerSecond">Урон/Сек: 10</div>
+        </div>
+
+        <div class="target-container">
+            <img id="targetImage" src="target.png" alt="target">
+            <button id="nextEnemyBtn" class="next-enemy-btn">&rarr;</button>
+        </div>
+
+        <div class="hp-bar">
+            <div class="hp-fill" id="hpFill" style="width: 88%;"></div>
+            <div class="hp-text" id="hpText">?</div>
+        </div>
+
+        <div class="enemy-info">
+            <div id="enemyName">Враг: ?</div>
+            <div id="enemyLevel">Уровень: ?</div>
+        </div>
+
+        <div class="footer">
+            <button class="footer-btn" id="profileBtn">Профиль</button>
+            <button class="footer-btn" id="upgradeBtn">Прокачка (База)</button>
+            <button class="footer-btn">Задания</button>
+            <button class="footer-btn">QR</button>
+            <button class="footer-btn">Торговая площадь</button>
+        </div>
     </div>
-    <div id="notification" class="notification"></div>
-    <div id="knowledgeNotification" class="knowledge-notification"></div>
+
+    <div id="baseUpgrades" class="overlay">
+        <div class="popup">
+            <button class="close-btn">&times;</button>
+            <button id="upgradeClickDamage">Улучшение урона/клик</button>
+            <button id="upgradeDPS">Улучшение урона/сек</button>
+            <button>Улучшение 3</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    <div class="knowledge-notification" id="knowledgeNotification"></div>
 
     <script src="Click.js"></script>
 </body>
