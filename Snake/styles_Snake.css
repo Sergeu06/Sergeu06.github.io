@@ -9,6 +9,27 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.mode-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.mode-selection button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.mode-selection button:hover {
+    background-color: #555;
+}
+
 .game-container {
     position: relative;
     border: 5px solid #333;
