@@ -2,29 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <link rel="stylesheet" href="styles_Snake.css">
 </head>
 <body>
     <div class="mode-selection">
-        <h2>Select Game Mode</h2>
         <button id="singlePlayerBtn">Single Player</button>
         <button id="multiPlayerBtn">Multiplayer</button>
+        <button id="skinBtn">Choose Skin</button>
     </div>
+
+    <!-- Всплывающее окно для выбора скина -->
+    <div id="skinModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Select Snake Color</h3>
+            <div class="color-options">
+                <button class="color-option" style="background-color: #333;" data-color="#333"></button>
+                <button class="color-option" style="background-color: #f00;" data-color="#f00"></button>
+                <button class="color-option" style="background-color: #0f0;" data-color="#0f0"></button>
+                <button class="color-option" style="background-color: #00f;" data-color="#00f"></button>
+                <button class="color-option" style="background-color: #ff0;" data-color="#ff0"></button>
+                <button class="color-option" style="background-color: #0ff;" data-color="#0ff"></button>
+            </div>
+            <button id="saveSkinBtn">Save</button>
+        </div>
+    </div>
+
     <div class="game-container" style="display: none;">
         <canvas id="gameCanvas" width="400" height="400"></canvas>
-        <div id="score">Score: 0</div>
-        <div id="best-score">Best Score: 0</div>
-    </div>
-    <div id="profile"></div>
-    <div class="controls" style="display: none;">
-        <button id="up" class="control-btn">↑</button>
-        <div class="horizontal-controls">
-            <button id="left" class="control-btn">←</button>
-            <button id="down" class="control-btn">↓</button>
-            <button id="right" class="control-btn">→</button>
+        <div id="controls" class="controls" style="display: none;">
+            <button id="up">Up</button>
+            <button id="down">Down</button>
+            <button id="left">Left</button>
+            <button id="right">Right</button>
         </div>
+        <div id="score">Score: 0</div>
+        <div id="best-score"></div>
+        <div id="profile"></div>
     </div>
 
     <script type="module" src="script_Snake.js"></script>
