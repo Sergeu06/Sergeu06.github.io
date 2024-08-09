@@ -95,21 +95,56 @@ function startGame(mode) {
     }
 }
 
-// Основная игровая логика для одиночного режима
+let selectedColor = '#333'; // Цвет по умолчанию
+
+// Открытие и закрытие модального окна
+const skinBtn = document.getElementById('skinBtn');
+const skinModal = document.getElementById('skinModal');
+const closeBtn = document.querySelector('.close');
+const saveSkinBtn = document.getElementById('saveSkinBtn');
+
+skinBtn.onclick = function() {
+    skinModal.style.display = 'block';
+}
+
+closeBtn.onclick = function() {
+    skinModal.style.display = 'none';
+}
+
+window.onclick = function(event) {
+    if (event.target === skinModal) {
+        skinModal.style.display = 'none';
+    }
+}
+
+// Логика выбора цвета змеи
+document.querySelectorAll('.color-option').forEach(option => {
+    option.addEventListener('click', function() {
+        selectedColor = this.dataset.color;
+        document.querySelectorAll('.color-option').forEach(btn => btn.style.border = 'none');
+        this.style.border = '2px solid black';
+    });
+});
+
+// Сохранение выбранного цвета и закрытие модального окна
+saveSkinBtn.onclick = function() {
+    skinModal.style.display = 'none';
+    console.log("Selected Snake Color: ", selectedColor);
+}
+
+// Логика игры
+
+let snake = [{x: 150, y: 150}];
+let direction = 'right';
+let food = {x: 200, y: 200};
+let score = 0;
+let intervalId;
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-let snake = [{ x: 10, y: 10 }];
-let direction = 'right';
-let food = { x: 20, y: 20 };
-let score = 0;
-let speed = 10;
-let gameStarted = false;
-
-const scoreElement = document.getElementById('score');
-
-function drawSnake() {
-    ctx.fillStyle = '#333';
+function drawSnake(snake, color) {
+    ctx.fillStyle = color || selectedColor; // Используем выбранный цвет или стандартный
     snake.forEach((segment, index) => {
         ctx.fillRect(segment.x, segment.y, 10, 10);
         if (index === 0) {
@@ -122,7 +157,7 @@ function drawSnake() {
                 ctx.fillRect(segment.x + 2, segment.y + 2, 2, 2);
                 ctx.fillRect(segment.x + 6, segment.y + 2, 2, 2);
             }
-            ctx.fillStyle = '#333';
+            ctx.fillStyle = selectedColor; // Восстанавливаем цвет после рисования глаз
         }
     });
 }
@@ -133,20 +168,28 @@ function drawFood() {
 }
 
 function moveSnake() {
-    if (!gameStarted) return; // Ожидаем нажатия на клавишу для начала движения
-    const head = { ...snake[0] };
+    let head = {x: snake[0].x, y: snake[0].y};
+    
     switch (direction) {
-        case 'up': head.y -= 10; break;
-        case 'down': head.y += 10; break;
-        case 'left': head.x -= 10; break;
-        case 'right': head.x += 10; break;
+        case 'right':
+            head.x += 10;
+            break;
+        case 'left':
+            head.x -= 10;
+            break;
+        case 'up':
+            head.y -= 10;
+            break;
+        case 'down':
+            head.y += 10;
+            break;
     }
+    
     snake.unshift(head);
+    
     if (head.x === food.x && head.y === food.y) {
-        score++;
-        speed *= 1.05;
-        console.log("Food eaten, new score:", score);
-        updateBestScore(score);
+        score += 10;
+        document.getElementById('score').textContent = `Score: ${score}`;
         generateFood();
     } else {
         snake.pop();
@@ -154,107 +197,101 @@ function moveSnake() {
 }
 
 function generateFood() {
-    let newFoodPosition;
-    while (true) {
-        newFoodPosition = {
-            x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
-            y: Math.floor(Math.random() * (canvas.height / 10)) * 10
-        };
-        if (!snake.some(segment => segment.x === newFoodPosition.x && segment.y === newFoodPosition.y)) {
-            break;
+    food.x = Math.floor(Math.random() * 40) * 10;
+    food.y = Math.floor(Math.random() * 40) * 10;
+}
+
+function checkCollision() {
+    const head = snake[0];
+    
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+        return true;
+    }
+    
+    for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+            return true;
         }
     }
-    food = newFoodPosition;
+    
+    return false;
 }
 
 function gameLoop() {
+    if (checkCollision()) {
+        clearInterval(intervalId);
+        alert(`Game Over! Your score was: ${score}`);
+        updateBestScore(score);  // Update the best score in Firebase
+        return;
+    }
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawSnake();
-    drawFood();
     moveSnake();
-    scoreElement.textContent = `Score: ${score}`;
-    setTimeout(gameLoop, 1000 / speed);
+    drawSnake(snake, selectedColor);
+    drawFood();
 }
 
-// Управление для одиночного режима
-document.addEventListener('keydown', event => {
-    gameStarted = true; // Игра начинается после первого нажатия на клавишу
-    switch (event.key) {
-        case 'ArrowUp':
-            if (direction !== 'down') direction = 'up';
-            break;
-        case 'ArrowDown':
-            if (direction !== 'up') direction = 'down';
-            break;
-        case 'ArrowLeft':
-            if (direction !== 'right') direction = 'left';
-            break;
-        case 'ArrowRight':
-            if (direction !== 'left') direction = 'right';
-            break;
-    }
-});
-
-// Начало одиночной игры
 function startSinglePlayer() {
+    score = 0;
+    snake = [{x: 150, y: 150}];
+    direction = 'right';
     generateFood();
-    gameLoop();
+    intervalId = setInterval(gameLoop, 100);
 }
 
-// Логика мультиплеерного режима
-const snakes = [
-    {
-        body: [{ x: 10, y: 10 }],
-        direction: 'right',
-        color: '#333',
-        started: false // Указывает, начала ли эта змея двигаться
-    },
-    {
-        body: [{ x: 30, y: 30 }],
-        direction: 'left',
-        color: '#007700',
-        started: false
-    }
+// Multiplayer logic
+
+const spawnPoints = [
+    { x: 10, y: 10, direction: 'right' },
+    { x: 380, y: 10, direction: 'down' },
+    { x: 380, y: 380, direction: 'left' },
+    { x: 10, y: 380, direction: 'up' },
+    { x: 200, y: 10, direction: 'down' },
+    { x: 380, y: 200, direction: 'left' },
+    { x: 200, y: 380, direction: 'up' },
+    { x: 10, y: 200, direction: 'right' }
 ];
 
+let snakes = Array(8).fill().map((_, i) => ({
+    body: [{ x: spawnPoints[i].x, y: spawnPoints[i].y }],
+    direction: spawnPoints[i].direction,
+    color: selectedColor,
+    started: false
+}));
+
 let multiplayerFood = [];
-let multiplayerScore = [0, 0];
 let multiplayerSpeed = 10;
+let multiplayerScore = Array(8).fill(0);
 
 function drawSnakeMultiplayer(snake) {
-    ctx.fillStyle = snake.color;
-    snake.body.forEach((segment, index) => {
-        ctx.fillRect(segment.x, segment.y, 10, 10);
-        if (index === 0) {
-            // Рисуем глаза на голове змеи
-            ctx.fillStyle = 'white';
-            if (snake.direction === 'right' || snake.direction === 'left') {
-                ctx.fillRect(segment.x + 2, segment.y + 2, 2, 2);
-                ctx.fillRect(segment.x + 2, segment.y + 6, 2, 2);
-            } else {
-                ctx.fillRect(segment.x + 2, segment.y + 2, 2, 2);
-                ctx.fillRect(segment.x + 6, segment.y + 2, 2, 2);
-            }
-            ctx.fillStyle = snake.color;
-        }
-    });
+    drawSnake(snake.body, snake.color);
 }
 
 function moveSnakeMultiplayer(snake) {
-    if (!snake.started) return; // Ожидаем начала движения
-    const head = { ...snake.body[0] };
+    let head = { x: snake.body[0].x, y: snake.body[0].y };
+
     switch (snake.direction) {
-        case 'up': head.y -= 10; break;
-        case 'down': head.y += 10; break;
-        case 'left': head.x -= 10; break;
-        case 'right': head.x += 10; break;
+        case 'right':
+            head.x += 10;
+            break;
+        case 'left':
+            head.x -= 10;
+            break;
+        case 'up':
+            head.y -= 10;
+            break;
+        case 'down':
+            head.y += 10;
+            break;
     }
+
     snake.body.unshift(head);
+
     const foodIndex = multiplayerFood.findIndex(f => f.x === head.x && f.y === head.y);
+
     if (foodIndex !== -1) {
-        multiplayerScore[snakes.indexOf(snake)]++;
+        multiplayerScore[snakes.indexOf(snake)] += 10;
         multiplayerFood.splice(foodIndex, 1);
-        multiplayerSpeed *= 1.05;
         generateMultiplayerFood();
     } else {
         snake.body.pop();
@@ -262,116 +299,61 @@ function moveSnakeMultiplayer(snake) {
 }
 
 function generateMultiplayerFood() {
-    if (multiplayerFood.length < 2) {
-        let newFoodPosition;
-        while (true) {
-            newFoodPosition = {
-                x: Math.floor(Math.random() * canvas.width / 10) * 10,
-                y: Math.floor(Math.random() * canvas.height / 10) * 10
-            };
-            if (!snakes.some(snake => snake.body.some(segment => segment.x === newFoodPosition.x && segment.y === newFoodPosition.y)) &&
-                !multiplayerFood.some(food => food.x === newFoodPosition.x && food.y === newFoodPosition.y)) {
-                break;
-            }
-        }
-        multiplayerFood.push(newFoodPosition);
-    }
+    const foodPosition = {
+        x: Math.floor(Math.random() * 40) * 10,
+        y: Math.floor(Math.random() * 40) * 10
+    };
+    multiplayerFood.push(foodPosition);
 }
 
 function checkCollisionMultiplayer(snake) {
     const head = snake.body[0];
+
     if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
         return true;
     }
 
     for (let i = 1; i < snake.body.length; i++) {
-        if (head.x === snake.body[i].x && head.y === snake.body[i].y) {
+        if (snake.body[i].x === head.x && snake.body[i].y === head.y) {
             return true;
         }
     }
 
-    return false;
+    return snakes.some(otherSnake => otherSnake !== snake && otherSnake.body.some(segment => segment.x === head.x && segment.y === head.y));
 }
 
 function gameLoopMultiplayer() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let snake of snakes) {
-        moveSnakeMultiplayer(snake);
-        drawSnakeMultiplayer(snake);
-
-        if (checkCollisionMultiplayer(snake)) {
-            alert(`Game Over! Snake ${snakes.indexOf(snake) + 1} lost.`);
-            return;
+    snakes.forEach(snake => {
+        if (!checkCollisionMultiplayer(snake)) {
+            moveSnakeMultiplayer(snake);
         }
-    }
+    });
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    snakes.forEach(drawSnakeMultiplayer);
     multiplayerFood.forEach(food => {
         ctx.fillStyle = 'red';
         ctx.fillRect(food.x, food.y, 10, 10);
     });
 
-    generateMultiplayerFood();
-
-    scoreElement.textContent = `Scores: Snake 1: ${multiplayerScore[0]}, Snake 2: ${multiplayerScore[1]}`;
+    // Repeat the loop
     setTimeout(gameLoopMultiplayer, 1000 / multiplayerSpeed);
 }
 
 function startMultiplayer() {
-    multiplayerScore = [0, 0];
-    snakes.forEach(snake => {
-        snake.body = [{ x: Math.floor(Math.random() * canvas.width / 10) * 10, y: Math.floor(Math.random() * canvas.height / 10) * 10 }];
-        snake.direction = 'right';
-        snake.started = false; // Устанавливаем, что змея ещё не начала движение
+    multiplayerScore = Array(8).fill(0);
+    snakes.forEach((snake, index) => {
+        snake.body = [{ x: spawnPoints[index].x, y: spawnPoints[index].y }];
+        snake.direction = spawnPoints[index].direction;
+        snake.color = selectedColor; // Присваиваем выбранный цвет
+        snake.started = false;
     });
     multiplayerFood = [];
     multiplayerSpeed = 10;
     gameLoopMultiplayer();
 }
 
-// Управление для мультиплеерного режима
-document.addEventListener('keydown', event => {
-    switch (event.key) {
-        case 'ArrowUp':
-            if (snakes[0].direction !== 'down') snakes[0].direction = 'up';
-            snakes[0].started = true; // Начинаем движение змеи
-            break;
-        case 'ArrowDown':
-            if (snakes[0].direction !== 'up') snakes[0].direction = 'down';
-            snakes[0].started = true;
-            break;
-        case 'ArrowLeft':
-            if (snakes[0].direction !== 'right') snakes[0].direction = 'left';
-            snakes[0].started = true;
-            break;
-        case 'ArrowRight':
-            if (snakes[0].direction !== 'left') snakes[0].direction = 'right';
-            snakes[0].started = true;
-            break;
-        case 'w':
-            if (snakes[1].direction !== 'down') snakes[1].direction = 'up';
-            snakes[1].started = true;
-            break;
-        case 's':
-            if (snakes[1].direction !== 'up') snakes[1].direction = 'down';
-            snakes[1].started = true;
-            break;
-        case 'a':
-            if (snakes[1].direction !== 'right') snakes[1].direction = 'left';
-            snakes[1].started = true;
-            break;
-        case 'd':
-            if (snakes[1].direction !== 'left') snakes[1].direction = 'right';
-            snakes[1].started = true;
-            break;
-    }
-});
-
-// JavaScript код для обработки двойного нажатия
-document.addEventListener('dblclick', function(event) {
-    event.preventDefault(); // Отключает стандартное действие двойного нажатия
-});
-
+// Контролы
 document.getElementById('up').addEventListener('click', () => {
     if (direction !== 'down') direction = 'up';
 });
