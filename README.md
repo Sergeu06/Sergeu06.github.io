@@ -3,3 +3,47 @@
 Кликер=Стиилстика- Создание UI- Добавлени простых мехпнник(клик, вкладки, прокачка)
 
 Мультиплеер змейки - выбор режима - логика игры + цвета - изменение головного блока змеи - удары стены и тд
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="styles_Snake.css">
+</head>
+<body>
+    <div class="mode-selection">
+        <h2>Select Game Mode</h2>
+        <button id="singlePlayerBtn">Single Player</button>
+        <button id="multiPlayerBtn">Multiplayer</button>
+    </div>
+    <div class="game-container" style="display: none;">
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div id="score">Score: 0</div>
+        <div id="best-score">Best Score: 0</div>
+    </div>
+    <div id="profile"></div>
+    <div class="controls" style="display: none;">
+        <button id="up" class="control-btn">↑</button>
+        <div class="horizontal-controls">
+            <button id="left" class="control-btn">←</button>
+            <button id="down" class="control-btn">↓</button>
+            <button id="right" class="control-btn">→</button>
+        </div>
+    </div>
+
+    <script type="module" src="script_Snake.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
