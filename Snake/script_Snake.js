@@ -86,8 +86,7 @@ window.onload = function() {
                 if (data.success) {
                     alert('Server created successfully!');
                     document.getElementById('serverCreationModal').style.display = 'none';
-                    document.getElementById('server-selection').style.display = 'block';
-                    refreshServerList(); // Обновляем список серверов после создания нового сервера
+                    joinServer(data.serverId); // Автоматически подключаемся к созданному серверу
                 } else {
                     alert('Error creating server');
                 }
