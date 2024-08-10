@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -15,14 +15,51 @@ const firebaseConfig = {
 
 // Инициализация Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const database = getDatabase(app);
 console.log('Firebase initialized.');
 
 window.onload = function() {
     console.log('Document loaded and script executed');
 
-    const userId = 'exampleUserId'; // Здесь используйте реальный userId
+    const userId = 'exampleUserId'; // Замените на реальный userId
+    const avatarImg = document.getElementById('playerAvatarImg');
     let ws; // Объявляем WebSocket вне функций
+
+    // Функция загрузки данных пользователя из Firebase
+    async function loadUserData(uid) {
+        const dbRef = ref(database);
+        try {
+            const snapshot = await get(child(dbRef, `users/${uid}`));
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                return userData;
+            } else {
+                console.error("User data not found");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error loading user data: ", error);
+            return null;
+        }
+    }
+
+    // Загрузка данных пользователя и установка URL аватара
+    async function setPlayerAvatar() {
+        const userData = await loadUserData(userId);
+        if (userData) {
+            const avatarUrl = userData.avatar_url;
+            if (avatarUrl) {
+                avatarImg.src = avatarUrl;
+                avatarImg.onload = () => console.log("Avatar loaded successfully");
+                avatarImg.onerror = () => {
+                    console.error("Failed to load avatar image, using default.");
+                    avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
+                };
+            } else {
+                avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
+            }
+        }
+    }
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -76,32 +113,9 @@ window.onload = function() {
     // Инициализация WebSocket при загрузке страницы
     setupWebSocket();
 
-    // Функция для получения аватара игрока
-    function fetchAndSetPlayerAvatar(userId) {
-        console.log('Fetching player avatar for user ID:', userId);
-
-        const userRef = ref(db, `users/${userId}`);
-        get(userRef).then(snapshot => {
-            const userData = snapshot.val();
-            if (userData) {
-                const avatarUrl = userData.avatar_url || 'https://via.placeholder.com/50';
-                const avatarImg = document.getElementById('playerAvatarImg');
-                if (avatarImg) {
-                    avatarImg.src = avatarUrl;
-                    avatarImg.onload = () => console.log('Avatar loaded successfully');
-                    avatarImg.onerror = () => {
-                        console.error('Failed to load avatar image, using default.');
-                        avatarImg.src = 'https://via.placeholder.com/50';
-                    };
-                } else {
-                    console.error('Player avatar element not found');
-                }
-            } else {
-                console.error('No user data found');
-            }
-        }).catch(error => {
-            console.error('Error fetching player data:', error);
-        });
+    // Загрузка аватара пользователя
+    if (avatarImg) {
+        setPlayerAvatar();
     }
 
     // Обработчики кликов на кнопки
@@ -265,7 +279,7 @@ window.onload = function() {
 
         // Получаем данные текущего пользователя для аватара
         if (userId) {
-            fetchAndSetPlayerAvatar(userId);
+            setPlayerAvatar();
         }
     }
 
@@ -275,19 +289,19 @@ window.onload = function() {
         playerListElement.innerHTML = '';
 
         players.forEach(player => {
-            const userRef = ref(db, `users/${player.id}`);
-            get(userRef).then(snapshot => {
-                const userData = snapshot.val();
-                const avatarUrl = userData?.avatar_url || 'https://via.placeholder.com/50';
-                const nickname = userData?.nickname || 'Unknown Player';
+            loadUserData(player.id).then(userData => {
+                if (userData) {
+                    const avatarUrl = userData.avatar_url || 'https://via.placeholder.com/50';
+                    const nickname = userData.nickname || 'Unknown Player';
 
-                const li = document.createElement('li');
-                li.classList.add('player-item');
-                li.innerHTML = `
-                    <img src="${avatarUrl}" alt="Avatar" class="player-avatar" />
-                    <span class="player-name">${nickname}</span>
-                `;
-                playerListElement.appendChild(li);
+                    const li = document.createElement('li');
+                    li.classList.add('player-item');
+                    li.innerHTML = `
+                        <img src="${avatarUrl}" alt="Avatar" class="player-avatar" />
+                        <span class="player-name">${nickname}</span>
+                    `;
+                    playerListElement.appendChild(li);
+                }
             }).catch(error => {
                 console.error('Error fetching player data:', error);
             });
