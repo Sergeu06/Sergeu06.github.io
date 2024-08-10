@@ -27,6 +27,7 @@ window.onload = function() {
 
     // Функция загрузки данных пользователя из Firebase
     async function loadUserData(uid) {
+        console.log("Attempting to load user data for UID:", uid);
         const dbRef = ref(database);
         try {
             const snapshot = await get(child(dbRef, `users/${uid}`));
@@ -49,15 +50,23 @@ window.onload = function() {
         if (userData) {
             const avatarUrl = userData.avatar_url;
             if (avatarUrl) {
-                avatarImg.src = avatarUrl;
-                avatarImg.onload = () => console.log("Avatar loaded successfully");
-                avatarImg.onerror = () => {
-                    console.error("Failed to load avatar image, using default.");
-                    avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
-                };
+                if (avatarImg) {
+                    avatarImg.src = avatarUrl;
+                    avatarImg.onload = () => console.log("Avatar loaded successfully");
+                    avatarImg.onerror = () => {
+                        console.error("Failed to load avatar image, using default.");
+                        avatarImg.src = 'https://via.placeholder.com/50';
+                    };
+                } else {
+                    console.error("Avatar image element not found");
+                }
             } else {
-                avatarImg.src = 'https://via.placeholder.com/50'; // Используем публичный URL для placeholder изображения
+                if (avatarImg) {
+                    avatarImg.src = 'https://via.placeholder.com/50';
+                }
             }
+        } else {
+            console.error("No user data found or failed to load");
         }
     }
 
@@ -149,9 +158,7 @@ window.onload = function() {
 
             fetch('http://127.0.0.1:8080/api/createServer', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: serverName,
                     password: passwordToggle ? serverPassword : null,
@@ -203,41 +210,33 @@ window.onload = function() {
         console.error('Multiplayer button not found');
     }
 
-    // Функция для старта одиночной игры
     function startGame() {
         document.querySelector('.mode-selection').style.display = 'none';
         document.querySelector('.game-container').style.display = 'block';
-        initSinglePlayerGame(); // Предполагается, что функция уже определена
+        initSinglePlayerGame();
     }
 
-    // Функция для старта мультиплеерного режима
     function startMultiplayer() {
         document.querySelector('.mode-selection').style.display = 'none';
         document.getElementById('server-selection').style.display = 'block';
         refreshServerList();
     }
 
-    // Функция для обновления списка серверов
     function refreshServerList() {
-        console.log('Refreshing server list...');
         fetch('http://127.0.0.1:8080/api/servers')
             .then(response => response.json())
-            .then(servers => {
-                updateServerList(servers);
-            })
+            .then(servers => updateServerList(servers))
             .catch(error => {
                 console.error('Error fetching server list:', error);
             });
     }
 
-    // Функция для обновления списка серверов в UI
     function updateServerList(servers) {
         const serverListElement = document.getElementById('serverList');
         serverListElement.innerHTML = '';
         servers.forEach(server => addServerToList(server));
     }
 
-    // Функция для добавления сервера в список
     function addServerToList(server) {
         const serverListElement = document.getElementById('serverList');
         const li = document.createElement('li');
@@ -251,7 +250,6 @@ window.onload = function() {
         serverListElement.appendChild(li);
     }
 
-    // Функция для удаления сервера из списка
     function removeServerFromList(serverId) {
         const serverListElement = document.getElementById('serverList');
         const serverItems = serverListElement.querySelectorAll('li');
@@ -262,13 +260,11 @@ window.onload = function() {
         });
     }
 
-    // Функция для обновления информации о сервере
     function updateServerInList(server) {
         removeServerFromList(server.id);
         addServerToList(server);
     }
 
-    // Функция для подключения к серверу
     function joinServer(serverId) {
         document.getElementById('server-selection').style.display = 'none';
         document.getElementById('lobby').style.display = 'block';
@@ -283,7 +279,6 @@ window.onload = function() {
         }
     }
 
-    // Функция для обновления списка игроков в лобби
     function updatePlayerList(players) {
         const playerListElement = document.getElementById('playerList');
         playerListElement.innerHTML = '';
