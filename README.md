@@ -452,3 +452,112 @@ document.getElementById('right').addEventListener('click', () => {
 
 
 
+
+
+
+
+
+
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.mode-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.mode-selection button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.mode-selection button:hover {
+    background-color: #555;
+}
+
+.game-container {
+    position: relative;
+    border: 5px solid #333;
+    background-color: #fff;
+    width: 90vw;
+    height: 90vw;
+    max-width: 600px;
+    max-height: 600px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#score, #best-score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+#best-score {
+    top: 10px;
+    right: 10px;
+    left: auto;
+}
+
+.controls {
+    margin-top: 20px;
+    text-align-last: center;
+}
+
+.control-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 2em;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.control-btn:hover {
+    background-color: #555;
+}
+
+.horizontal-controls {
+    display: flex;
+    justify-content: center;
+}
+
+#profile {
+    margin-top: 10px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+#profile img.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
