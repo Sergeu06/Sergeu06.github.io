@@ -149,23 +149,28 @@ canvas {
     padding: 0;
 }
 
-#playerList .player {
+#playerList .player-item {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-#playerList .player img {
+#playerList .player-avatar {
     width: 30px;
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-#serverSettings {
-    margin-top: 20px;
+#playerList .player-name {
+    font-size: 1.2em;
 }
 
+/* Общие стили для кнопок */
 button {
     padding: 15px 30px;
     font-size: 18px;
