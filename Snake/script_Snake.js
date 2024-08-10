@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,16 +17,16 @@ const firebaseConfig = {
 // Инициализация Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+const auth = getAuth(app);
+
 console.log('Firebase initialized.');
 
 window.onload = function() {
     console.log('Document loaded and script executed');
 
-    const userId = 'exampleUserId'; // Замените на реальный userId
     const avatarImg = document.getElementById('playerAvatarImg');
     let ws; // Объявляем WebSocket вне функций
 
-    // Функция загрузки данных пользователя из Firebase
     async function loadUserData(uid) {
         console.log("Attempting to load user data for UID:", uid);
         const dbRef = ref(database);
@@ -33,6 +34,7 @@ window.onload = function() {
             const snapshot = await get(child(dbRef, `users/${uid}`));
             if (snapshot.exists()) {
                 const userData = snapshot.val();
+                console.log("User data loaded:", userData);
                 return userData;
             } else {
                 console.error("User data not found");
@@ -44,9 +46,14 @@ window.onload = function() {
         }
     }
 
-    // Загрузка данных пользователя и установка URL аватара
     async function setPlayerAvatar() {
-        const userData = await loadUserData(userId);
+        const user = auth.currentUser;
+        if (!user) {
+            console.error("No authenticated user found. Please log in.");
+            return;
+        }
+
+        const userData = await loadUserData(user.uid);
         if (userData) {
             const avatarUrl = userData.avatar_url;
             if (avatarUrl) {
@@ -70,7 +77,6 @@ window.onload = function() {
         }
     }
 
-    // Функция для установки соединения WebSocket
     function setupWebSocket() {
         console.log('Setting up WebSocket connection...');
         ws = new WebSocket('ws://127.0.0.1:8080');
@@ -274,9 +280,7 @@ window.onload = function() {
         ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
 
         // Получаем данные текущего пользователя для аватара
-        if (userId) {
-            setPlayerAvatar();
-        }
+        setPlayerAvatar();
     }
 
     function updatePlayerList(players) {
