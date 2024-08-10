@@ -9,6 +9,28 @@ body {
     font-family: Arial, sans-serif;
 }
 
+
+
+/* Добавьте этот CSS в ваш файл стилей */
+.player-avatar-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 1000; /* Убедитесь, что аватар находится поверх других элементов */
+}
+
+.player-avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Обеспечивает правильное масштабирование изображения */
+    border: 2px solid #fff; /* Опционально, чтобы добавить границу */
+}
+
+
 /* Стили для профиля */
 .profile {
     display: flex;
