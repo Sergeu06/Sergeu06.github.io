@@ -14,7 +14,6 @@ const firebaseConfig = {
 };
 
 // Инициализация Firebase
-console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 console.log('Firebase initialized.');
@@ -22,8 +21,8 @@ console.log('Firebase initialized.');
 window.onload = function() {
     console.log('Document loaded and script executed');
 
-    let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
     const userId = 'exampleUserId'; // Здесь используйте реальный userId
+    let ws; // Объявляем WebSocket вне функций
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -39,21 +38,29 @@ window.onload = function() {
             console.log('WebSocket message received:', event.data);
             const message = JSON.parse(event.data);
 
-            if (message.type === 'serverListUpdate') {
-                console.log('Server list update received');
-                updateServerList(message.servers);
-            } else if (message.type === 'serverAdded') {
-                console.log('New server added:', message.server);
-                addServerToList(message.server);
-            } else if (message.type === 'serverRemoved') {
-                console.log('Server removed:', message.serverId);
-                removeServerFromList(message.serverId);
-            } else if (message.type === 'serverUpdated') {
-                console.log('Server updated:', message.server);
-                updateServerInList(message.server);
-            } else if (message.type === 'playerListUpdate') {
-                console.log('Player list update received');
-                updatePlayerList(message.players); // Обновляем список игроков
+            switch (message.type) {
+                case 'serverListUpdate':
+                    console.log('Server list update received');
+                    updateServerList(message.servers);
+                    break;
+                case 'serverAdded':
+                    console.log('New server added:', message.server);
+                    addServerToList(message.server);
+                    break;
+                case 'serverRemoved':
+                    console.log('Server removed:', message.serverId);
+                    removeServerFromList(message.serverId);
+                    break;
+                case 'serverUpdated':
+                    console.log('Server updated:', message.server);
+                    updateServerInList(message.server);
+                    break;
+                case 'playerListUpdate':
+                    console.log('Player list update received');
+                    updatePlayerList(message.players);
+                    break;
+                default:
+                    console.warn('Unknown message type:', message.type);
             }
         });
 
@@ -76,19 +83,15 @@ window.onload = function() {
         const userRef = ref(db, `users/${userId}`);
         get(userRef).then(snapshot => {
             const userData = snapshot.val();
-            console.log(`User data for ID ${userId}:`, userData);
-
             if (userData) {
                 const avatarUrl = userData.avatar_url || 'https://via.placeholder.com/50';
-                console.log(`Setting player avatar with URL: ${avatarUrl}`);
-
                 const avatarImg = document.getElementById('playerAvatarImg');
                 if (avatarImg) {
                     avatarImg.src = avatarUrl;
                     avatarImg.onload = () => console.log('Avatar loaded successfully');
                     avatarImg.onerror = () => {
                         console.error('Failed to load avatar image, using default.');
-                        avatarImg.src = 'https://via.placeholder.com/50'; // Публичный URL для placeholder изображения
+                        avatarImg.src = 'https://via.placeholder.com/50';
                     };
                 } else {
                     console.error('Player avatar element not found');
@@ -101,32 +104,29 @@ window.onload = function() {
         });
     }
 
-    // Обработчик клика на кнопку создания сервера
+    // Обработчики кликов на кнопки
     const createServerBtn = document.getElementById('openCreateServerModalBtn');
     if (createServerBtn) {
-        createServerBtn.addEventListener('click', function() {
-            console.log('Create Server button clicked');
+        createServerBtn.addEventListener('click', () => {
             document.getElementById('serverCreationModal').style.display = 'block';
         });
     } else {
         console.error('Create Server button not found');
     }
 
-    // Обработчик клика на кнопку создания сервера в модальном окне
     const createServerConfirmBtn = document.getElementById('createServerConfirmBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const refreshServersBtn = document.getElementById('refreshServersBtn');
+    const singlePlayerBtn = document.getElementById('singlePlayerBtn');
+    const multiPlayerBtn = document.getElementById('multiPlayerBtn');
 
     if (createServerConfirmBtn) {
-        createServerConfirmBtn.addEventListener('click', function() {
-            console.log('Create Server Confirm button clicked');
-
+        createServerConfirmBtn.addEventListener('click', () => {
             const serverName = document.getElementById('serverName').value;
             const passwordToggle = document.getElementById('passwordToggle').checked;
             const serverPassword = document.getElementById('serverPassword').value;
             const maxPlayers = document.getElementById('maxPlayers').value;
             const gameMode = document.getElementById('gameMode').value;
-
-            console.log('Server details:', { serverName, passwordToggle, serverPassword, maxPlayers, gameMode });
 
             if (!serverName) {
                 console.error('Server name is required');
@@ -147,11 +147,10 @@ window.onload = function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Create server response:', data);
                 if (data.success) {
                     alert('Server created successfully!');
                     document.getElementById('serverCreationModal').style.display = 'none';
-                    joinServer(data.serverId); // Автоматически подключаемся к созданному серверу
+                    joinServer(data.serverId);
                 } else {
                     alert('Error creating server');
                 }
@@ -165,60 +164,46 @@ window.onload = function() {
     }
 
     if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
+        closeModalBtn.addEventListener('click', () => {
             document.getElementById('serverCreationModal').style.display = 'none';
         });
     } else {
         console.error('Close modal button not found');
     }
 
-    // Обработчик клика на кнопку обновления списка серверов
-    const refreshServersBtn = document.getElementById('refreshServersBtn');
     if (refreshServersBtn) {
-        refreshServersBtn.addEventListener('click', function() {
-            console.log('Refresh Servers button clicked');
-            refreshServerList(); // Обновляем список серверов при клике
-        });
+        refreshServersBtn.addEventListener('click', refreshServerList);
     } else {
         console.error('Refresh Servers button not found');
     }
 
-    // Обработчик клика на кнопку одиночного режима
-    const singlePlayerBtn = document.getElementById('singlePlayerBtn');
     if (singlePlayerBtn) {
-        singlePlayerBtn.addEventListener('click', function() {
-            console.log('Single Player button clicked');
-            startGame();
-        });
+        singlePlayerBtn.addEventListener('click', startGame);
     } else {
         console.error('Single Player button not found');
     }
 
-    // Обработчик клика на кнопку мультиплеера
-    const multiPlayerBtn = document.getElementById('multiPlayerBtn');
     if (multiPlayerBtn) {
-        multiPlayerBtn.addEventListener('click', function() {
-            console.log('Multiplayer button clicked');
-            startMultiplayer();
-        });
+        multiPlayerBtn.addEventListener('click', startMultiplayer);
     } else {
         console.error('Multiplayer button not found');
     }
 
+    // Функция для старта одиночной игры
     function startGame() {
-        console.log('Starting single player game');
         document.querySelector('.mode-selection').style.display = 'none';
         document.querySelector('.game-container').style.display = 'block';
         initSinglePlayerGame(); // Предполагается, что функция уже определена
     }
 
+    // Функция для старта мультиплеерного режима
     function startMultiplayer() {
-        console.log('Starting multiplayer mode');
         document.querySelector('.mode-selection').style.display = 'none';
         document.getElementById('server-selection').style.display = 'block';
-        refreshServerList(); // Обновляем список серверов при переходе в мультиплеерный режим
+        refreshServerList();
     }
 
+    // Функция для обновления списка серверов
     function refreshServerList() {
         console.log('Refreshing server list...');
         fetch('http://127.0.0.1:8080/api/servers')
@@ -231,34 +216,29 @@ window.onload = function() {
             });
     }
 
+    // Функция для обновления списка серверов в UI
     function updateServerList(servers) {
-        console.log('Updating server list UI...');
         const serverListElement = document.getElementById('serverList');
         serverListElement.innerHTML = '';
-        servers.forEach(server => {
-            console.log('Adding server to list:', server);
-            addServerToList(server);
-        });
+        servers.forEach(server => addServerToList(server));
     }
 
+    // Функция для добавления сервера в список
     function addServerToList(server) {
         const serverListElement = document.getElementById('serverList');
         const li = document.createElement('li');
-        li.setAttribute('data-server-id', server.id); // Установите ID сервера в качестве атрибута
+        li.setAttribute('data-server-id', server.id);
         li.innerHTML = `
             <div class="server-name">${server.name}</div>
             <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
             ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
         `;
-        li.addEventListener('click', () => {
-            console.log('Server item clicked:', server.id);
-            joinServer(server.id);
-        });
+        li.addEventListener('click', () => joinServer(server.id));
         serverListElement.appendChild(li);
     }
 
+    // Функция для удаления сервера из списка
     function removeServerFromList(serverId) {
-        console.log('Removing server from list:', serverId);
         const serverListElement = document.getElementById('serverList');
         const serverItems = serverListElement.querySelectorAll('li');
         serverItems.forEach(item => {
@@ -268,14 +248,14 @@ window.onload = function() {
         });
     }
 
+    // Функция для обновления информации о сервере
     function updateServerInList(server) {
-        console.log('Updating server in list:', server.id);
-        removeServerFromList(server.id); // Удаляем старую запись
-        addServerToList(server); // Добавляем новую
+        removeServerFromList(server.id);
+        addServerToList(server);
     }
 
+    // Функция для подключения к серверу
     function joinServer(serverId) {
-        console.log('Joining server with ID:', serverId);
         document.getElementById('server-selection').style.display = 'none';
         document.getElementById('lobby').style.display = 'block';
         ws.send(JSON.stringify({ type: 'join', serverId }));
@@ -289,26 +269,18 @@ window.onload = function() {
         }
     }
 
-    // Функция обновления списка игроков в лобби
+    // Функция для обновления списка игроков в лобби
     function updatePlayerList(players) {
-        console.log('Updating player list UI...');
         const playerListElement = document.getElementById('playerList');
-        playerListElement.innerHTML = ''; // Очищаем список перед обновлением
+        playerListElement.innerHTML = '';
 
         players.forEach(player => {
-            console.log('Fetching data for player ID:', player.id);
-
-            // Получаем данные пользователя из Firebase
             const userRef = ref(db, `users/${player.id}`);
             get(userRef).then(snapshot => {
                 const userData = snapshot.val();
-                console.log(`User data for ID ${player.id}:`, userData);
-
                 const avatarUrl = userData?.avatar_url || 'https://via.placeholder.com/50';
                 const nickname = userData?.nickname || 'Unknown Player';
 
-                console.log(`Displaying player ${nickname} with avatar: ${avatarUrl}`);
-                
                 const li = document.createElement('li');
                 li.classList.add('player-item');
                 li.innerHTML = `
