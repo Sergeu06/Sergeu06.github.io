@@ -9,6 +9,25 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Стили для профиля */
+.profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+#nickname {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
 .mode-selection {
     display: flex;
     flex-direction: column;
@@ -49,22 +68,23 @@ canvas {
 #score, #best-score {
     position: absolute;
     top: 10px;
-    left: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 5px;
     border-radius: 5px;
     font-size: 1.2em;
 }
 
+#score {
+    left: 10px;
+}
+
 #best-score {
-    top: 10px;
     right: 10px;
-    left: auto;
 }
 
 .controls {
     margin-top: 20px;
-    text-align-last: center;
+    text-align: center;
 }
 
 .control-btn {
@@ -86,6 +106,7 @@ canvas {
     justify-content: center;
 }
 
+/* Стили для списка серверов */
 #server-selection, #server-setup, #lobby {
     text-align: center;
     margin-top: 20px;
@@ -220,4 +241,47 @@ button:hover {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+#playerList {
+    margin-top: 20px;
+}
+
+#serverSettings {
+    margin-top: 20px;
+}
+
+/* Упрощение стилей кнопок для общего использования */
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Стили для профиля игрока */
+.profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+#nickname {
+    font-size: 1.5em;
+    font-weight: bold;
 }
