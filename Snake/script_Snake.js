@@ -2,7 +2,7 @@ window.onload = function() {
     console.log('Document loaded and script executed');
 
     // Настройка WebSocket
-    let ws = new WebSocket('ws://localhost:8080');
+    let ws = new WebSocket('ws://127.0.0.1:8080');
 
     ws.addEventListener('open', function() {
         console.log('WebSocket connection established.');
