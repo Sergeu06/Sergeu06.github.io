@@ -13,7 +13,6 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
-
 // Инициализация Firebase
 console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
@@ -24,7 +23,7 @@ window.onload = function() {
     console.log('Document loaded and script executed');
 
     let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
-    let playerId; // Хранение ID игрока для аватара
+    let userId; // Хранение ID игрока для аватара
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -69,6 +68,29 @@ window.onload = function() {
 
     // Инициализация WebSocket при загрузке страницы
     setupWebSocket();
+
+    // Функция для получения аватара игрока
+    function fetchAndSetPlayerAvatar(userId) {
+        console.log('Fetching player avatar for user ID:', userId);
+
+        const userRef = ref(db, `users/${userId}`);
+        get(userRef).then(snapshot => {
+            const userData = snapshot.val();
+            console.log(`User data for ID ${userId}:`, userData);
+
+            const avatarUrl = userData?.avatar_url || 'default-avatar.png';
+            console.log(`Setting player avatar with URL: ${avatarUrl}`);
+
+            const avatarImg = document.getElementById('playerAvatarImg');
+            if (avatarImg) {
+                avatarImg.src = avatarUrl;
+            } else {
+                console.error('Player avatar element not found');
+            }
+        }).catch(error => {
+            console.error('Error fetching player data:', error);
+        });
+    }
 
     // Обработчик клика на кнопку создания сервера
     const createServerBtn = document.getElementById('openCreateServerModalBtn');
@@ -193,7 +215,6 @@ window.onload = function() {
         fetch('http://127.0.0.1:8080/api/servers')
             .then(response => response.json())
             .then(servers => {
-                console.log('Server list fetched:', servers);
                 updateServerList(servers);
             })
             .catch(error => {
@@ -252,6 +273,11 @@ window.onload = function() {
 
         // Запрашиваем список игроков после подключения
         ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
+
+        // Получаем данные текущего пользователя для аватара
+        if (userId) {
+            fetchAndSetPlayerAvatar(userId);
+        }
     }
 
     // Функция обновления списка игроков в лобби
@@ -285,17 +311,6 @@ window.onload = function() {
                 console.error('Error fetching player data:', error);
             });
         });
-    }
-
-    // Функция для установки аватара игрока
-    function setPlayerAvatar(avatarUrl) {
-        console.log('Setting player avatar with URL:', avatarUrl);
-        const avatarImg = document.getElementById('playerAvatarImg');
-        if (avatarImg) {
-            avatarImg.src = avatarUrl;
-        } else {
-            console.error('Player avatar element not found');
-        }
     }
 
     // Пример использования функции установки аватара
