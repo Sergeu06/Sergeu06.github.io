@@ -24,6 +24,8 @@ window.onload = function() {
                 removeServerFromList(message.serverId);
             } else if (message.type === 'serverUpdated') {
                 updateServerInList(message.server);
+            } else if (message.type === 'playerListUpdate') {
+                updatePlayerList(message.players); // Обновляем список игроков
             }
         });
 
@@ -207,5 +209,24 @@ window.onload = function() {
         document.getElementById('server-selection').style.display = 'none';
         document.getElementById('lobby').style.display = 'block';
         ws.send(JSON.stringify({ type: 'join', serverId }));
+
+        // Запрашиваем список игроков после подключения
+        ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
+    }
+
+    // Функция обновления списка игроков в лобби
+    function updatePlayerList(players) {
+        const playerListElement = document.getElementById('playerList');
+        playerListElement.innerHTML = ''; // Очищаем список перед обновлением
+
+        players.forEach(player => {
+            const li = document.createElement('li');
+            li.classList.add('player-item');
+            li.innerHTML = `
+                <img src="${player.avatarUrl}" alt="Avatar" class="player-avatar" />
+                <span class="player-name">${player.nickname}</span>
+            `;
+            playerListElement.appendChild(li);
+        });
     }
 };
