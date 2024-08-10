@@ -13,6 +13,7 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
+
 // Инициализация Firebase
 console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
@@ -23,7 +24,7 @@ window.onload = function() {
     console.log('Document loaded and script executed');
 
     let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
-    let userId; // Хранение ID игрока для аватара
+    let userId = 'exampleUserId'; // Здесь используйте реальный userId
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -78,14 +79,18 @@ window.onload = function() {
             const userData = snapshot.val();
             console.log(`User data for ID ${userId}:`, userData);
 
-            const avatarUrl = userData?.avatar_url || 'default-avatar.png';
-            console.log(`Setting player avatar with URL: ${avatarUrl}`);
+            if (userData) {
+                const avatarUrl = userData.avatar_url || 'default-avatar.png';
+                console.log(`Setting player avatar with URL: ${avatarUrl}`);
 
-            const avatarImg = document.getElementById('playerAvatarImg');
-            if (avatarImg) {
-                avatarImg.src = avatarUrl;
+                const avatarImg = document.getElementById('playerAvatarImg');
+                if (avatarImg) {
+                    avatarImg.src = avatarUrl;
+                } else {
+                    console.error('Player avatar element not found');
+                }
             } else {
-                console.error('Player avatar element not found');
+                console.error('No user data found');
             }
         }).catch(error => {
             console.error('Error fetching player data:', error);
@@ -284,7 +289,7 @@ window.onload = function() {
     function updatePlayerList(players) {
         console.log('Updating player list UI...');
         const playerListElement = document.getElementById('playerList');
-        playerListElement.innerHTML = '';
+        playerListElement.innerHTML = ''; // Очищаем список перед обновлением
 
         players.forEach(player => {
             console.log('Fetching data for player ID:', player.id);
@@ -314,6 +319,6 @@ window.onload = function() {
     }
 
     // Пример использования функции установки аватара
-    // Не забудьте вызвать setPlayerAvatar, когда получите аватар игрока
+    // Не забудьте вызвать fetchAndSetPlayerAvatar, когда получите аватар игрока
     // Например, при входе в лобби или инициализации игрока
 };
