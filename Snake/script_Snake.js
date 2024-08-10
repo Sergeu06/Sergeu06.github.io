@@ -1,35 +1,46 @@
 window.onload = function() {
     console.log('Document loaded and script executed');
 
-    // Настройка WebSocket
-    let ws = new WebSocket('ws://127.0.0.1:8080');
+    let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
 
-    ws.addEventListener('open', function() {
-        console.log('WebSocket connection established.');
-        refreshServerList(); // Обновляем список серверов при подключении WebSocket
-    });
+    // Функция для установки соединения WebSocket
+    function setupWebSocket() {
+        ws = new WebSocket('ws://127.0.0.1:8080');
 
-    ws.addEventListener('message', function(event) {
-        console.log('Message received:', event.data);
-        const message = JSON.parse(event.data);
+        ws.addEventListener('open', function() {
+            console.log('WebSocket connection established.');
+            refreshServerList(); // Обновляем список серверов при подключении WebSocket
+        });
 
-        if (message.type === 'serverListUpdate') {
-            updateServerList(message.servers);
-        }
-    });
+        ws.addEventListener('message', function(event) {
+            console.log('Message received:', event.data);
+            const message = JSON.parse(event.data);
 
-    ws.addEventListener('error', function(error) {
-        console.error('WebSocket error:', error);
-    });
+            if (message.type === 'serverListUpdate') {
+                updateServerList(message.servers);
+            } else if (message.type === 'serverAdded') {
+                addServerToList(message.server);
+            } else if (message.type === 'serverRemoved') {
+                removeServerFromList(message.serverId);
+            } else if (message.type === 'serverUpdated') {
+                updateServerInList(message.server);
+            }
+        });
 
-    ws.addEventListener('close', function() {
-        console.log('WebSocket connection closed.');
-    });
+        ws.addEventListener('error', function(error) {
+            console.error('WebSocket error:', error);
+        });
+
+        ws.addEventListener('close', function() {
+            console.log('WebSocket connection closed.');
+        });
+    }
+
+    // Инициализация WebSocket при загрузке страницы
+    setupWebSocket();
 
     // Обработчик клика на кнопку создания сервера
     const createServerBtn = document.getElementById('openCreateServerModalBtn');
-    console.log('Create Server button:', createServerBtn);
-
     if (createServerBtn) {
         createServerBtn.addEventListener('click', function() {
             console.log('Create Server button clicked');
@@ -53,12 +64,6 @@ window.onload = function() {
             const maxPlayers = document.getElementById('maxPlayers').value;
             const gameMode = document.getElementById('gameMode').value;
 
-            console.log('Server Name:', serverName);
-            console.log('Password Toggle:', passwordToggle);
-            console.log('Server Password:', serverPassword);
-            console.log('Max Players:', maxPlayers);
-            console.log('Game Mode:', gameMode);
-
             if (!serverName) {
                 console.error('Server name is required');
                 return;
@@ -78,7 +83,6 @@ window.onload = function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Server creation response:', data);
                 if (data.success) {
                     alert('Server created successfully!');
                     document.getElementById('serverCreationModal').style.display = 'none';
@@ -106,8 +110,6 @@ window.onload = function() {
 
     // Обработчик клика на кнопку обновления списка серверов
     const refreshServersBtn = document.getElementById('refreshServersBtn');
-    console.log('Refresh Servers button:', refreshServersBtn);
-
     if (refreshServersBtn) {
         refreshServersBtn.addEventListener('click', function() {
             console.log('Refresh Servers button clicked');
@@ -119,8 +121,6 @@ window.onload = function() {
 
     // Обработчик клика на кнопку одиночного режима
     const singlePlayerBtn = document.getElementById('singlePlayerBtn');
-    console.log('Single Player button:', singlePlayerBtn);
-
     if (singlePlayerBtn) {
         singlePlayerBtn.addEventListener('click', function() {
             console.log('Single Player button clicked');
@@ -132,8 +132,6 @@ window.onload = function() {
 
     // Обработчик клика на кнопку мультиплеера
     const multiPlayerBtn = document.getElementById('multiPlayerBtn');
-    console.log('Multiplayer button:', multiPlayerBtn);
-
     if (multiPlayerBtn) {
         multiPlayerBtn.addEventListener('click', function() {
             console.log('Multiplayer button clicked');
@@ -147,36 +145,14 @@ window.onload = function() {
         console.log('Starting single player game');
         document.querySelector('.mode-selection').style.display = 'none';
         document.querySelector('.game-container').style.display = 'block';
-        initSinglePlayerGame();
+        initSinglePlayerGame(); // Предполагается, что функция уже определена
     }
 
     function startMultiplayer() {
         console.log('Starting multiplayer mode');
         document.querySelector('.mode-selection').style.display = 'none';
         document.getElementById('server-selection').style.display = 'block';
-
-        ws = new WebSocket('ws://localhost:8080');
-
-        ws.addEventListener('open', function() {
-            console.log('WebSocket connection established for multiplayer.');
-            refreshServerList(); // Обновляем список серверов при открытии соединения
-        });
-
-        ws.addEventListener('message', function(event) {
-            console.log('Message received:', event.data);
-            const message = JSON.parse(event.data);
-            if (message.type === 'serverListUpdate') {
-                updateServerList(message.servers);
-            }
-        });
-
-        ws.addEventListener('error', function(error) {
-            console.error('WebSocket error:', error);
-        });
-
-        ws.addEventListener('close', function() {
-            console.log('WebSocket connection closed.');
-        });
+        refreshServerList(); // Обновляем список серверов при переходе в мультиплеерный режим
     }
 
     function refreshServerList() {
@@ -191,21 +167,40 @@ window.onload = function() {
     }
 
     function updateServerList(servers) {
-        console.log('Updating server list');
         const serverListElement = document.getElementById('serverList');
         serverListElement.innerHTML = '';
         servers.forEach(server => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <div class="server-name">${server.name}</div>
-                <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
-                ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
-            `;
-            li.addEventListener('click', () => {
-                joinServer(server.id);
-            });
-            serverListElement.appendChild(li);
+            addServerToList(server);
         });
+    }
+
+    function addServerToList(server) {
+        const serverListElement = document.getElementById('serverList');
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div class="server-name">${server.name}</div>
+            <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
+            ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
+        `;
+        li.addEventListener('click', () => {
+            joinServer(server.id);
+        });
+        serverListElement.appendChild(li);
+    }
+
+    function removeServerFromList(serverId) {
+        const serverListElement = document.getElementById('serverList');
+        const serverItems = serverListElement.querySelectorAll('li');
+        serverItems.forEach(item => {
+            if (item.getAttribute('data-server-id') === serverId) {
+                serverListElement.removeChild(item);
+            }
+        });
+    }
+
+    function updateServerInList(server) {
+        removeServerFromList(server.id); // Удаляем старую запись
+        addServerToList(server); // Добавляем новую
     }
 
     function joinServer(serverId) {
