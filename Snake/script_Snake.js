@@ -13,7 +13,6 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
-
 // Инициализация Firebase
 console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
@@ -24,7 +23,7 @@ window.onload = function() {
     console.log('Document loaded and script executed');
 
     let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
-    let userId = 'exampleUserId'; // Здесь используйте реальный userId
+    const userId = 'exampleUserId'; // Здесь используйте реальный userId
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -80,12 +79,17 @@ window.onload = function() {
             console.log(`User data for ID ${userId}:`, userData);
 
             if (userData) {
-                const avatarUrl = userData.avatar_url || 'default-avatar.png';
+                const avatarUrl = userData.avatar_url || 'https://via.placeholder.com/50';
                 console.log(`Setting player avatar with URL: ${avatarUrl}`);
 
                 const avatarImg = document.getElementById('playerAvatarImg');
                 if (avatarImg) {
                     avatarImg.src = avatarUrl;
+                    avatarImg.onload = () => console.log('Avatar loaded successfully');
+                    avatarImg.onerror = () => {
+                        console.error('Failed to load avatar image, using default.');
+                        avatarImg.src = 'https://via.placeholder.com/50'; // Публичный URL для placeholder изображения
+                    };
                 } else {
                     console.error('Player avatar element not found');
                 }
@@ -300,7 +304,7 @@ window.onload = function() {
                 const userData = snapshot.val();
                 console.log(`User data for ID ${player.id}:`, userData);
 
-                const avatarUrl = userData?.avatar_url || 'default-avatar.png';
+                const avatarUrl = userData?.avatar_url || 'https://via.placeholder.com/50';
                 const nickname = userData?.nickname || 'Unknown Player';
 
                 console.log(`Displaying player ${nickname} with avatar: ${avatarUrl}`);
@@ -317,8 +321,4 @@ window.onload = function() {
             });
         });
     }
-
-    // Пример использования функции установки аватара
-    // Не забудьте вызвать fetchAndSetPlayerAvatar, когда получите аватар игрока
-    // Например, при входе в лобби или инициализации игрока
 };
