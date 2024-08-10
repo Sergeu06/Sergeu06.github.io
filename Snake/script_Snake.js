@@ -13,6 +13,7 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
+
 // Инициализация Firebase
 console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
@@ -23,6 +24,7 @@ window.onload = function() {
     console.log('Document loaded and script executed');
 
     let ws; // Объявляем WebSocket вне функций, чтобы избежать пересоздания
+    let playerId; // Хранение ID игрока для аватара
 
     // Функция для установки соединения WebSocket
     function setupWebSocket() {
@@ -210,17 +212,16 @@ window.onload = function() {
     }
 
     function addServerToList(server) {
-        console.log('Adding server to UI:', server);
         const serverListElement = document.getElementById('serverList');
         const li = document.createElement('li');
-        li.setAttribute('data-server-id', server.id); // Устанавливаем ID сервера в атрибут
+        li.setAttribute('data-server-id', server.id); // Установите ID сервера в качестве атрибута
         li.innerHTML = `
             <div class="server-name">${server.name}</div>
             <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
             ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
         `;
         li.addEventListener('click', () => {
-            console.log('Server clicked:', server.id);
+            console.log('Server item clicked:', server.id);
             joinServer(server.id);
         });
         serverListElement.appendChild(li);
@@ -232,14 +233,13 @@ window.onload = function() {
         const serverItems = serverListElement.querySelectorAll('li');
         serverItems.forEach(item => {
             if (item.getAttribute('data-server-id') === serverId) {
-                console.log('Server found and removed:', serverId);
                 serverListElement.removeChild(item);
             }
         });
     }
 
     function updateServerInList(server) {
-        console.log('Updating server in list:', server);
+        console.log('Updating server in list:', server.id);
         removeServerFromList(server.id); // Удаляем старую запись
         addServerToList(server); // Добавляем новую
     }
@@ -286,4 +286,19 @@ window.onload = function() {
             });
         });
     }
+
+    // Функция для установки аватара игрока
+    function setPlayerAvatar(avatarUrl) {
+        console.log('Setting player avatar with URL:', avatarUrl);
+        const avatarImg = document.getElementById('playerAvatarImg');
+        if (avatarImg) {
+            avatarImg.src = avatarUrl;
+        } else {
+            console.error('Player avatar element not found');
+        }
+    }
+
+    // Пример использования функции установки аватара
+    // Не забудьте вызвать setPlayerAvatar, когда получите аватар игрока
+    // Например, при входе в лобби или инициализации игрока
 };
