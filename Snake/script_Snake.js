@@ -13,7 +13,6 @@ const firebaseConfig = {
     measurementId: "G-P9R1G79S57"
 };
 
-
 // Инициализация Firebase
 console.log('Initializing Firebase app...');
 const app = initializeApp(firebaseConfig);
@@ -214,6 +213,7 @@ window.onload = function() {
         console.log('Adding server to UI:', server);
         const serverListElement = document.getElementById('serverList');
         const li = document.createElement('li');
+        li.setAttribute('data-server-id', server.id); // Устанавливаем ID сервера в атрибут
         li.innerHTML = `
             <div class="server-name">${server.name}</div>
             <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
@@ -254,6 +254,7 @@ window.onload = function() {
         ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
     }
 
+    // Функция обновления списка игроков в лобби
     function updatePlayerList(players) {
         console.log('Updating player list UI...');
         const playerListElement = document.getElementById('playerList');
