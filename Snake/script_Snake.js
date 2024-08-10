@@ -6,10 +6,16 @@ window.onload = function() {
 
     ws.addEventListener('open', function() {
         console.log('WebSocket connection established.');
+        refreshServerList(); // Обновляем список серверов при подключении WebSocket
     });
 
     ws.addEventListener('message', function(event) {
         console.log('Message received:', event.data);
+        const message = JSON.parse(event.data);
+
+        if (message.type === 'serverListUpdate') {
+            updateServerList(message.servers);
+        }
     });
 
     ws.addEventListener('error', function(error) {
@@ -22,7 +28,7 @@ window.onload = function() {
 
     // Обработчик клика на кнопку создания сервера
     const createServerBtn = document.getElementById('openCreateServerModalBtn');
-    console.log('Create Server button:', createServerBtn); // Проверяем, найден ли элемент
+    console.log('Create Server button:', createServerBtn);
 
     if (createServerBtn) {
         createServerBtn.addEventListener('click', function() {
@@ -53,13 +59,11 @@ window.onload = function() {
             console.log('Max Players:', maxPlayers);
             console.log('Game Mode:', gameMode);
 
-            // Проверяем, что имя сервера введено
             if (!serverName) {
                 console.error('Server name is required');
                 return;
             }
 
-            // Отправка данных на сервер
             fetch('http://127.0.0.1:8080/api/createServer', {
                 method: 'POST',
                 headers: {
@@ -74,15 +78,12 @@ window.onload = function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Server creation response:', data); // Логируем ответ от сервера
+                console.log('Server creation response:', data);
                 if (data.success) {
                     alert('Server created successfully!');
                     document.getElementById('serverCreationModal').style.display = 'none';
                     document.getElementById('server-selection').style.display = 'block';
-                    if (ws) {
-                        console.log('Sending refreshServers message');
-                        ws.send(JSON.stringify({ type: 'refreshServers' }));
-                    }
+                    refreshServerList(); // Обновляем список серверов после создания нового сервера
                 } else {
                     alert('Error creating server');
                 }
@@ -105,18 +106,12 @@ window.onload = function() {
 
     // Обработчик клика на кнопку обновления списка серверов
     const refreshServersBtn = document.getElementById('refreshServersBtn');
-    console.log('Refresh Servers button:', refreshServersBtn); // Проверяем, найден ли элемент
+    console.log('Refresh Servers button:', refreshServersBtn);
 
     if (refreshServersBtn) {
         refreshServersBtn.addEventListener('click', function() {
             console.log('Refresh Servers button clicked');
-
-            if (ws) {
-                console.log('Sending refreshServers message');
-                ws.send(JSON.stringify({ type: 'refreshServers' }));
-            } else {
-                console.error('WebSocket is not connected');
-            }
+            refreshServerList(); // Обновляем список серверов при клике
         });
     } else {
         console.error('Refresh Servers button not found');
@@ -124,7 +119,7 @@ window.onload = function() {
 
     // Обработчик клика на кнопку одиночного режима
     const singlePlayerBtn = document.getElementById('singlePlayerBtn');
-    console.log('Single Player button:', singlePlayerBtn); // Проверяем, найден ли элемент
+    console.log('Single Player button:', singlePlayerBtn);
 
     if (singlePlayerBtn) {
         singlePlayerBtn.addEventListener('click', function() {
@@ -137,7 +132,7 @@ window.onload = function() {
 
     // Обработчик клика на кнопку мультиплеера
     const multiPlayerBtn = document.getElementById('multiPlayerBtn');
-    console.log('Multiplayer button:', multiPlayerBtn); // Проверяем, найден ли элемент
+    console.log('Multiplayer button:', multiPlayerBtn);
 
     if (multiPlayerBtn) {
         multiPlayerBtn.addEventListener('click', function() {
@@ -160,11 +155,11 @@ window.onload = function() {
         document.querySelector('.mode-selection').style.display = 'none';
         document.getElementById('server-selection').style.display = 'block';
 
-        // Переопределяем ws переменную для WebSocket
         ws = new WebSocket('ws://localhost:8080');
 
         ws.addEventListener('open', function() {
             console.log('WebSocket connection established for multiplayer.');
+            refreshServerList(); // Обновляем список серверов при открытии соединения
         });
 
         ws.addEventListener('message', function(event) {
@@ -184,65 +179,15 @@ window.onload = function() {
         });
     }
 
-    function initSinglePlayerGame() {
-        console.log('Initializing single player game');
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let snake = [{x: 150, y: 150}, {x: 140, y: 150}, {x: 130, y: 150}];
-        let dx = 10;
-        let dy = 0;
-        let foodX;
-        let foodY;
-
-        function clearCanvas() {
-            ctx.fillStyle = "white";
-            ctx.strokeStyle = "black";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function drawSnakePart(snakePart) {
-            ctx.fillStyle = "lightgreen";
-            ctx.strokeStyle = "darkgreen";
-            ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
-            ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
-        }
-
-        function drawSnake() {
-            snake.forEach(drawSnakePart);
-        }
-
-        function moveSnake() {
-            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            snake.unshift(head);
-            snake.pop();
-        }
-
-        function generateFood() {
-            foodX = Math.round((Math.random() * (canvas.width - 10)) / 10) * 10;
-            foodY = Math.round((Math.random() * (canvas.height - 10)) / 10) * 10;
-        }
-
-        function drawFood() {
-            ctx.fillStyle = 'red';
-            ctx.strokeStyle = 'darkred';
-            ctx.fillRect(foodX, foodY, 10, 10);
-            ctx.strokeRect(foodX, foodY, 10, 10);
-        }
-
-        function main() {
-            setTimeout(function onTick() {
-                clearCanvas();
-                drawFood();
-                moveSnake();
-                drawSnake();
-                main();
-            }, 100)
-        }
-
-        generateFood();
-        main();
+    function refreshServerList() {
+        fetch('http://127.0.0.1:8080/api/servers')
+            .then(response => response.json())
+            .then(servers => {
+                updateServerList(servers);
+            })
+            .catch(error => {
+                console.error('Error fetching server list:', error);
+            });
     }
 
     function updateServerList(servers) {
@@ -252,9 +197,9 @@ window.onload = function() {
         servers.forEach(server => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <img src="${server.creatorAvatar || 'default-avatar.png'}" alt="Avatar">
                 <div class="server-name">${server.name}</div>
-                ${server.hasPassword ? '<span class="lock-icon">🔒</span>' : ''}
+                <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
+                ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
             `;
             li.addEventListener('click', () => {
                 joinServer(server.id);
