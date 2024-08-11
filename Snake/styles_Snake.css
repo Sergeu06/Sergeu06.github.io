@@ -14,8 +14,6 @@
     background-color: #555;
 }
 
-
-
 /* Стили для всех кнопок по умолчанию */
 button {
     background-color: #333;
@@ -35,8 +33,8 @@ button:hover {
 }
 
 /* Специфические стили для кнопок Refresh Servers и Create Server */
-#refreshServersButton,
-#createServerButton {
+#refreshServersBtn,
+#openCreateServerModalBtn {
     background-color: #333;
     color: #fff;
     border: none;
@@ -48,8 +46,8 @@ button:hover {
 }
 
 /* Эффект при наведении для этих кнопок */
-#refreshServersButton:hover,
-#createServerButton:hover {
+#refreshServersBtn:hover,
+#openCreateServerModalBtn:hover {
     background-color: #555;
 }
 
@@ -245,7 +243,7 @@ canvas {
     background: #fff;
     padding: 20px;
     border-radius: 5px;
-    width: 90%;
+    width: 80%;
     max-width: 500px;
     position: relative;
 }
@@ -253,31 +251,7 @@ canvas {
 .close {
     position: absolute;
     top: 10px;
-    right: 20px;
+    right: 10px;
     font-size: 24px;
     cursor: pointer;
-}
-
-.close:hover {
-    color: #f00;
-}
-
-#lobby {
-    text-align: center;
-}
-
-#playerList {
-    list-style: none;
-    padding: 0;
-}
-
-#playerList li {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #eee;
-    border-radius: 5px;
-}
-
-#serverSettings {
-    margin-top: 20px;
 }
