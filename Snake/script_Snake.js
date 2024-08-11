@@ -318,4 +318,21 @@ window.onload = function() {
             });
         });
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const readyButton = document.getElementById("readyButton");
+
+    readyButton.addEventListener("click", function () {
+        if (readyButton.textContent === "ГОТОВ") {
+            readyButton.textContent = "Отменить готовность";
+            // Дополнительные действия при готовности, например отправка состояния на сервер
+        } else {
+            readyButton.textContent = "ГОТОВ";
+            // Дополнительные действия при отмене готовности
+        }
+    });
+});
+
 };
+
+
