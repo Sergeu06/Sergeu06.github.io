@@ -197,7 +197,6 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1;
     width: 100%;
     max-width: 600px; /* Ограничиваем максимальную ширину */
     margin-bottom: 80px; /* Увеличиваем нижний отступ для кнопок */
@@ -221,14 +220,14 @@ canvas {
     border: 1px solid #ccc;
     width: 100%; /* Ширина рамки фиксирована */
     box-sizing: border-box; /* Учитываем padding и border в ширину */
-    overflow: hidden; /* Чтобы текст не выходил за пределы рамки */
 }
 
 .player-number {
     font-size: 1.5em;
     font-weight: bold;
-    margin-right: 10px;
     width: 30px; /* Фиксированная ширина для номера */
+    text-align: center;
+    margin-right: 10px;
 }
 
 .player-info {
@@ -240,6 +239,7 @@ canvas {
 
 .player-name {
     flex: 1;
+    font-size: 1em; /* Уменьшение размера шрифта для лучшего отображения на мобильных устройствах */
 }
 
 /* Стили для кнопок в лобби */
@@ -266,8 +266,8 @@ canvas {
     }
 
     .player-item {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         padding: 8px;
     }
 
@@ -276,7 +276,7 @@ canvas {
     }
 
     .player-name {
-        font-size: 1em;
+        font-size: 0.9em;
     }
 
     button {
