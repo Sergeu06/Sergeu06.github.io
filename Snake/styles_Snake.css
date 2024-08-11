@@ -198,17 +198,17 @@ canvas {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 600px; /* Ограничиваем максимальную ширину */
-    margin-bottom: 80px; /* Увеличиваем нижний отступ для кнопок */
+    max-width: 600px;
+    margin-bottom: 80px;
 }
 
 .player-list {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     width: 100%;
-    max-width: 100%; /* Ширина списка на всю доступную ширину */
-    overflow-y: auto; /* Прокрутка при необходимости */
+    max-width: 100%;
+    overflow-y: auto;
 }
 
 .player-item {
@@ -218,14 +218,14 @@ canvas {
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
-    width: 100%; /* Ширина рамки фиксирована */
-    box-sizing: border-box; /* Учитываем padding и border в ширину */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .player-number {
     font-size: 1.5em;
     font-weight: bold;
-    width: 30px; /* Фиксированная ширина для номера */
+    width: 30px;
     text-align: center;
     margin-right: 10px;
 }
@@ -234,12 +234,18 @@ canvas {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1; /* Занимает оставшееся пространство */
+    flex: 1;
+}
+
+.player-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 
 .player-name {
     flex: 1;
-    font-size: 1em; /* Уменьшение размера шрифта для лучшего отображения на мобильных устройствах */
+    font-size: 1em;
 }
 
 /* Стили для кнопок в лобби */
