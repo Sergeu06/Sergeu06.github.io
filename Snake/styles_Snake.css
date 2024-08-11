@@ -167,41 +167,56 @@ canvas {
 #lobby {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 100%;
+    max-width: 400px; /* Максимальная ширина для лобби */
+    padding: 20px;
     box-sizing: border-box;
+}
+
+.lobby-title {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
 }
 
 .lobby-content {
-    display: flex;
-    flex: 1;
+    flex: 1; /* Позволяет содержимому занимать доступное пространство */
     width: 100%;
-    max-width: 1200px;
 }
 
 .player-list {
-    width: 50%;
-    padding: 10px;
-    background-color: #fff;
-    border-right: 1px solid #ddd;
-    box-sizing: border-box;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Отступы между элементами */
 }
 
-.server-settings {
-    width: 50%;
+.player-item {
+    display: flex;
+    align-items: center;
     padding: 10px;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
-/* Стили для кнопки Ready */
+.player-number {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.player-name {
+    flex: 1;
+}
+
 .ready-button {
     background-color: #333;
     color: #fff;
     border: none;
-    padding: 10px 20px;
-    font-size: 1.2em;
+    padding: 15px 30px;
+    font-size: 1.5em;
     cursor: pointer;
     border-radius: 5px;
     margin: 10px;
