@@ -41,7 +41,7 @@
     </div>
 
     <!-- Server creation modal -->
-    <div id="serverCreationModal" class="modal">
+    <div id="serverCreationModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>Create Server</h2>
@@ -68,64 +68,8 @@
     <div id="lobby" style="display: none;">
         <div class="lobby-content">
             <div class="lobby-title">Lobby</div>
-            <div class="player-list">
-                <!-- Список игроков -->
-                <div class="player-item">
-                    <div class="player-number">1</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 1</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">2</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 2</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">3</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 3</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">4</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 4</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">5</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 5</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">6</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 6</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">7</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 7</div>
-                    </div>
-                </div>
-                <div class="player-item">
-                    <div class="player-number">8</div>
-                    <div class="player-info">
-                        <img src="" alt="Avatar" class="player-avatar">
-                        <div class="player-name">Player 8</div>
-                    </div>
-                </div>
+            <div id="playerList" class="player-list">
+                <!-- Список игроков будет динамически загружен -->
             </div>
         </div>
         <div class="lobby-footer">
