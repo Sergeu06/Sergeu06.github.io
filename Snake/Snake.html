@@ -67,11 +67,17 @@
 
     <div id="lobby" style="display: none;">
         <h2>Lobby</h2>
-        <div id="playerList"></div>
-        <div id="serverSettings"></div>
-        <button id="readyButton">ГОТОВ</button>
+        <div class="lobby-content">
+            <div id="playerList" class="player-list">
+                <!-- Список игроков будет добавляться сюда -->
+            </div>
+            <div id="serverSettings" class="server-settings">
+                <!-- Дополнительные настройки сервера -->
+            </div>
+        </div>
+        <button id="readyButton" class="ready-button">ГОТОВ</button>
     </div>
-    
+
     <script type="module" src="script_Snake.js"></script>
 </body>
 </html>
