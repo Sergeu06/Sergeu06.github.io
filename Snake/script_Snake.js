@@ -27,6 +27,17 @@ window.onload = function() {
     const avatarImg = document.getElementById('playerAvatarImg');
     let ws; // Объявляем WebSocket вне функций
 
+    // Функция для извлечения параметра `uid` из URL
+    function getUidFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('uid');
+    }
+
+    // Извлекаем `uid` из URL
+    const uid = getUidFromUrl();
+    console.log("Extracted UID:", uid);
+
+    // Функция загрузки данных пользователя из Firebase
     async function loadUserData(uid) {
         console.log("Attempting to load user data for UID:", uid);
         const dbRef = ref(database);
@@ -46,14 +57,14 @@ window.onload = function() {
         }
     }
 
+    // Функция для установки аватара пользователя
     async function setPlayerAvatar() {
-        const user = auth.currentUser;
-        if (!user) {
-            console.error("No authenticated user found. Please log in.");
+        if (!uid) {
+            console.error("No UID found in URL.");
             return;
         }
 
-        const userData = await loadUserData(user.uid);
+        const userData = await loadUserData(uid);
         if (userData) {
             const avatarUrl = userData.avatar_url;
             if (avatarUrl) {
@@ -77,6 +88,7 @@ window.onload = function() {
         }
     }
 
+    // Функция для настройки WebSocket соединения
     function setupWebSocket() {
         console.log('Setting up WebSocket connection...');
         ws = new WebSocket('ws://127.0.0.1:8080');
