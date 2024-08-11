@@ -205,7 +205,6 @@ canvas {
 .player-list {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
     width: 100%;
     max-width: 100%;
     overflow-y: auto;
@@ -220,6 +219,7 @@ canvas {
     border: 1px solid #ccc;
     width: 100%;
     box-sizing: border-box;
+    border-radius: 5px;
 }
 
 .player-number {
@@ -228,6 +228,7 @@ canvas {
     width: 30px;
     text-align: center;
     margin-right: 10px;
+    flex-shrink: 0;
 }
 
 .player-info {
@@ -235,6 +236,7 @@ canvas {
     align-items: center;
     gap: 10px;
     flex: 1;
+    max-width: calc(100% - 50px); /* Учитываем ширину номера и отступы */
 }
 
 .player-info img {
