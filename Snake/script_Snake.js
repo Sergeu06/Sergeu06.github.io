@@ -335,4 +335,33 @@ window.onload = function() {
     function refreshServerList() {
         ws.send(JSON.stringify({ type: 'getServerList' }));
     }
+
+    // Обработчики кликов для кнопок Single Player и Multiplayer
+    const singlePlayerBtn = document.getElementById('singlePlayerBtn');
+    if (singlePlayerBtn) {
+        singlePlayerBtn.addEventListener('click', () => {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('singleplayer').style.display = 'block';
+            startSinglePlayerGame();
+        });
+    } else {
+        console.error('Single Player button not found');
+    }
+
+    const multiplayerBtn = document.getElementById('multiplayerBtn');
+    if (multiplayerBtn) {
+        multiplayerBtn.addEventListener('click', () => {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('server-selection').style.display = 'block';
+            refreshServerList(); // Обновляем список серверов при открытии мультиплеера
+        });
+    } else {
+        console.error('Multiplayer button not found');
+    }
+
+    // Функция для запуска одиночной игры
+    function startSinglePlayerGame() {
+        console.log('Single Player Game Started');
+        // Реализуйте здесь логику для начала одиночной игры
+    }
 };
