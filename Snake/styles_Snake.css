@@ -145,6 +145,7 @@ canvas {
     margin: 5px 0;
     padding: 10px;
     border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 #serverList li img {
@@ -217,9 +218,9 @@ canvas {
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
+    border-radius: 5px;
     width: 100%;
     box-sizing: border-box;
-    border-radius: 5px;
 }
 
 .player-number {
@@ -251,7 +252,7 @@ canvas {
 }
 
 /* Стили для кнопок в лобби */
-.edit-settings-button, .ready-button {
+.edit-settings-button {
     background-color: #333;
     color: #fff;
     border: none;
@@ -263,8 +264,41 @@ canvas {
     transition: background-color 0.3s;
 }
 
-.edit-settings-button:hover, .ready-button:hover {
+.edit-settings-button:hover {
     background-color: #555;
+}
+
+.ready-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0; /* Убираем закругления нижних углов */
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.ready-button:hover {
+    background-color: #555;
+}
+
+/* Контейнер для кнопок внизу */
+.lobby-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lobby-footer .ready-button {
+    width: 100%;
+    margin: 0;
 }
 
 /* Медиазапросы для мобильных устройств */
