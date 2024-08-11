@@ -156,107 +156,120 @@ window.onload = function() {
     }
 
     const createServerConfirmBtn = document.getElementById('createServerConfirmBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const refreshServersBtn = document.getElementById('refreshServersBtn');
+    const singlePlayerBtn = document.getElementById('singlePlayerBtn');
+    const multiPlayerBtn = document.getElementById('multiPlayerBtn');
+    const readyButton = document.getElementById("readyButton");
+
     if (createServerConfirmBtn) {
-        createServerConfirmBtn.addEventListener('click', handleServerCreation);
+        createServerConfirmBtn.addEventListener('click', () => {
+            const serverName = document.getElementById('serverName').value;
+            const passwordToggle = document.getElementById('passwordToggle').checked;
+            const serverPassword = document.getElementById('serverPassword').value;
+            const maxPlayers = document.getElementById('maxPlayers').value;
+            const gameMode = document.getElementById('gameMode').value;
+
+            if (!serverName) {
+                console.error('Server name is required');
+                return;
+            }
+
+            fetch('http://127.0.0.1:8080/api/createServer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: serverName,
+                    password: passwordToggle ? serverPassword : null,
+                    maxPlayers: maxPlayers,
+                    gameMode: gameMode
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Server created successfully!');
+                    document.getElementById('serverCreationModal').style.display = 'none';
+                    joinServer(data.serverId);
+                } else {
+                    alert('Error creating server');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating server:', error);
+            });
+        });
     } else {
         console.error('Create Server Confirm button not found');
     }
 
-    const refreshServersBtn = document.getElementById('refreshServersBtn');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            document.getElementById('serverCreationModal').style.display = 'none';
+        });
+    } else {
+        console.error('Close modal button not found');
+    }
+
     if (refreshServersBtn) {
         refreshServersBtn.addEventListener('click', refreshServerList);
     } else {
         console.error('Refresh Servers button not found');
     }
 
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', () => {
-            document.getElementById('serverCreationModal').style.display = 'none';
-        });
+    if (singlePlayerBtn) {
+        singlePlayerBtn.addEventListener('click', startGame);
     } else {
-        console.error('Close Modal button not found');
+        console.error('Single Player button not found');
     }
 
-    const passwordToggle = document.getElementById('passwordToggle');
-    const serverPassword = document.getElementById('serverPassword');
-    if (passwordToggle && serverPassword) {
-        passwordToggle.addEventListener('change', () => {
-            serverPassword.style.display = passwordToggle.checked ? 'block' : 'none';
-        });
+    if (multiPlayerBtn) {
+        multiPlayerBtn.addEventListener('click', startMultiplayer);
     } else {
-        console.error('Password toggle or server password input not found');
+        console.error('Multiplayer button not found');
     }
 
-    // Функция для создания сервера
-    function handleServerCreation() {
-        const serverName = document.getElementById('serverName').value;
-        const passwordToggle = document.getElementById('passwordToggle').checked;
-        const serverPassword = document.getElementById('serverPassword').value;
-        const maxPlayers = document.getElementById('maxPlayers').value;
-        const gameMode = document.getElementById('gameMode').value;
-
-        if (!serverName) {
-            console.error('Server name is required');
-            return;
-        }
-
-        fetch('http://127.0.0.1:8080/api/createServer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: serverName,
-                password: passwordToggle ? serverPassword : null,
-                maxPlayers: maxPlayers,
-                gameMode: gameMode
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Server created successfully!');
-                document.getElementById('serverCreationModal').style.display = 'none';
-                joinServer(data.serverId);
+    if (readyButton) {
+        readyButton.addEventListener("click", function () {
+            if (readyButton.textContent === "ГОТОВ") {
+                readyButton.textContent = "Отменить готовность";
+                readyButton.classList.remove('ready');
+                readyButton.classList.add('not-ready');
+                // Дополнительные действия при готовности, например отправка состояния на сервер
+                console.log("Player is now ready.");
             } else {
-                alert('Error creating server');
+                readyButton.textContent = "ГОТОВ";
+                readyButton.classList.remove('not-ready');
+                readyButton.classList.add('ready');
+                // Дополнительные действия при отмене готовности
+                console.log("Player is not ready anymore.");
             }
-        })
-        .catch(error => {
-            console.error('Error creating server:', error);
         });
+    } else {
+        console.error('Ready button not found');
     }
 
-    // Функция для присоединения к серверу
-    function joinServer(serverId) {
-        document.getElementById('server-selection').style.display = 'none';
-        document.getElementById('lobby').style.display = 'block';
-        ws.send(JSON.stringify({ type: 'join', serverId }));
-
-        // Запрашиваем список игроков после подключения
-        ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
-
-        // Устанавливаем информацию о первом игроке
-        setFirstPlayerInfo();
+    function startGame() {
+        document.querySelector('.mode-selection').style.display = 'none';
+        document.querySelector('.game-container').style.display = 'block';
+        initSinglePlayerGame();
     }
 
-    // Функция для установки информации о первом игроке
-    async function setFirstPlayerInfo() {
-        const userData = await loadUserData(uid); // Загружаем данные пользователя
-
-        if (userData) {
-            const playerListElement = document.getElementById('playerList');
-            const playerItem = document.createElement('div');
-            playerItem.className = 'player-item';
-            playerItem.innerHTML = `
-                <div class="player-number">1</div>
-                <div class="player-nickname">${userData.nickname || 'Player 1'}</div>
-                <img class="player-avatar" src="${userData.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar">
-            `;
-            playerListElement.appendChild(playerItem);
-        }
+    function startMultiplayer() {
+        document.querySelector('.mode-selection').style.display = 'none';
+        document.getElementById('server-selection').style.display = 'block';
+        refreshServerList();
     }
 
-    // Функции для работы с сервером
+    function refreshServerList() {
+        fetch('http://127.0.0.1:8080/api/servers')
+            .then(response => response.json())
+            .then(servers => updateServerList(servers))
+            .catch(error => {
+                console.error('Error fetching server list:', error);
+            });
+    }
+
     function updateServerList(servers) {
         const serverListElement = document.getElementById('serverList');
         serverListElement.innerHTML = '';
@@ -265,69 +278,71 @@ window.onload = function() {
 
     function addServerToList(server) {
         const serverListElement = document.getElementById('serverList');
-        const serverItem = document.createElement('div');
-        serverItem.className = 'server-item';
-        serverItem.innerHTML = `
+        const li = document.createElement('li');
+        li.setAttribute('data-server-id', server.id);
+        li.innerHTML = `
             <div class="server-name">${server.name}</div>
-            <div class="server-mode">${server.gameMode}</div>
-            <div class="server-players">${server.players.length}/${server.maxPlayers}</div>
+            <div class="server-details">Max Players: ${server.maxPlayers} | Mode: ${server.gameMode}</div>
+            ${server.password ? '<span class="lock-icon">🔒</span>' : ''}
         `;
-        serverItem.addEventListener('click', () => joinServer(server.id));
-        serverListElement.appendChild(serverItem);
+        li.addEventListener('click', () => joinServer(server.id));
+        serverListElement.appendChild(li);
     }
 
     function removeServerFromList(serverId) {
         const serverListElement = document.getElementById('serverList');
-        const serverItems = serverListElement.getElementsByClassName('server-item');
-        for (const serverItem of serverItems) {
-            if (serverItem.dataset.id === serverId) {
-                serverListElement.removeChild(serverItem);
-                break;
+        const serverItems = serverListElement.querySelectorAll('li');
+        serverItems.forEach(item => {
+            if (item.getAttribute('data-server-id') === serverId) {
+                serverListElement.removeChild(item);
             }
-        }
+        });
     }
 
     function updateServerInList(server) {
-        const serverListElement = document.getElementById('serverList');
-        const serverItems = serverListElement.getElementsByClassName('server-item');
-        for (const serverItem of serverItems) {
-            if (serverItem.dataset.id === server.id) {
-                serverItem.querySelector('.server-name').textContent = server.name;
-                serverItem.querySelector('.server-mode').textContent = server.gameMode;
-                serverItem.querySelector('.server-players').textContent = `${server.players.length}/${server.maxPlayers}`;
-                break;
-            }
-        }
+        removeServerFromList(server.id);
+        addServerToList(server);
+    }
+
+    function joinServer(serverId) {
+        document.getElementById('server-selection').style.display = 'none';
+        document.getElementById('lobby').style.display = 'block';
+        ws.send(JSON.stringify({ type: 'join', serverId }));
+
+        // Запрашиваем список игроков после подключения
+        ws.send(JSON.stringify({ type: 'getPlayerList', serverId }));
+
+        // Получаем данные текущего пользователя для аватара
+        setPlayerAvatar();
     }
 
     function updatePlayerList(players) {
         const playerListElement = document.getElementById('playerList');
         playerListElement.innerHTML = '';
-        players.forEach((player, index) => {
-            const playerItem = document.createElement('div');
-            playerItem.className = 'player-item';
-            playerItem.innerHTML = `
-                <div class="player-number">${index + 1}</div>
-                <div class="player-nickname">${player.nickname || `Player ${index + 1}`}</div>
-                <img class="player-avatar" src="${player.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar">
-            `;
-            playerListElement.appendChild(playerItem);
+
+        players.forEach(player => {
+            loadUserData(player.id).then(userData => {
+                if (userData) {
+                    const avatarUrl = userData.avatar_url || 'https://via.placeholder.com/50';
+                    const nickname = userData.nickname || 'Unknown Player';
+
+                    const li = document.createElement('li');
+                    li.classList.add('player-item');
+                    li.innerHTML = `
+                        <img src="${avatarUrl}" alt="Avatar" class="player-avatar" />
+                        <span class="player-name">${nickname}</span>
+                    `;
+                    playerListElement.appendChild(li);
+                }
+            }).catch(error => {
+                console.error('Error fetching player data:', error);
+            });
         });
     }
 
-    function refreshServerList() {
-        console.log('Refreshing server list...');
-        ws.send(JSON.stringify({ type: 'getServerList' }));
-    }
-
-    // Запуск одиночной игры
-    const startSingleplayerBtn = document.getElementById('startSingleplayerBtn');
-    if (startSingleplayerBtn) {
-        startSingleplayerBtn.addEventListener('click', () => {
-            document.getElementById('mode-selection').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-        });
-    } else {
-        console.error('Singleplayer Start button not found');
+    // Функция инициализации игры для одиночного режима
+    function initSinglePlayerGame() {
+        // Логика инициализации игры для одиночного режима
+        console.log("Single player game initialized.");
     }
 };
