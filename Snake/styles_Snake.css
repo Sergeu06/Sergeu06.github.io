@@ -189,7 +189,7 @@ canvas {
 .lobby-title {
     text-align: center;
     margin: 20px 0;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: bold;
 }
 
@@ -198,6 +198,8 @@ canvas {
     flex-direction: column;
     align-items: center;
     flex: 1;
+    width: 100%;
+    max-width: 600px; /* Ограничиваем максимальную ширину */
     margin-bottom: 80px; /* Увеличиваем нижний отступ для кнопок */
 }
 
@@ -206,7 +208,7 @@ canvas {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    max-width: 600px; /* Фиксированная ширина для списка игроков */
+    max-width: 100%; /* Ширина списка на всю доступную ширину */
     overflow-y: auto; /* Прокрутка при необходимости */
 }
 
@@ -219,6 +221,7 @@ canvas {
     border: 1px solid #ccc;
     width: 100%; /* Ширина рамки фиксирована */
     box-sizing: border-box; /* Учитываем padding и border в ширину */
+    overflow: hidden; /* Чтобы текст не выходил за пределы рамки */
 }
 
 .player-number {
@@ -237,38 +240,52 @@ canvas {
 
 .player-name {
     flex: 1;
-    /* Удалим отступы и выравнивание */
 }
 
 /* Стили для кнопок в лобби */
-.edit-settings-button {
+.edit-settings-button, .ready-button {
     background-color: #333;
     color: #fff;
     border: none;
     padding: 15px 30px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     cursor: pointer;
     border-radius: 5px;
-    margin: 10px;
+    margin: 5px;
     transition: background-color 0.3s;
 }
 
-.edit-settings-button:hover {
+.edit-settings-button:hover, .ready-button:hover {
     background-color: #555;
 }
 
-.ready-button {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1.5em;
-    cursor: pointer;
-    border-radius: 5px;
-    margin: 10px;
-    transition: background-color 0.3s;
-}
+/* Медиазапросы для мобильных устройств */
+@media (max-width: 600px) {
+    .lobby-title {
+        font-size: 1.2em;
+    }
 
-.ready-button:hover {
-    background-color: #555;
+    .player-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .player-number {
+        font-size: 1.2em;
+    }
+
+    .player-name {
+        font-size: 1em;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 1em;
+    }
+
+    .edit-settings-button, .ready-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
 }
