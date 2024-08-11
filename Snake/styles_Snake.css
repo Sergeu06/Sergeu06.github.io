@@ -211,6 +211,23 @@ canvas {
     flex: 1;
 }
 
+/* Стили для кнопок в лобби */
+.edit-settings-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+    transition: background-color 0.3s;
+}
+
+.edit-settings-button:hover {
+    background-color: #555;
+}
+
 .ready-button {
     background-color: #333;
     color: #fff;
