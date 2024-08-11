@@ -7,17 +7,17 @@
     <link rel="stylesheet" href="styles_Snake.css">
 </head>
 <body>
-    <!-- Секция профиля -->
+    <!-- Profile Section -->
     <div id="profile" class="profile" style="display: none;">
         <img id="avatar" class="avatar" src="" alt="Avatar">
         <span id="nickname">Nickname</span>
     </div>
 
-    <img id="playerAvatarImg" src="" alt="User Avatar"> <!-- Аватар игрока -->
+    <img id="playerAvatarImg" src="" alt="User Avatar"> <!-- Player Avatar -->
 
     <div class="mode-selection">
         <button id="singlePlayerBtn">Single Player</button>
-        <button id="multiplayerBtn">Multiplayer</button>
+        <button id="multiPlayerBtn">Multiplayer</button>
     </div>
 
     <div class="game-container" style="display: none;">
@@ -40,8 +40,8 @@
         <button id="openCreateServerModalBtn">Create Server</button>
     </div>
 
-    <!-- Server creation modal -->
-    <div id="serverCreationModal" class="modal" style="display: none;">
+    <!-- Server Creation Modal -->
+    <div id="serverCreationModal" class="modal">
         <div class="modal-content">
             <span id="closeModalBtn" class="close">&times;</span>
             <h2>Create Server</h2>
@@ -68,14 +68,19 @@
     <div id="lobby" style="display: none;">
         <div class="lobby-content">
             <div class="lobby-title">Lobby</div>
-            <div id="playerList" class="player-list">
-                <!-- Список игроков будет динамически загружен -->
+            <div class="player-list" id="playerList">
+                <!-- Player list will be dynamically populated -->
             </div>
         </div>
-        <div class="lobby-footer">
-            <button class="edit-settings-button">Edit Settings</button>
-            <button id="readyButton" class="ready-button">ГОТОВ</button>
-        </div>
+<!-- Container for Buttons -->
+<div class="button-container">
+    <!-- Settings Button -->
+    <button id="editSettingsButton" class="edit-settings-button">Настройки</button>
+    
+    <!-- Ready Button -->
+    <button id="readyButton" class="ready-button">ГОТОВ</button>
+</div>
+
     </div>
     
     <script type="module" src="script_Snake.js"></script>
