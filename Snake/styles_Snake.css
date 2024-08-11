@@ -206,6 +206,8 @@ canvas {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
+    max-width: 600px; /* Фиксированная ширина для списка игроков */
+    overflow-y: auto; /* Прокрутка при необходимости */
 }
 
 .player-item {
@@ -215,23 +217,27 @@ canvas {
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;
-    width: 90%;
+    width: 100%; /* Ширина рамки фиксирована */
+    box-sizing: border-box; /* Учитываем padding и border в ширину */
 }
 
 .player-number {
     font-size: 1.5em;
     font-weight: bold;
     margin-right: 10px;
+    width: 30px; /* Фиксированная ширина для номера */
 }
 
 .player-info {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1; /* Занимает оставшееся пространство */
 }
 
 .player-name {
     flex: 1;
+    /* Удалим отступы и выравнивание */
 }
 
 /* Стили для кнопок в лобби */
