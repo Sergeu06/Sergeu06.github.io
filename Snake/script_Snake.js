@@ -249,119 +249,85 @@ window.onload = function() {
             playerItem.className = 'player-item';
             playerItem.innerHTML = `
                 <div class="player-number">1</div>
-                <div class="player-info">
-                    <img src="${userData.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar" class="player-avatar">
-                    <div class="player-name">${userData.nickname || 'Unknown Player'}</div>
-                </div>
+                <div class="player-nickname">${userData.nickname || 'Player 1'}</div>
+                <img class="player-avatar" src="${userData.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar">
             `;
             playerListElement.appendChild(playerItem);
-        } else {
-            console.error('No user data found for first player');
         }
     }
 
-    // Функция для обновления списка серверов
+    // Функции для работы с сервером
     function updateServerList(servers) {
         const serverListElement = document.getElementById('serverList');
-        serverListElement.innerHTML = ''; // Очищаем список серверов
-
-        servers.forEach(server => {
-            const serverItem = document.createElement('li');
-            serverItem.textContent = `${server.name} (${server.players.length}/${server.maxPlayers})`;
-            serverItem.dataset.serverId = server.id;
-            serverItem.addEventListener('click', () => {
-                joinServer(server.id);
-            });
-            serverListElement.appendChild(serverItem);
-        });
+        serverListElement.innerHTML = '';
+        servers.forEach(server => addServerToList(server));
     }
 
-    // Функция для обновления списка игроков
+    function addServerToList(server) {
+        const serverListElement = document.getElementById('serverList');
+        const serverItem = document.createElement('div');
+        serverItem.className = 'server-item';
+        serverItem.innerHTML = `
+            <div class="server-name">${server.name}</div>
+            <div class="server-mode">${server.gameMode}</div>
+            <div class="server-players">${server.players.length}/${server.maxPlayers}</div>
+        `;
+        serverItem.addEventListener('click', () => joinServer(server.id));
+        serverListElement.appendChild(serverItem);
+    }
+
+    function removeServerFromList(serverId) {
+        const serverListElement = document.getElementById('serverList');
+        const serverItems = serverListElement.getElementsByClassName('server-item');
+        for (const serverItem of serverItems) {
+            if (serverItem.dataset.id === serverId) {
+                serverListElement.removeChild(serverItem);
+                break;
+            }
+        }
+    }
+
+    function updateServerInList(server) {
+        const serverListElement = document.getElementById('serverList');
+        const serverItems = serverListElement.getElementsByClassName('server-item');
+        for (const serverItem of serverItems) {
+            if (serverItem.dataset.id === server.id) {
+                serverItem.querySelector('.server-name').textContent = server.name;
+                serverItem.querySelector('.server-mode').textContent = server.gameMode;
+                serverItem.querySelector('.server-players').textContent = `${server.players.length}/${server.maxPlayers}`;
+                break;
+            }
+        }
+    }
+
     function updatePlayerList(players) {
         const playerListElement = document.getElementById('playerList');
-        playerListElement.innerHTML = ''; // Очищаем список игроков
-
+        playerListElement.innerHTML = '';
         players.forEach((player, index) => {
             const playerItem = document.createElement('div');
             playerItem.className = 'player-item';
             playerItem.innerHTML = `
                 <div class="player-number">${index + 1}</div>
-                <div class="player-info">
-                    <img src="${player.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar" class="player-avatar">
-                    <div class="player-name">${player.nickname || 'Unknown Player'}</div>
-                </div>
+                <div class="player-nickname">${player.nickname || `Player ${index + 1}`}</div>
+                <img class="player-avatar" src="${player.avatar_url || 'https://via.placeholder.com/50'}" alt="Avatar">
             `;
             playerListElement.appendChild(playerItem);
         });
     }
 
-    // Функция для добавления нового сервера в список
-    function addServerToList(server) {
-        const serverListElement = document.getElementById('serverList');
-        const serverItem = document.createElement('li');
-        serverItem.textContent = `${server.name} (${server.players.length}/${server.maxPlayers})`;
-        serverItem.dataset.serverId = server.id;
-        serverItem.addEventListener('click', () => {
-            joinServer(server.id);
-        });
-        serverListElement.appendChild(serverItem);
-    }
-
-    // Функция для удаления сервера из списка
-    function removeServerFromList(serverId) {
-        const serverListElement = document.getElementById('serverList');
-        const serverItems = serverListElement.getElementsByTagName('li');
-        for (let i = 0; i < serverItems.length; i++) {
-            if (serverItems[i].dataset.serverId === serverId) {
-                serverListElement.removeChild(serverItems[i]);
-                break;
-            }
-        }
-    }
-
-    // Функция для обновления информации о сервере в списке
-    function updateServerInList(server) {
-        const serverListElement = document.getElementById('serverList');
-        const serverItems = serverListElement.getElementsByTagName('li');
-        for (let i = 0; i < serverItems.length; i++) {
-            if (serverItems[i].dataset.serverId === server.id) {
-                serverItems[i].textContent = `${server.name} (${server.players.length}/${server.maxPlayers})`;
-                break;
-            }
-        }
-    }
-
-    // Функция для обновления списка серверов
     function refreshServerList() {
+        console.log('Refreshing server list...');
         ws.send(JSON.stringify({ type: 'getServerList' }));
     }
 
-    // Обработчики кликов для кнопок Single Player и Multiplayer
-    const singlePlayerBtn = document.getElementById('singlePlayerBtn');
-    if (singlePlayerBtn) {
-        singlePlayerBtn.addEventListener('click', () => {
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('singleplayer').style.display = 'block';
-            startSinglePlayerGame();
+    // Запуск одиночной игры
+    const startSingleplayerBtn = document.getElementById('startSingleplayerBtn');
+    if (startSingleplayerBtn) {
+        startSingleplayerBtn.addEventListener('click', () => {
+            document.getElementById('mode-selection').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
         });
     } else {
-        console.error('Single Player button not found');
-    }
-
-    const multiplayerBtn = document.getElementById('multiplayerBtn');
-    if (multiplayerBtn) {
-        multiplayerBtn.addEventListener('click', () => {
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('server-selection').style.display = 'block';
-            refreshServerList(); // Обновляем список серверов при открытии мультиплеера
-        });
-    } else {
-        console.error('Multiplayer button not found');
-    }
-
-    // Функция для запуска одиночной игры
-    function startSinglePlayerGame() {
-        console.log('Single Player Game Started');
-        // Реализуйте здесь логику для начала одиночной игры
+        console.error('Singleplayer Start button not found');
     }
 };
