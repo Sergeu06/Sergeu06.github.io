@@ -207,6 +207,12 @@ canvas {
     margin-right: 10px;
 }
 
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .player-name {
     flex: 1;
 }
