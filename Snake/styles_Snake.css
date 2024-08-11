@@ -163,46 +163,63 @@ canvas {
     margin-left: 10px;
 }
 
-/* Стили для лобби */
-#lobby {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    max-width: 400px; /* Максимальная ширина для лобби */
-    padding: 20px;
-    box-sizing: border-box;
+#server-setup {
+    text-align: center;
 }
 
+#server-setup input, #server-setup select {
+    margin: 10px 0;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+}
+
+#server-setup button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#server-setup button:hover {
+    background-color: #555;
+}
+
+/* Стили для лобби */
 .lobby-title {
     text-align: center;
+    margin: 20px 0;
     font-size: 2em;
-    margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .lobby-content {
-    flex: 1; /* Позволяет содержимому занимать доступное пространство */
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 80px; /* Увеличиваем нижний отступ для кнопок */
 }
 
 .player-list {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Отступы между элементами */
+    align-items: flex-start;
+    width: 100%;
 }
 
 .player-item {
     display: flex;
     align-items: center;
+    margin: 5px 0;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    width: 90%;
 }
 
 .player-number {
+    font-size: 1.5em;
     font-weight: bold;
     margin-right: 10px;
 }
