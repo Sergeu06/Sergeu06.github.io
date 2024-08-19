@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetContainer = document.querySelector('.target-container');
     const upgradeBtn = document.getElementById('upgradeBtn');
 
-    let damagePerClick = 81;
-    let damagePerSecond = 10;
+    let damagePerClick = 1;
+    let damagePerSecond = 0;
     let currency1 = 0;
     let currency2 = 0;
     let currency3 = 0;
